@@ -6,30 +6,30 @@ const getAllDrugs = (req, res) => {
   res.json({ status: "OK", data: allDrugs });
 };
 
-const getOneDrug = (req, res) => {
-  const drug = drugsService.getOneDrug();
+const getDrug = (req, res) => {
+  const drug = drugsService.getDrug();
   res.json({ message: "Get an existing drug: " + req.params.drugId });
 };
 
-const createNewDrug = (req, res) => {
-  const createdDrug = drugsService.createNewDrug();
+const createDrug = (req, res) => {
+  const createdDrug = drugsService.createDrug();
   res.json({ message: "Create a new drug" });
 };
 
-const updateOneDrug = (req, res) => {
-  const updatedDrug = drugsService.updateOneDrug();
+const updateDrug = (req, res) => {
+  const updatedDrug = drugsService.updateDrug();
   res.json({ message: "Update an existing drug" });
 };
 
-const deleteOneDrug = (req, res) => {
-  const deletedDrug = drugsService.deleteOneDrug();
+const deleteDrug = (req, res) => {
+  const deletedDrug = drugsService.deleteDrug();
   res.json({ message: "Delete an existing drug" });
 };
 
 module.exports = {
   getAllDrugs,
-  getOneDrug,
-  createNewDrug,
-  updateOneDrug,
-  deleteOneDrug
+  getDrug,
+  createDrug,
+  updateDrug,
+  deleteDrug
 };
