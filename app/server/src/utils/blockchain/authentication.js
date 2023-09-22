@@ -8,17 +8,12 @@
 
 const { Gateway, Wallets } = require('fabric-network');
 const FabricCAServices = require('fabric-ca-client');
-const path = require('path');
 // ============== ASE modifica dovuta a cambiamento di percorso dei file AppUtil.js ===============
 // const { buildCAClient, registerAndEnrollUser, enrollAdmin } = require('../../test-application/javascript/CAUtil.js');
 const { buildCAClient, registerAndEnrollUser, enrollAdmin } = require('./CAUtil.js');
 // const { buildCCPOrg1, buildWallet } = require('../../test-application/javascript/AppUtil.js');
 const { buildCCPOrg1, buildWallet } = require('./AppUtil.js');
-const { caClient, wallet, mspOrg1 } = require("../../config/blockchain.js");
-
-function prettyJSONString(inputString) {
-	return JSON.stringify(JSON.parse(inputString), null, 2);
-}
+const { mspOrg1, walletPath } = require("../../config/blockchain.js");
 
 // NOTE: If you see  kind an error like these:
 /*
@@ -40,13 +35,14 @@ function prettyJSONString(inputString) {
 
 exports.registerUser = async (org1UserId) => {
 	try {
+    const { caClient, wallet } = require("../../index.js");
 		// in a real application this would be done only when a new user was required to be added
 		// and would be part of an administrative flow
 		await registerAndEnrollUser(caClient, wallet, mspOrg1, org1UserId, 'org1.department1');
-
+    return { userId: org1UserId, mspOrg: mspOrg1 };
 	} catch (error) {
-		console.error(`******** FAILED to authenticate: ${error}`);
-		process.exit(1);
+		console.error(`******** FAILED to register: ${error}`);
+		return error;
 	}
 };
 

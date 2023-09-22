@@ -4,12 +4,12 @@ const drugsController = require("../controllers/drugs.controller")
 
 router.get("/", drugsController.getAllDrugs);
 
-router.get("/:drugId", drugsController.getOneDrug);
+router.get("/:drugId", drugsController.getDrug);
 
-router.post("/", drugsController.createNewDrug);
+router.post("/", drugsController.createDrug);
 
-router.patch("/:drugId", drugsController.updateOneDrug);
+router.patch("/:drugId", drugsController.updateDrug);
 
-router.delete("/:drugId", drugsController.deleteOneDrug);
+router.delete("/:drugId", drugsController.deleteDrug);
 
 module.exports = router;

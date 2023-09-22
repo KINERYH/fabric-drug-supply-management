@@ -7,26 +7,26 @@ const getAllDrugs = async () => {
   return;
 };
 
-const getOneDrug = () => {
+const getDrug = () => {
   return;
 };
 
-const createNewDrug = () => {
+const createDrug = () => {
   return;
 };
 
-const updateOneDrug = () => {
+const updateDrug = () => {
   return;
 };
 
-const deleteOneDrug = () => {
+const deleteDrug = () => {
   return;
 };
 
 module.exports = {
   getAllDrugs,
-  getOneDrug,
-  createNewDrug,
-  updateOneDrug,
-  deleteOneDrug
+  getDrug,
+  createDrug,
+  updateDrug,
+  deleteDrug
 };
