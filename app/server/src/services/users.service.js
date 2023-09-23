@@ -9,7 +9,12 @@ const getUser = () => {
 };
 
 const createUser = async (userId) => {
-  return await auth.registerUser(userId);
+  try{ 
+    return await auth.registerUser(userId);
+  } catch(error) {
+    console.error(error);
+    throw Error(error);
+  }
 };
 
 const updateUser = () => {

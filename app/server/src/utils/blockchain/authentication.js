@@ -38,11 +38,10 @@ exports.registerUser = async (org1UserId) => {
     const { caClient, wallet } = require("../../index.js");
 		// in a real application this would be done only when a new user was required to be added
 		// and would be part of an administrative flow
-		await registerAndEnrollUser(caClient, wallet, mspOrg1, org1UserId, 'org1.department1');
-    return { userId: org1UserId, mspOrg: mspOrg1 };
+		return await registerAndEnrollUser(caClient, wallet, mspOrg1, org1UserId, 'org1.department1');
 	} catch (error) {
 		console.error(`******** FAILED to register: ${error}`);
-		return error;
+		throw Error(error);
 	}
 };
 

@@ -18,10 +18,10 @@ const createUser = async (req, res) => {
       message: "New user created.",
       data: createdUser
     });
-  } catch(e){
+  } catch(error){
     res.status(500).json({ 
       message: "User not created.",
-      error: e
+      error: error.message
     });
   }
 };
