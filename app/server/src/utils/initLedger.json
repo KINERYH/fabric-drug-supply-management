@@ -1,0 +1,27 @@
+{
+  "assets":{
+    "drugs":[
+      {
+        "ID": "asset1",
+        "Color": "blue",
+        "Size": 5,
+        "Owner": "Tomoko",
+        "AppraisedValue": 300
+      },
+      {
+        "ID": "asset2",
+        "Color": "red",
+        "Size": 5,
+        "Owner": "Brad",
+        "AppraisedValue": 400
+      }
+    ],
+    "prescriptions":[],
+    "orders":[]
+  },
+  "participants":{
+    "doctors":[],
+    "patients":[],
+    "nurses":[]
+  }
+}

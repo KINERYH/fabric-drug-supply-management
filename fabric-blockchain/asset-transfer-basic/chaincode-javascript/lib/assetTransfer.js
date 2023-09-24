@@ -13,60 +13,18 @@ const { Contract } = require('fabric-contract-api');
 
 class AssetTransfer extends Contract {
 
-    async InitLedger(ctx) {
-        const assets = [
-            {
-                ID: 'asset1',
-                Color: 'blue',
-                Size: 5,
-                Owner: 'Tomoko',
-                AppraisedValue: 300,
-            },
-            {
-                ID: 'asset2',
-                Color: 'red',
-                Size: 5,
-                Owner: 'Brad',
-                AppraisedValue: 400,
-            },
-            {
-                ID: 'asset3',
-                Color: 'green',
-                Size: 10,
-                Owner: 'Jin Soo',
-                AppraisedValue: 500,
-            },
-            {
-                ID: 'asset4',
-                Color: 'yellow',
-                Size: 10,
-                Owner: 'Max',
-                AppraisedValue: 600,
-            },
-            {
-                ID: 'asset5',
-                Color: 'black',
-                Size: 15,
-                Owner: 'Adriana',
-                AppraisedValue: 700,
-            },
-            {
-                ID: 'asset6',
-                Color: 'white',
-                Size: 15,
-                Owner: 'Michel',
-                AppraisedValue: 800,
-            },
-        ];
-
-        for (const asset of assets) {
-            asset.docType = 'asset';
-            // example of how to write to world state deterministically
-            // use convetion of alphabetic order
-            // we insert data in alphabetic order using 'json-stringify-deterministic' and 'sort-keys-recursive'
-            // when retrieving data, in any lang, the order of data will be the same and consequently also the corresonding hash
-            await ctx.stub.putState(asset.ID, Buffer.from(stringify(sortKeysRecursive(asset))));
-        }
+    async InitLedger(ctx, initState) {
+        initState = JSON.parse(initState);
+        await ctx.stub.putState('assets', Buffer.from(stringify(sortKeysRecursive(initState.assets))));
+        await ctx.stub.putState('participants', Buffer.from(stringify(sortKeysRecursive(initState.participants))));
+        // for (const asset of assets) {
+        //     asset.docType = 'asset';
+        //     // example of how to write to world state deterministically
+        //     // use convetion of alphabetic order
+        //     // we insert data in alphabetic order using 'json-stringify-deterministic' and 'sort-keys-recursive'
+        //     // when retrieving data, in any lang, the order of data will be the same and consequently also the corresonding hash
+        //     await ctx.stub.putState(asset.ID, Buffer.from(stringify(sortKeysRecursive(asset))));
+        // }
     }
 
     // CreateAsset issues a new asset to the world state with given details.
