@@ -4,10 +4,16 @@ const app = express();
 const drugsRouter = require("./routes/drugs.routes");
 const usersRouter = require("./routes/users.routes");
 const auth = require("./utils/blockchain/authentication");
+const { chaincodeName, channelName } = require("./config/blockchain");
+const ledger = require("./utils/blockchain/connection");
 
 async function main() {
   const { ccp, caClient, wallet } = await auth.setupBlockchainApplicationConfig();
   
+  if (process.env?.INIT_LEDGER){
+    await init_ledger(ccp, wallet, 'admin');
+  }
+
   app.get("/api", (req, res) => {
       res.json({ message: "Hello from server!" });
   });
@@ -33,3 +39,22 @@ main()
   .catch((error) => {
     console.error(`Failed to startup the server: ${error}`);
   });
+
+async function init_ledger(ccp, wallet, adminId) {
+  console.log('Inizializing the ledger ...');
+  
+  // Connect to the ledger
+  const { gateway, contract } = await ledger.connect(ccp, wallet, adminId, channelName, chaincodeName);
+  
+  // Initialize a set of asset data on the channel using the chaincode 'InitLedger' function.
+  // This type of transaction would only be run once by an application the first time it was started after it
+  // deployed the first time. Any updates to the chaincode deployed later would likely not need to run
+  // an "init" type function.
+  console.log('\n--> Submit Transaction: InitLedger, function creates the initial set of assets on the ledger');
+  await contract.submitTransaction('InitLedger');
+  console.log('*** Result: committed');
+
+  ledger.disconnect(gateway);
+  
+  console.log('Ledger inizialized ...');
+}

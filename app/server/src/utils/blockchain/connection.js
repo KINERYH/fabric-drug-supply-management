@@ -22,7 +22,7 @@ exports.connect = async (ccp, wallet, org1UserId, channelName, chaincodeName) =>
   // Get the contract from the network.
   const contract = network.getContract(chaincodeName);
 
-  return contract
+  return { gateway, contract };
 };
 
 exports.disconnect = (gateway) => {
