@@ -6,9 +6,9 @@ const getAllDrugs = (req, res) => {
   res.json({ status: "OK", data: allDrugs });
 };
 
-const getDrug = (req, res) => {
-  const drug = drugsService.getDrug();
-  res.json({ message: "Get an existing drug: " + req.params.drugId });
+const getDrug = async (req, res) => {
+  const drug = await drugsService.getDrug(req.params.drugId);
+  res.json({ message: "Get an existing drug: " + drug });
 };
 
 const createDrug = (req, res) => {
