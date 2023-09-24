@@ -1,9 +1,12 @@
 const drugsService = require("../services/drugs.service")
 
-
-const getAllDrugs = (req, res) => {
-  const allDrugs = drugsService.getAllDrugs();
-  res.json({ status: "OK", data: allDrugs });
+const getAllDrugs = async (req, res) => {
+  try {
+    const allDrugs = await drugsService.getAllDrugs();
+    res.json({ status: "OK", data: allDrugs });
+  } catch (error) {
+    res.status(500).json({ status: "Error", message: error.message });
+  }
 };
 
 const getDrug = async (req, res) => {

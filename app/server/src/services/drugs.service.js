@@ -9,13 +9,18 @@ function prettyJSONString(inputString) {
 };
 
 const getAllDrugs = async () => {
-  // Let's try a query type operation (function).
-  // This will be sent to just one peer and the results will be shown.
+  // If I remove this requirement from here and put it at the beginning of the script i get an error
+  const { ccp, wallet } = require("../index"); 
+  const { contract } = await ledger.connect(ccp, wallet, 'admin', channelName, chaincodeName);
   console.log('\n--> Evaluate Transaction: GetAllAssets, function returns all the current assets on the ledger');
   const result = await contract.evaluateTransaction('GetAllAssets');
-  console.log(`*** Result: ${prettyJSONString(result.toString())}`);
-  return;
+  const data = JSON.parse(result.toString());
+  // const drugs = data.assets.drugs; // Cannot read properties of undefined (reading 'drugs')
+  const drugs = data[0].drugs;
+  console.log("*** Drugs:", JSON.stringify(drugs, null, 2));
+  return drugs;
 };
+
 
 const getDrug = async (drugId) => {
   const { ccp, wallet } = require("../index");
