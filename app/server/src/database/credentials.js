@@ -1,6 +1,6 @@
 const db = require("./db.json");
-const uuid = require("uuid");
 const passport = require("passport");
+const { v4: uuidv4 } = require('uuid');
 const LocalStrategy = require("passport-local");
 const crypto = require("crypto");
 const fs = require("fs");
@@ -20,7 +20,7 @@ const registerUser = async (user) => {
     if (userId) {
       throw Error("User already exists.");
     }
-    const uuid = uuid.v1();
+    const uuid =  uuidv4();
     const newUser = {"username": user.username, "password": user.password, "role": "patient", "uuid": uuid};
     db.users.push(newUser);
     fs.writeFileSync("./src/database/db.json", JSON.stringify(db));
