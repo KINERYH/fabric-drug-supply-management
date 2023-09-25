@@ -13,13 +13,13 @@ const getUser = (req, res) => {
 
 const createUser = async (req, res) => {
   try{
-    const createdUser = await usersService.createUser(req.body.name);
-    res.status(201).json({ 
+    const createdUser = await usersService.createUser(req.body);
+    res.status(201).json({
       message: "New user created.",
       data: createdUser
     });
   } catch(error){
-    res.status(500).json({ 
+    res.status(500).json({
       message: "User not created.",
       error: error.message
     });
