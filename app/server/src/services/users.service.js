@@ -3,6 +3,7 @@ const creds = require("../database/credentials");
 const db = require("../database/db.json");
 const fs = require("fs");
 const path = require('path');
+const { v4: uuidv4 } = require('uuid');
 
 
 const getAllUsers = async () => {
@@ -31,11 +32,37 @@ const getUser = async (username) => {
 
 }
 
-const createUser = async (user) => {
+const loginUser = async (user) => {
   try{
-    return await creds.registerUser(user);
-  } catch(error) {
-    console.error(error);
+    const userId = await db.users.find((u) => u.username === user.username);
+    if (!userId) {
+      throw Error("User " + user.username + " does not exist.");
+    }
+    const password = await db.users.find((u) => u.password === user.password);
+    if (!password) {
+      throw Error("Wrong password.");
+    }
+
+  } catch(error){
+    console.error('Failed to login user: ' + user.username);
+    throw Error(error);
+  }
+};
+
+
+const createUser = async (user) => {
+  try{ const userId = await db.users.find((u) => u.username === user.username);
+    if (userId) {
+      throw Error("User already exists.");
+    }
+    const uuid =  uuidv4();
+    const newUser = {"username": user.username, "password": user.password, "role": "patient", "uuid": uuid};
+    db.users.push(newUser);
+    fs.writeFileSync("./src/database/db.json", JSON.stringify(db));
+    return await auth.registerUser(uuid);
+  }
+  catch(error){
+    console.error('Failed to register user: ' + user.username);
     throw Error(error);
   }
 };
@@ -53,5 +80,6 @@ module.exports = {
   getUser,
   createUser,
   updateUser,
-  deleteUser
+  deleteUser,
+  loginUser
 };
