@@ -6,9 +6,18 @@ const getAllUsers = (req, res) => {
   res.json({ status: "OK", data: allUsers });
 };
 
-const getUser = (req, res) => {
-  const user = usersService.getUser();
-  res.json({ message: "Get an existing user: " + req.params.userId });
+const getUser = async (req, res) => {
+  try{const user = await usersService.getUser(req.params.userId);
+    res.status(200).json({
+      message: "Get an existing user: ",
+      data: user});
+  } catch(error){
+    res.status(500).json({
+      message: "User not found.",
+      error: error.message
+    });
+  }
+
 };
 
 const createUser = async (req, res) => {

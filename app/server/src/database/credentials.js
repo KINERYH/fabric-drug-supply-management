@@ -11,11 +11,7 @@ const getAllUsers = () => {
   // TODO: implementare la lettura da blockchain
 };
 
-const getUser = (userID) => {
-
-}
 const registerUser = async (user) => {
-  console.log("User name: " + user.username);
   try{ const userId = await db.users.find((u) => u.username === user.username);
     if (userId) {
       throw Error("User already exists.");
