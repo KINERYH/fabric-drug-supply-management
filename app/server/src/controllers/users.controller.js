@@ -7,7 +7,8 @@ const getAllUsers = (req, res) => {
 };
 
 const getUser = async (req, res) => {
-  try{const user = await usersService.getUser(req);
+  try{
+    const user = await usersService.getUser(req.params.userId);
     res.status(200).json({
       message: "Get an existing user: ",
       data: user});
@@ -17,7 +18,6 @@ const getUser = async (req, res) => {
       error: error.message
     });
   }
-
 };
 
 const createUser = async (req, res) => {

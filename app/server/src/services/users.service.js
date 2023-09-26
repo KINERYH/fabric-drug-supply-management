@@ -1,6 +1,5 @@
 const auth = require("../utils/blockchain/authentication");
-const creds = require("../database/credentials");
-const db = require("../database/db.json");
+const db = require('../database/db.json');
 const fs = require("fs");
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
@@ -26,7 +25,7 @@ const getUser = async (username) => {
     console.log(`\n--> User info correctly retrieved`);
     return  user_info;
   } catch(error){
-    console.error('Failed to get user: ' + username);
+    console.error('Failed to get user: ' + username + '\n' + error);
     throw Error(error);
   }
 
@@ -44,14 +43,15 @@ const loginUser = async (user) => {
     }
 
   } catch(error){
-    console.error('Failed to login user: ' + user.username);
+    console.error('Failed to login user: ' + user.username + '\n' + error);
     throw Error(error);
   }
 };
 
 
 const createUser = async (user) => {
-  try{ const userId = await db.users.find((u) => u.username === user.username);
+  try{ 
+    const userId = await db.users.find((u) => u.username === user.username);
     if (userId) {
       throw Error("User already exists.");
     }

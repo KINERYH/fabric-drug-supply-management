@@ -2,7 +2,6 @@
 
 const ledger = require("../utils/blockchain/connection");
 const { chaincodeName, channelName } = require("../config/blockchain");
-const jsonpath = require('jsonpath');
 
 function prettyJSONString(inputString) {
 	return JSON.stringify(JSON.parse(inputString), null, 2);
@@ -11,7 +10,9 @@ function prettyJSONString(inputString) {
 const getAllDrugs = async () => {
   // If I remove this requirement from here and put it at the beginning of the script i get an error
   const { ccp, wallet } = require("../index"); 
+  //TODO la connection non dovrebbe stare qui, deve essere collegate alla sessione utente
   const { contract } = await ledger.connect(ccp, wallet, 'admin', channelName, chaincodeName);
+
   console.log('\n--> Evaluate Transaction: GetAllAssets, function returns all the current assets on the ledger');
   const result = await contract.evaluateTransaction('GetAllAssets');
   const data = JSON.parse(result.toString());
@@ -24,7 +25,6 @@ const getAllDrugs = async () => {
 
 const getDrug = async (drugId) => {
   const { ccp, wallet } = require("../index");
-
   //TODO la connection non dovrebbe stare qui, deve essere collegate alla sessione utente
   const { contract } = await ledger.connect(ccp, wallet, 'admin', channelName, chaincodeName);
   
@@ -32,9 +32,8 @@ const getDrug = async (drugId) => {
   let assets = await contract.evaluateTransaction('ReadAsset', 'assets');
   console.log(`*** Result: ${prettyJSONString(assets.toString())}`);
   assets = JSON.parse(assets.toString());
-  const drug = jsonpath.query(assets, `$.drugs[?(@.ID == '${drugId}')]`);
-  console.log(drug);
-  return drug.toString();
+  const drug = await assets.drugs.find((a) => a.ID == drugId) || {};
+  return drug;
 };
 
 const createDrug = () => {
