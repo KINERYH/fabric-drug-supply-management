@@ -1,4 +1,5 @@
 const express = require("express");
+const path = require("path");
 const PORT = process.env.PORT || 3001;
 const app = express();
 const drugsRouter = require("./routes/drugs.routes");
@@ -14,6 +15,14 @@ async function main() {
     await init_ledger(ccp, wallet, 'admin');
   }
 
+  // Serves React frontend static files from 'build' directory
+  app.use(express.static(path.join(__dirname, "../../client/build")));
+
+  
+  app.get("/", (req, res) => {
+    res.sendFile(path.join(__dirname, "../../client/build", "index.html"));
+  });
+  
   app.get("/api", (req, res) => {
       res.json({ message: "Hello from server!" });
   });
