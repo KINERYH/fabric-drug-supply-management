@@ -1,13 +1,15 @@
 {
-  "assets":{
     "drugs":[
       {
         "ID": "asset1",
-        "Color": "blue",
-        "Size": 5,
-        "Owner": "Tomoko",
-        "AppraisedValue": 300
-      },
+        "Name": "drug1",
+        "Description": "drug1",
+        "Price": 100,
+        "Manufacturer": "manufacturer1",
+        "ExpirationDate": "2018-12-31T23:59:59.000Z",
+        "Composition": ["element1", "element2"],
+        "ManufactureDate": "2018-12-31T23:59:59.000Z",
+        "UOM": "mg"      },
       {
         "ID": "asset2",
         "Color": "red",
@@ -16,12 +18,27 @@
         "AppraisedValue": 400
       }
     ],
-    "prescriptions":[],
-    "orders":[]
-  },
-  "participants":{
+    "prescriptions":[
+      { "ID": "prescription1",
+        "DoctorID": "doctor1",
+        "PatientID": "patient1",
+        "DrugID": null,
+        "Quantity": 5,
+        "Status": "pending",
+        "Comments": "comment1"
+
+      },
+      { "ID": "prescription1",
+        "DoctorID": "doctor1",
+        "PatientID": "patient1",
+        "DrugID": "drug1",
+        "Quantity": 5,
+        "Status": "pending",
+        "Comments": "comment1"
+
+      }
+    ],
     "doctors":[],
     "patients":[],
-    "nurses":[]
-  }
+
 }
