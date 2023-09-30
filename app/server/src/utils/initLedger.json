@@ -1,44 +1,97 @@
 {
-    "drugs":[
-      {
-        "ID": "asset1",
-        "Name": "drug1",
-        "Description": "drug1",
-        "Price": 100,
-        "Manufacturer": "manufacturer1",
-        "ExpirationDate": "2018-12-31T23:59:59.000Z",
-        "Composition": ["element1", "element2"],
-        "ManufactureDate": "2018-12-31T23:59:59.000Z",
-        "UOM": "mg"      },
-      {
-        "ID": "asset2",
-        "Color": "red",
-        "Size": 5,
-        "Owner": "Brad",
-        "AppraisedValue": 400
-      }
-    ],
-    "prescriptions":[
-      { "ID": "prescription1",
-        "DoctorID": "doctor1",
-        "PatientID": "patient1",
-        "DrugID": null,
-        "Quantity": 5,
-        "Status": "pending",
-        "Comments": "comment1"
-
-      },
-      { "ID": "prescription1",
-        "DoctorID": "doctor1",
-        "PatientID": "patient1",
-        "DrugID": "drug1",
-        "Quantity": 5,
-        "Status": "pending",
-        "Comments": "comment1"
-
-      }
-    ],
-    "doctors":[],
-    "patients":[],
-
+  "drugs": [
+    {
+      "ID": "ec110aef-28ce-4d1b-a008-840e40390328",
+      "Name": "drug1",
+      "Description": "drug1",
+      "Price": 100,
+      "Manufacturer": "manufacturer1",
+      "ExpirationDate": "2018-12-31T23:59:59.000Z",
+      "Composition": [
+        "element1",
+        "element2"
+      ],
+      "ManufactureDate": "2018-12-31T23:59:59.000Z",
+      "UOM": "mg"
+    }
+  ],
+  "prescriptions": [
+    {
+      "ID": "6918bcdb-bf53-4a88-9f11-986b52a72fc4",
+      "DoctorID": "94ae7246-40c6-40fa-8d5a-fcc34d0edbca",
+      "PatientID": "patient1",
+      "DrugIDs": [null, null],
+      "Status": "pending",
+      "Description": "Due supposte grosse per il culo"
+    },
+    {
+      "ID": "94ae7246-40c6-40fa-8d5a-fcc34d0edbca",
+      "DoctorID": "doctor1",
+      "PatientID": "patient1",
+      "DrugID": "drug1",
+      "Quantity": 5,
+      "Status": "pending",
+      "Comments": "comment1"
+    }
+  ],
+  "orders": [
+    {
+      "ID": "94ae7246-40c6-40fa-8d5a-fcc34d0edbca",
+      "PharmacyID": "pharmacy1",
+      "DrugID": [null, null],
+      "Name": "Tachipirina",
+      "Status": "pending",
+      "Description": "si richiedono 10 scatole di tachipirina"
+    }
+  ],
+  "doctors": [
+    {
+      "ID": "94ae7246-40c6-40fa-8d5a-fcc34d0edbca",
+      "Name": "doctor1",
+      "Specialization": "Neonatologia",
+      "Hospital": "Ospedale di Venere"
+    },
+    {
+      "ID": "94ae7246-40c6-40fa-8d5a-fcc34d0edbcb",
+      "Name": "doctor2",
+      "Specialization": "Cardiologia",
+      "Hospital": "Ospedale San Paolo"
+    }
+  ],
+  "patients": [
+    {
+      "ID": "94ae7246-40c6-40fa-8d5a-fcc34d0edbca",
+      "Name": "Pietro",
+      "Surname": "Ventrella",
+      "BirthDate": "1995-12-31",
+      "Address": "address1",
+      "Allergies": [
+        "allergy1",
+        "allergy2"
+      ],
+      "Weight": 87,
+      "Height": 190,
+      "MedicalHistory": [
+        "Asthma",
+        "Diabetes"
+      ]
+    }
+  ],
+  "pharmacies": [
+    {
+      "ID": "94ae7246-40c6-40fa-8d5a-fcc34d0edbca",
+      "Name": "pharmacy1",
+      "Address": "address1",
+      "DrugStorage": [
+        "ec110aef-28ce-4d1b-a008-840e40390328",
+        "ec110aef-28ce-4d1b-a008-840e40390329"
+      ]
+    }
+  ],
+  "manufacturer": [
+    {"ID": "94ae7246-40c6-40fa-8d5a-fcc34d0edbca",
+    "Name": "manufacturer1",
+    "Address": "address1"
+  }
+  ]
 }
