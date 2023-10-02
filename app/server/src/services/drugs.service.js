@@ -16,8 +16,7 @@ const getAllDrugs = async () => {
   console.log('\n--> Evaluate Transaction: GetAllAssets, function returns all the current assets on the ledger');
   const result = await contract.evaluateTransaction('GetAllAssets');
   const data = JSON.parse(result.toString());
-  // const drugs = data.drugs; // Cannot read properties of undefined (reading 'drugs')
-  const drugs = data[1];
+  const drugs = data.drugs;
   console.log("*** Drugs:", JSON.stringify(drugs, null, 2));
   return drugs;
 };

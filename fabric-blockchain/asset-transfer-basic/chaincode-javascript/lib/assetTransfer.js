@@ -14,7 +14,6 @@ const { Contract } = require('fabric-contract-api');
 class AssetTransfer extends Contract {
 
     async InitLedger(ctx, initState) {
-        // TODO: non posso ancora accedere al risultato come se fosse un array associativo
         initState = JSON.parse(initState);
         await ctx.stub.putState('drugs', Buffer.from(stringify(sortKeysRecursive(initState.drugs))));
         await ctx.stub.putState('prescriptions', Buffer.from(stringify(sortKeysRecursive(initState.prescriptions))));
@@ -108,73 +107,39 @@ class AssetTransfer extends Contract {
 
     // GetAllAssets returns all assets found in the world state.
     async GetAllAssets(ctx) {
-        const allResults = [];
-        // range query with empty string for startKey and endKey does an open-ended query of all assets in the chaincode namespace.
+        const stateData = {}; 
         const iterator = await ctx.stub.getStateByRange('', '');
-        let result = await iterator.next();
+        let result = await iterator.next(); 
+    
         while (!result.done) {
             const strValue = Buffer.from(result.value.value.toString()).toString('utf8');
             let record;
             try {
-                record = JSON.parse(strValue);
+                record = JSON.parse(strValue); 
             } catch (err) {
                 console.log(err);
                 record = strValue;
             }
-            allResults.push(record);
+    
+            // Extract the data type from the key.
+            const key = result.value.key.toString('utf8');
+            const dataType = key.split(':')[0];
+    
+            // If the data type doesn't exist in the stateData object, initialize it as an empty array.
+            if (!stateData[dataType]) {
+                stateData[dataType] = [];
+            }
+    
+            // Add the record to the corresponding array.
+            stateData[dataType].push(record);
+    
             result = await iterator.next();
         }
-        return JSON.stringify(allResults);
+    
+        return JSON.stringify(stateData);
     }
-
-    // GetAllAssets returns all assets found in the world state.
-    // async GetAllAssets(ctx) {
-    //     const allResults = {
-    //         drugs: [],
-    //         prescriptions: [],
-    //         orders: [],
-    //         doctors: [],
-    //         patients: [],
-    //         pharmacies: [],
-    //         manufacturer: []
-    //     };
     
-    //     const iterator = await ctx.stub.getStateByRange('', '');
     
-    //     let result = await iterator.next();
-    
-    //     while (!result.done) {
-    //         const strValue = Buffer.from(result.value.value.toString()).toString('utf8');
-    //         let record;
-    //         try {
-    //             record = JSON.parse(strValue);
-    //         } catch (err) {
-    //             console.log(err);
-    //             record = strValue;
-    //         }
-    
-    //         // Determinare il tipo di record in base alla sua struttura
-    //         if (record.hasOwnProperty('drugs')) {
-    //             allResults.drugs.push(record.drugs);
-    //         } else if (record.hasOwnProperty('prescriptions')) {
-    //             allResults.prescriptions.push(record.prescriptions);
-    //         } else if (record.hasOwnProperty('orders')) {
-    //             allResults.orders.push(record.orders);
-    //         } else if (record.hasOwnProperty('doctors')) {
-    //             allResults.doctors.push(record.doctors);
-    //         } else if (record.hasOwnProperty('patients')) {
-    //             allResults.patients.push(record.patients);
-    //         } else if (record.hasOwnProperty('pharmacies')) {
-    //             allResults.pharmacies.push(record.pharmacies);
-    //         } else if (record.hasOwnProperty('manufacturer')) {
-    //             allResults.manufacturer.push(record.manufacturer);
-    //         }
-    
-    //         result = await iterator.next();
-    //     }
-    
-    //     return JSON.stringify(allResults);
-    // }
     
 }
 
