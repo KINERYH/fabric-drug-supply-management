@@ -7,8 +7,8 @@
 'use strict';
 
 const assetTransfer = require('./lib/assetTransfer');
-const docContract = require('./lib/docContract');
+const doctorContract = require('./lib/doctorContract');
 
 module.exports.AssetTransfer = assetTransfer;
-module.exports.contracts = [assetTransfer, docContract];
-module.exports.DocContract = docContract;
+module.exports.DoctorContract = doctorContract;
+module.exports.contracts = [assetTransfer, doctorContract];

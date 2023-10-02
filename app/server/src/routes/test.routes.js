@@ -20,11 +20,11 @@ router.get("/", async (req, res) => {
 router.get("/patients", async (req, res) => {
   const { ccp, wallet } = require("../index");
   // creo il contratto indicando il contratto docContract
-  const { contract } = await ledger.connect(ccp, wallet, 'admin', channelName, chaincodeName, 'DocContract');
+  const { contract } = await ledger.connect(ccp, wallet, 'admin', channelName, chaincodeName, 'DoctorContract');
   const result = await contract.evaluateTransaction('GetAllPatients');
   const patients = JSON.parse(result.toString());
   console.log('*** Patients:', JSON.stringify(patients, null, 2));
-  
+  res.json({ status: "OK", data: patients });
 });
 
 module.exports = router;
