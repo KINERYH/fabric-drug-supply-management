@@ -4,6 +4,7 @@ const PORT = process.env.PORT || 3001;
 const app = express();
 const drugsRouter = require("./routes/drugs.routes");
 const usersRouter = require("./routes/users.routes");
+const testRouter = require("./routes/test.routes");
 const auth = require("./utils/blockchain/authentication");
 const { chaincodeName, channelName } = require("./config/blockchain");
 const ledger = require("./utils/blockchain/connection");
@@ -30,6 +31,7 @@ async function main() {
   app.use(express.json());
   app.use("/api/drugs", drugsRouter);
   app.use("/api/users", usersRouter);
+  app.use("/api/test", testRouter);
   
   app.listen(PORT, () => {
     console.log(`Server listening on ${PORT}`);
