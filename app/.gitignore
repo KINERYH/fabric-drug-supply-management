@@ -5,3 +5,5 @@ build
 package-lock.json
 # Ignore wallet
 wallet
+# Ignore REST API
+request.rest
