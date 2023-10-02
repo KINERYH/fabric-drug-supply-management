@@ -17,8 +17,5 @@ Content-Type: "application/json"
 }
 
 ###
-GET http://localhost:3001/api/test
-
-###
-GET http://localhost:3001/api/test/patients
-
+GET http://localhost:3001/api/users/Pietro
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlBpZXRybyIsInBhc3N3b3JkIjoicHJvdmEiLCJpYXQiOjE2OTYxODI3NTQsImV4cCI6MTY5NjE4NjM1NH0.WIgmoreoc_q_RuRGWT0gt5TLyvOascm7uqMufv9sOCE

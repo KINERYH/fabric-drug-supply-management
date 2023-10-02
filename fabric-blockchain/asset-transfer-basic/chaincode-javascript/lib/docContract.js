@@ -4,16 +4,16 @@ const stringify  = require('json-stringify-deterministic');
 const sortKeysRecursive  = require('sort-keys-recursive');
 const { Contract } = require('fabric-contract-api');
 
-class DocContract extends Contract {
+class DoctorContract extends Contract {
 
   async getAllPatients(ctx) {
     const allPatients = await ctx.stub.getState('patients');
-    return allPatients;
+    return allPatients.toString();
   }
 
   async getPatient(ctx, cf) {
-    const patients = await ctx.stub.getState('patients');
-
+    const patient = await ctx.stub.getState('patients');
+    
     return patient.toString();
   }
 
@@ -24,5 +24,3 @@ class DocContract extends Contract {
 
 
 }
-
-module.exports = DocContract;

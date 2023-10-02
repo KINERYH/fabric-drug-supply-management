@@ -1,7 +1,7 @@
 const { Gateway, Wallets } = require('fabric-network');
 
 //TODO: aggiunta possibilità di indigare un contratto, in realtà questo potrebbe essere indicato nella variabile orgUserID
-exports.connect = async (ccp, wallet, org1UserId, channelName, chaincodeName, contractName = 'AssetTransfer') => {
+exports.connect = async (ccp, wallet, org1UserId, channelName, chaincodeName) => {
   // Create a new gateway instance for interacting with the fabric network.
   // In a real application this would be done as the backend server session is setup for
   // a user that has been verified.
@@ -19,12 +19,10 @@ exports.connect = async (ccp, wallet, org1UserId, channelName, chaincodeName, co
 
   // Build a network instance based on the channel where the smart contract is deployed
   const network = await gateway.getNetwork(channelName);
-  console.log(`Connected to the Fabric Network: ${channelName} `);
-
-
 
   // Get the contract from the network.
-  const contract = await network.getContract(chaincodeName, contractName);
+  const contract = network.getContract(chaincodeName);
+
   return { gateway, contract };
 };
 
