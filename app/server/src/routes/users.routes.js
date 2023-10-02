@@ -1,10 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const usersController = require("../controllers/users.controller")
+const authMiddleware = require("../middlewares/auth.middleware");
+
 
 router.get("/", usersController.getAllUsers);
-
-router.get("/:userId", usersController.getUser);
+// TODO: modificare, usata ora solamente per testare se il token funziona (vd. service)
+router.get("/:username", authMiddleware.authenticateToken, usersController.getUser);
 
 router.post("/", usersController.createUser);
 

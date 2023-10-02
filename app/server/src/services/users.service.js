@@ -3,6 +3,8 @@ const db = require('../database/db.json');
 const fs = require("fs");
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
+const bcrypt = require("bcrypt");
+
 
 
 const getAllUsers = async () => {
@@ -16,11 +18,10 @@ const getUser = async (username) => {
       throw Error("User " + username + " does not exist.");
     }
     const uuid = user.uuid;
-    // TODO: correggi path
-    const wallet = fs.readdirSync(path.resolve(__dirname, '../config/wallet')).find((w) => w.includes(uuid));
-    if (!wallet) {
-      throw Error("Wallet not found.");
-    }
+    //const wallet = fs.readdirSync(path.resolve(__dirname, '../config/wallet')).find((w) => w.includes(uuid));
+    //if (!wallet) {
+    //  throw Error("Wallet not found.");
+    //}
     const user_info = {"username": user.username, "role": user.role, "UUID": user.uuid};
     console.log(`\n--> User info correctly retrieved`);
     return  user_info;
@@ -37,8 +38,7 @@ const loginUser = async (user) => {
     if (!userId) {
       throw Error("User " + user.username + " does not exist.");
     }
-    const password = await db.users.find((u) => u.password === user.password);
-    if (!password) {
+    if (await !(bcrypt.compare(user.password, userId.password))){
       throw Error("Wrong password.");
     }
 
@@ -50,7 +50,14 @@ const loginUser = async (user) => {
 
 
 const createUser = async (user) => {
-  try{ 
+  try{
+    if (!user.username) {
+      throw Error("Missing username.");
+    }
+    if (!user.password) {
+      throw Error("Missing password.");
+    }
+
     const userId = await db.users.find((u) => u.username === user.username);
     if (userId) {
       throw Error("User already exists.");
@@ -59,10 +66,13 @@ const createUser = async (user) => {
     const newUser = {"username": user.username, "password": user.password, "role": "patient", "uuid": uuid};
     db.users.push(newUser);
     fs.writeFileSync("./src/database/db.json", JSON.stringify(db));
-    return await auth.registerUser(uuid);
+    // TODO: cerca di capire perché la funzione da errore
+    // return await auth.registerUser(uuid);
+    return newUser;
   }
   catch(error){
     console.error('Failed to register user: ' + user.username);
+    delete db.users[db.users.indexOf(uuid)];
     throw Error(error);
   }
 };

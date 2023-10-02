@@ -22,16 +22,20 @@
       "PatientID": "patient1",
       "DrugIDs": [null, null],
       "Status": "pending",
-      "Description": "Due supposte grosse per il culo"
+      "Description": "Due supposte grosse per il culo",
+      "Drugs":{
+        "Name": "drug1",
+        "Quantity": 10
+      }
+
     },
     {
       "ID": "94ae7246-40c6-40fa-8d5a-fcc34d0edbca",
       "DoctorID": "doctor1",
       "PatientID": "patient1",
       "DrugID": "drug1",
-      "Quantity": 5,
       "Status": "pending",
-      "Comments": "comment1"
+      "Description": "comment1"
     }
   ],
   "orders": [
@@ -39,9 +43,12 @@
       "ID": "94ae7246-40c6-40fa-8d5a-fcc34d0edbca",
       "PharmacyID": "pharmacy1",
       "DrugID": [null, null],
-      "Name": "Tachipirina",
       "Status": "pending",
-      "Description": "si richiedono 10 scatole di tachipirina"
+      "Description": "si richiedono 10 scatole di tachipirina",
+      "Drugs":{
+        "Name": "drug1",
+        "Quantity": 10
+      }
     }
   ],
   "doctors": [
