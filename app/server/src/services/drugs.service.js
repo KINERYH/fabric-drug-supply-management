@@ -3,13 +3,14 @@
 const ledger = require("../utils/blockchain/connection");
 const { chaincodeName, channelName } = require("../config/blockchain");
 
+
 function prettyJSONString(inputString) {
 	return JSON.stringify(JSON.parse(inputString), null, 2);
 };
 
 const getAllDrugs = async () => {
   // If I remove this requirement from here and put it at the beginning of the script i get an error
-  const { ccp, wallet } = require("../index"); 
+  const { ccp, wallet } = require("../index");
   //TODO la connection non dovrebbe stare qui, deve essere collegate alla sessione utente
   const { contract } = await ledger.connect(ccp, wallet, 'admin', channelName, chaincodeName);
 
@@ -26,7 +27,7 @@ const getDrug = async (drugId) => {
   const { ccp, wallet } = require("../index");
   //TODO la connection non dovrebbe stare qui, deve essere collegate alla sessione utente
   const { contract } = await ledger.connect(ccp, wallet, 'admin', channelName, chaincodeName);
-  
+
   console.log(`\n--> Evaluate Transaction: ReadAsset, function returns assets or participants list`);
   let assets = await contract.evaluateTransaction('ReadAsset', 'assets');
   console.log(`*** Result: ${prettyJSONString(assets.toString())}`);

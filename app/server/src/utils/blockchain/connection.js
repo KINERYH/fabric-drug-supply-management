@@ -1,5 +1,6 @@
 const { Gateway, Wallets } = require('fabric-network');
 
+//TODO: aggiunta possibilità di indigare un contratto, in realtà questo potrebbe essere indicato nella variabile orgUserID
 exports.connect = async (ccp, wallet, org1UserId, channelName, chaincodeName) => {
   // Create a new gateway instance for interacting with the fabric network.
   // In a real application this would be done as the backend server session is setup for
