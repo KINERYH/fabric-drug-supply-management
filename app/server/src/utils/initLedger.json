@@ -68,6 +68,7 @@
   "patients": [
     {
       "ID": "94ae7246-40c6-40fa-8d5a-fcc34d0edbca",
+      "Codice Fiscale": "VNTPLA95T31L219K",
       "Name": "Pietro",
       "Surname": "Ventrella",
       "BirthDate": "1995-12-31",
