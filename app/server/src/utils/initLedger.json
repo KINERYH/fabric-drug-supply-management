@@ -23,10 +23,10 @@
       "DrugIDs": [null, null],
       "Status": "pending",
       "Description": "Due supposte grosse per il culo",
-      "Drugs":{
+      "Drugs":[{
         "Name": "drug1",
         "Quantity": 10
-      }
+      }]
 
     },
     {
@@ -45,10 +45,10 @@
       "DrugID": [null, null],
       "Status": "pending",
       "Description": "si richiedono 10 scatole di tachipirina",
-      "Drugs":{
+      "Drugs":[{
         "Name": "drug1",
         "Quantity": 10
-      }
+      }]
     }
   ],
   "doctors": [

@@ -8,7 +8,9 @@
 
 const assetTransfer = require('./lib/assetTransfer');
 const doctorContract = require('./lib/doctorContract');
+const pharmacyContract = require('./lib/pharmacyContract');
 
 module.exports.AssetTransfer = assetTransfer;
 module.exports.DoctorContract = doctorContract;
-module.exports.contracts = [assetTransfer, doctorContract];
+module.exports.PharmacyContract = pharmacyContract;
+module.exports.contracts = [assetTransfer, doctorContract, pharmacyContract];

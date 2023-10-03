@@ -122,8 +122,9 @@ class AssetTransfer extends Contract {
             }
     
             // Extract the data type from the key.
+            // Ex: result.value.key => "drugs:ec110aef-28ce-4d1b-a008-840e40390328"
             const key = result.value.key.toString('utf8');
-            const dataType = key.split(':')[0];
+            const dataType = key.split(':')[0]; // dataType = "drugs"
     
             // If the data type doesn't exist in the stateData object, initialize it as an empty array.
             if (!stateData[dataType]) {
