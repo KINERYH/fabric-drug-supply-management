@@ -6,13 +6,11 @@ const { Contract } = require('fabric-contract-api');
 
 class PharmacyContract extends Contract {
 
-	// TODO: Do I need the constructor?
-
 	/**
 	 * 
 	 * @param {*} ctx 
 	 * @param {*} id = pharmacy id
-	 * @returns list of all the IDs of the drugs in the pharmacy
+	 * @returns a list of all the IDs of the drugs in the pharmacy
 	 */
 	async GetPharmacyStorage(ctx, id) {
 		const serializedPharmacies = await ctx.stub.getState("pharmacies"); 
@@ -25,22 +23,55 @@ class PharmacyContract extends Contract {
 
 	}
 
+	async getDrugName(ctx, drugId) {
+		const drugs = await ctx.stub.getState("drugs");
+		if (!drugs || drugs.length === 0) {
+			throw new Error(`Drugs not found`);
+		}
+		const drugsList = JSON.parse(drugs.toString());
+		const drug = drugsList.find((d) => d.ID === drugId);
+  		if (!drug) {
+    		throw new Error(`Drug with ID ${drugId} not found`);
+  		}
+  		return drug.Name;
+	}
+
 
 	/**
 	 * 
 	 * @param {*} ctx 
 	 * @param {String} id = user id
-	 * @returns list of all the drugs in the pharmacy with their quantities
+	 * @returns JSON list of all the drugs in the pharmacy with their quantities
 	 */
 	async GetAllDrugs(ctx, id) {
 
 		const drugsListID = await this.GetPharmacyStorage(ctx, id);
 
-		// The idea is to populate an hash map {name, quantity} by looking at all the drug IDs 
-		// and then to return them as a JSON
-		
-		// const  = new Map();
+		const drugsMap = new Map();
 
+		for(const drugId of drugsListID){
+			let drugName = await this.getDrugName(ctx, drugId);
+			if(drugsMap.has(drugName)){
+				drugsMap.set(drugName, drugsMap.get(drugName) + 1);
+			} else {
+				drugsMap.set(drugName, 1);
+			}
+		}
+
+		// // Convert drugsMap to an array of objects [{drugName: quantity}]
+		// const drugsArray = Array.from(drugsMap.entries()).map(([drugName, quantity]) => ({
+		// [drugName]: quantity,
+		// }));
+	
+		// return JSON.stringify(drugsArray);
+
+		// Convert drugsMap to an array of objects with "drugName" and "quantity" properties
+		const drugsArray = Array.from(drugsMap.entries()).map(([drugName, quantity]) => ({
+		drugName: drugName,
+		quantity: quantity,
+		}));
+	
+		return drugsArray;
 	}
 
 }

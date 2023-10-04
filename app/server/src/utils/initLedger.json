@@ -1,8 +1,22 @@
 {
   "drugs": [
     {
-      "ID": "ec110aef-28ce-4d1b-a008-840e40390328",
+      "ID": "ec110aef-28ce-4d1b-a008-840e40390328", 
       "Name": "drug1",
+      "Description": "drug1",
+      "Price": 100,
+      "Manufacturer": "manufacturer1",
+      "ExpirationDate": "2018-12-31T23:59:59.000Z",
+      "Composition": [
+        "element1",
+        "element2"
+      ],
+      "ManufactureDate": "2018-12-31T23:59:59.000Z",
+      "UOM": "mg"
+    },
+    {
+      "ID": "ec110aef-28ce-4d1b-a008-840e40390329",
+      "Name": "drug2",
       "Description": "drug1",
       "Price": 100,
       "Manufacturer": "manufacturer1",
