@@ -32,6 +32,7 @@
   "prescriptions": [
     {
       "ID": "6918bcdb-bf53-4a88-9f11-986b52a72fc4",
+      "PharmacyID" : null,
       "DoctorID": "94ae7246-40c6-40fa-8d5a-fcc34d0edbca",
       "PatientID": "patient1",
       "DrugIDs": [null, null],
@@ -39,15 +40,18 @@
       "Description": "Due supposte grosse per il culo",
       "Drugs":[{
         "Name": "drug1",
-        "Quantity": 10
+        "Quantity": 2
+      },
+      {
+        "Name": "drug2",
+        "Quantity": 1
       }]
-
     },
     {
-      "ID": "94ae7246-40c6-40fa-8d5a-fcc34d0edbca",
+      "ID": "94ae5246-40c6-40fa-8d5a-fcc34d0edbca",
       "DoctorID": "doctor1",
       "PatientID": "patient1",
-      "DrugID": "drug1",
+      "DrugIDs": [null, null],
       "Status": "pending",
       "Description": "comment1"
     }
