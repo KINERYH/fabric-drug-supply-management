@@ -132,7 +132,7 @@ class PharmacyContract extends Contract {
 	async GetDrugQuantity(ctx, pharmacyID, drugName) {
 		const drugsListID = await this.GetPharmacyStorage(ctx, pharmacyID);
 
-		const quantity = 0;
+		let quantity = 0;
 
 		for(const drugId of drugsListID){
 			let name = await this.GetDrugName(ctx, drugId);
@@ -204,34 +204,34 @@ class PharmacyContract extends Contract {
 	 * @param {*} prescriptionID = prescription id
 	 * @param {*} drugsList = list of drugs in the prescription
 	 */
-	async ProcessPrescription(ctx, pharmacyID, prescriptionID) {
-		const prescription = await this.GetPrescription(ctx, prescriptionID);
+	async ProcessPrescription(ctx, prescriptionID, pharmacyID) {
+		let prescription = await this.GetPrescription(ctx, prescriptionID);
 		if(prescription.PharmacyID !== null){
 			throw new Error(`Prescription with ID ${prescriptionID} has already been processed`);
 		} else {
-			const listIDs = [];
+			let listIDs = [];
 			const drugsList = prescription.Drugs;
 			for(let requestedDrug of drugsList){
-				let actualQuantity = await this.GetDrugQuantity(ctx, pharmacyID, requestedDrug.Name);
-				let requestedQuantity = requestedDrug.Quantity;
+				const actualQuantity = await this.GetDrugQuantity(ctx, pharmacyID, requestedDrug.Name);
+				const requestedQuantity = requestedDrug.Quantity;
 				if(requestedQuantity > actualQuantity){
 					throw new Error(
 						`Prescription with ID ${prescriptionID} cannot be processed because the drug ` +
-						`${drugName} is missing ${requestedQuantity - actualQuantity} pieces in ` +
+						`${requestedDrug.Name} is missing ${requestedQuantity - actualQuantity} pieces in ` +
 						`the pharmacy ${this.GetName(ctx, pharmacyID)} `
 					  );
 				} else {
 					// Take the drugIDs from the pharmacy storage
 					for(let i = 0; i < requestedQuantity; i++){
-						let drugId = this.GetDrugID(ctx, pharmacyID, requestedDrug.Name);
+						const drugId = this.GetDrugID(ctx, pharmacyID, requestedDrug.Name);
 						listIDs.push(drugId);
 					}
 				}
 			}
 			// Update the storage of the pharmacy:
 			// 1) Take the pharmacies and the specific pharmacy with the given id
-			const pharmacies = await ctx.stub.getState("pharmacies");
-			const pharmacy = pharmacies.find((p) => p.ID === pharmacyID);
+			let pharmacies = await ctx.stub.getState("pharmacies");
+			let pharmacy = pharmacies.find((p) => p.ID === pharmacyID);
 			// 2) Update the pharmacy with the new storage:
 			// 2a) Take the old storage
 			const newStorage = await this.GetPharmacyStorage(ctx, pharmacyID);
@@ -252,7 +252,7 @@ class PharmacyContract extends Contract {
 
 			// Add the drug IDs in the prescription and update the prescription state:
 			// 1) Take the prescriptions
-			const prescriptions = await ctx.stub.getState("prescriptions");
+			let prescriptions = await ctx.stub.getState("prescriptions");
 			// 2) Update the prescription with the new status
 			prescription.Status = "processed";
 			// 3) Add the DrugIDs in the prescription
@@ -263,6 +263,7 @@ class PharmacyContract extends Contract {
 			await ctx.stub.putState("prescriptions", Buffer.from(JSON.stringify(sortKeysRecursive(prescriptions))));
 
 			console.log("Prescription processed successfully");
+			return prescription.toString();
 		}
 	}
 

@@ -110,12 +110,15 @@
       "Address": "address1",
       "DrugStorage": [
         "ec110aef-28ce-4d1b-a008-840e40390328",
+        "ec110aef-28ce-4d1b-a008-840e40390329",
+        "ec110aef-28ce-4d1b-a008-840e40390328",
+        "ec110aef-28ce-4d1b-a008-840e40390328",
         "ec110aef-28ce-4d1b-a008-840e40390329"
       ]
     }
   ],
   "manufacturer": [
-    {"ID": "94ae7246-40c6-40fa-8d5a-fcc34d0edbca",
+    {"ID": "94ae7246-40c6-40fa-8d5a-fcc34d0edbcb",
     "Name": "manufacturer1",
     "Address": "address1"
   }

@@ -49,4 +49,14 @@ router.get("/pharmacy/:pharmacyID/quantity", async (req, res) => {
 	res.json({ status: "OK", data: map });
 });
 
+// curl -X POST http://localhost:3001/api/test/prescriptions/6918bcdb-bf53-4a88-9f11-986b52a72fc4 -H "Content-Type: application/json" -d '{"pharmacyID":"94ae7246-40c6-40fa-8d5a-fcc34d0edbca"}'
+router.post("/prescriptions/:prescriptionID", async (req, res) => {
+	const { ccp, wallet } = require("../index");
+	const { contract } = await ledger.connect(ccp, wallet, 'admin', channelName, chaincodeName, 'PharmacyContract');
+	const result = await contract.evaluateTransaction('ProcessPrescription', req.params.prescriptionID, req.body.pharmacyID);
+	const map = JSON.parse(result.toString());
+	console.log('*** List:', JSON.stringify(map, null, 2));
+	res.json({ status: "OK", data: map });
+});
+
 module.exports = router;
