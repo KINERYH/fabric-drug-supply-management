@@ -83,13 +83,32 @@ router.get("/doctors/specialization/:doctorID", async (req, res) => {
 
 router.post("/doctors/prescriptions", async (req, res) => {
 	const { ccp, wallet } = require("../index");
-	console.log(typeof(req.body.PatientID), typeof(req.body.DoctorID), typeof(req.body.Drugs), typeof(req.body.Description));
 	const { contract } = await ledger.connect(ccp, wallet, 'admin', channelName, chaincodeName, 'DoctorContract');
-	//async CreatePrescription(ctx, docID, patientID, drugs, description) {
-	const result = await contract.submitTransaction('CreatePrescription', req.body.DoctorID, req.body.PatientID, req.body.Drugs, req.body.Description);
-	res.json({ status: "OK", data: result });
+	const docID = req.body.DoctorID;
+	const patID = req.body.PatientID;
+	// FONDAMENTALE: qualsiasi array va convertito in stringa per essere correttamente passato al chaincode
+	const drugs = JSON.stringify(req.body.Drugs);
+	const description = req.body.Description;
+	const result = await contract.submitTransaction('CreatePrescription', docID, patID, drugs, description);
+	const prescriptions = JSON.parse(result.toString());
+	res.json({ status: "OK", data: prescriptions });
 });
 
+//JSON.parse(prescriptionsList.toString()
+router.get("/doctors/patients", async (req, res) => {
+	const { ccp, wallet } = require("../index");
+	const { contract } = await ledger.connect(ccp, wallet, 'admin', channelName, chaincodeName, 'DoctorContract');
+	const result = await contract.evaluateTransaction('GetAllPatients');
+	const patients = JSON.parse(result.toString());
+	res.json({ status: "OK", data: patients });
+});
 
+router.get("/doctors/patients/:patientID", async (req, res) => {
+	const { ccp, wallet } = require("../index");
+	const { contract } = await ledger.connect(ccp, wallet, 'admin', channelName, chaincodeName, 'DoctorContract');
+	const result = await contract.evaluateTransaction('GetPatient', req.params.patientID);
+	const patient = JSON.parse(result.toString());
+	res.json({ status: "OK", data: patient });
+});
 
 module.exports = router;

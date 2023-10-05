@@ -119,27 +119,127 @@ class DoctorContract extends Contract {
     return exist;
   }
 
-  //GUARDA async InitLedger(ctx, initState) l'oggetto dovrebbe essere stringificato prima di essere passato,
-  //es. https://github.com/tulios/kafkajs/issues/1019
+  /**
+   * Check if a doctor exists.
+   * @async
+   * @param {Context} ctx - The transaction context object.
+   * @param {string} doctorID - The ID of the doctor to check.
+   * @returns {boolean} - True or False.
+   * @throws Will throw an error if a doctor does not exist.
+   */
+  async DoctorExists(ctx, doctorID) {
+    const doctors = await ctx.stub.getState('doctors');
+    if (!doctors || doctors.length === 0) {
+      throw new Error(`No doctors in the ledger`);
+    }
+    const exists = doctors.find(doctor => doctor.ID === doctorID)
+    return exists;
+  }
+
+  /**
+   * Check if a patient exists.
+   * @async
+   * @param {Context} ctx - The transaction context object.
+   * @param {string} patientID - The ID of the patient to check.
+   * @returns {boolean} - True or False.
+   * @throws Will throw an error if a patient does not exist.
+   */
+  async PatientExists(ctx, patientID) {
+    const patients = await ctx.stub.getState('patients');
+    if (!patients || patients.length === 0) {
+      throw new Error(`No patients in the ledger`);
+    }
+    const exists = patients.find(patient => patient.ID === patientID)
+    return exists;
+  }
+
+
+  /**
+   * Creates a new prescription for a patient by a doctor.
+   * @async
+   * @function CreatePrescription
+   * @param {Context} ctx - The transaction context object
+   * @param {string} docID - The ID of the doctor creating the prescription
+   * @param {string} patientID - The ID of the patient for whom the prescription is being created
+   * @param {string} drugs - The drugs prescribed, in JSON format
+   * @param {string} description - The description of the prescription
+   * @returns {Promise<Object[]>} - An array of all prescriptions
+   * @throws {Error} - If the doctor or patient does not exist
+   */
   async CreatePrescription(ctx, docID, patientID, drugs, description) {
     let prescriptionID = uuidv4();
     const exists = await this.PresciptionExists(ctx, prescriptionID);
     while (exists) {
       prescriptionID = uuidv4();
     }
+    const docExists = await this.DoctorExists(ctx, docID);
+    if (docExists == false) {
+      throw new Error(`Doctor does not exist`, docExists);
+    }
+    const patientExists = await this.PatientExists(ctx, patientID);
+    if (patientExists == false) {
+      throw new Error(`Patient does not exist`);
+    }
+
+    const serializedPrescriptionsList = await ctx.stub.getState('prescriptions');
+    const prescriptionsList = JSON.parse(serializedPrescriptionsList.toString());
 
     const prescription = {
       DoctorID: docID,
       PatientID: patientID,
-      Drugs: drugs,
+      Drugs: JSON.parse(drugs),
       Description: description,
       Status: "pending"
     };
-    await ctx.stub.putState('prescriptions', Buffer.from(sortKeysRecursive(prescription)));
-    return JSON.stringify(prescription);
+    console.log(drugs)
+    prescriptionsList.push(prescription)
+    console.log(prescriptionsList)
+    console.log(prescription)
+    await ctx.stub.putState('prescriptions', Buffer.from(stringify(sortKeysRecursive(prescriptionsList))));
+
+    return  prescriptionsList;
+  }
+
+  /**
+   * Retrieves all patients from the ledger.
+   * @async
+   * @function
+   * @param {Context} ctx - The transaction context object.
+   * @returns {Promise<Array>} - An array of patient objects.
+   * @throws {Error} - If there are no patients in the ledger.
+   */
+  async GetAllPatients(ctx) {
+    const serializedPatients = await ctx.stub.getState('patients');
+    if (!serializedPatients || serializedPatients.length === 0) {
+      throw new Error(`There are no patients in the ledger`);
+    }
+    const patients = JSON.parse(serializedPatients.toString());
+    return patients;
   }
 
 
+  /**
+   * Retrieves a patient from the ledger by their ID.
+   * @async
+   * @function
+   * @param {Context} ctx - The transaction context object.
+   * @param {string} patientID - The ID of the patient to retrieve.
+   * @returns {Promise<Object>} The patient object.
+   * @throws Will throw an error if there are no patients in the ledger or if the specified patient does not exist.
+   */
+  async GetPatient(ctx, patientID) {
+    const serializedPatients = await ctx.stub.getState('patients');
+    if (!serializedPatients || serializedPatients.length === 0) {
+      throw new Error(`There are no patients in the ledger`);
+    }
+    const patientExists = await this.PatientExists(ctx, patientID);
+    if(patientExists == false) {
+      throw new Error(`Patient does not exist`);
+    }
+    const patients = JSON.parse(serializedPatients.toString());
+    const patient = patients.find(patient => patient.ID === patientID);
+    return patient;
+  }
 
 }
 
