@@ -7,17 +7,17 @@ const { Contract } = require('fabric-contract-api');
 class PharmacyContract extends Contract {
 
 	/**
-	 * 
-	 * @param {*} ctx 
+	 *
+	 * @param {*} ctx
 	 * @param {*} id = pharmacy id
 	 * @returns the name of the pharmacy with the given id
 	 */
 	async GetName(ctx, id) {
-		const serializedPharmacies = await ctx.stub.getState("pharmacies"); 
+		const serializedPharmacies = await ctx.stub.getState("pharmacies");
 		if (!serializedPharmacies || serializedPharmacies.length === 0) {
 			throw new Error(`Pharmacies not found`);
 		}
-		const pharmacies = JSON.parse(serializedPharmacies.toString()); 
+		const pharmacies = JSON.parse(serializedPharmacies.toString());
 		const pharmacy = pharmacies.find((p) => p.ID === id) || {};
 		if (!pharmacy) {
 			throw new Error(`Pharmacy with ID ${id} not found`);
@@ -26,37 +26,37 @@ class PharmacyContract extends Contract {
 	}
 
 	/**
-	 * 
-	 * @param {*} ctx 
+	 *
+	 * @param {*} ctx
 	 * @param {*} id = pharmacy id
 	 * @returns the address of the pharmacy with the given id
 	 */
 	async GetAddress(ctx, id) {
-		const serializedPharmacies = await ctx.stub.getState("pharmacies"); 
+		const serializedPharmacies = await ctx.stub.getState("pharmacies");
 		if (!serializedPharmacies || serializedPharmacies.length === 0) {
 			throw new Error(`Pharmacies not found`);
 		}
-		const pharmacies = JSON.parse(serializedPharmacies.toString()); 
+		const pharmacies = JSON.parse(serializedPharmacies.toString());
 		const pharmacy = pharmacies.find((p) => p.ID === id) || {};
 		if (!pharmacy) {
 			throw new Error(`Pharmacy with ID ${id} not found`);
 		}
 		return pharmacy.Address;
 	}
-	
-	
+
+
 	/**
-	 * 
-	 * @param {*} ctx 
+	 *
+	 * @param {*} ctx
 	 * @param {*} id = pharmacy id
 	 * @returns a list of all the IDs of the drugs in the pharmacy
 	 */
 	async GetPharmacyStorage(ctx, id) {
-		const serializedPharmacies = await ctx.stub.getState("pharmacies"); 
+		const serializedPharmacies = await ctx.stub.getState("pharmacies");
         if (!serializedPharmacies || serializedPharmacies.length === 0) {
             throw new Error(`Pharmacies not found`);
         }
-		const pharmacies = JSON.parse(serializedPharmacies.toString()); 
+		const pharmacies = JSON.parse(serializedPharmacies.toString());
 		const pharmacy = pharmacies.find((p) => p.ID === id) || {};
 		if (!pharmacy) {
 			throw new Error(`Pharmacy with ID ${id} not found`);
@@ -71,8 +71,8 @@ class PharmacyContract extends Contract {
 	}
 
 	/**
-	 * 
-	 * @param {*} ctx 
+	 *
+	 * @param {*} ctx
 	 * @param {*} drugId = drug id
 	 * @returns the name of the drug with the given id
 	 */
@@ -91,8 +91,8 @@ class PharmacyContract extends Contract {
 
 
 	/**
-	 * 
-	 * @param {*} ctx 
+	 *
+	 * @param {*} ctx
 	 * @param {String} id = user id
 	 * @returns JSON list of all the drugs in the pharmacy with their quantities
 	 */
@@ -115,7 +115,7 @@ class PharmacyContract extends Contract {
 		// const drugsArray = Array.from(drugsMap.entries()).map(([drugName, quantity]) => ({
 		// [drugName]: quantity,
 		// }));
-	
+
 		// return JSON.stringify(drugsArray);
 
 		// Convert drugsMap to an array of objects with "drugName" and "quantity" properties
@@ -123,13 +123,13 @@ class PharmacyContract extends Contract {
 		drugName: drugName,
 		quantity: quantity,
 		}));
-	
+
 		return drugsArray;
 	}
 
 	/**
-	 * 
-	 * @param {*} ctx 
+	 *
+	 * @param {*} ctx
 	 * @param {*} pharmacyID = pharmacy id
 	 * @param {*} drugName = drug name
 	 * @returns the quantity of the drug with the given name in the storage of the pharmacy with the given id
@@ -159,7 +159,7 @@ class PharmacyContract extends Contract {
 				return id;
 			}
 		}
-		
+
 		if(drugId === ""){
 			throw new Error(`Drug with name ${drugName} not found in the pharmacy with ID ${pharmacyID}`);
 		}
@@ -167,8 +167,8 @@ class PharmacyContract extends Contract {
 
 
 	/**
-	 * 
-	 * @param {*} ctx 
+	 *
+	 * @param {*} ctx
 	 * @param {*} prescriptionID = prescription id
 	 * returns the prescription with the given id
 	 */
@@ -184,10 +184,10 @@ class PharmacyContract extends Contract {
   		}
   		return prescription;
 	}
-	
+
 	/**
-	 * 
-	 * @param {*} ctx 
+	 *
+	 * @param {*} ctx
 	 * @param {*} pharmacyID = pharmacy id
 	 * @param {*} prescriptionID = prescription id
 	 * @param {*} drugsList = list of drugs in the prescription
@@ -223,11 +223,11 @@ class PharmacyContract extends Contract {
 			console.log(`*** listIDs (after): ${listIDs}`);
 			// Update the storage of the pharmacy:
 			// 1) Take the pharmacies and the specific pharmacy with the given id
-			const serializedPharmacies = await ctx.stub.getState("pharmacies"); 
+			const serializedPharmacies = await ctx.stub.getState("pharmacies");
 			if (!serializedPharmacies || serializedPharmacies.length === 0) {
 				throw new Error(`Pharmacies not found`);
 			}
-			const pharmacies = JSON.parse(serializedPharmacies.toString()); 
+			const pharmacies = JSON.parse(serializedPharmacies.toString());
 			const pharmacyIndex = pharmacies.findIndex((p) => p.ID === pharmacyID);
 
 			// let pharmacy = pharmacies.find((p) => p.ID === pharmacyID);
@@ -239,7 +239,7 @@ class PharmacyContract extends Contract {
 			// 2a) Take the old storage
 			let newStorage = await this.GetPharmacyStorage(ctx, pharmacyID);
 			console.log("New storage (original): " + newStorage);
-			// 2b) Remove the drugs in the listIDs from the storage 
+			// 2b) Remove the drugs in the listIDs from the storage
 			for(let drugId of listIDs){
 				let index = newStorage.indexOf(drugId);
 				if(index > -1){
@@ -250,7 +250,7 @@ class PharmacyContract extends Contract {
 			// 2c) Update the pharmacy with the new storage
 			pharmacies[pharmacyIndex].DrugStorage = newStorage;
 			// 3) Substitute the old pharmacy with the updated one
-			
+
 			// pharmacies[pharmacyIndex] = pharmacy;
 			// 4) Put the pharmacies list in the world state
 			await ctx.stub.putState("pharmacies", Buffer.from(stringify(sortKeysRecursive(pharmacies))));
