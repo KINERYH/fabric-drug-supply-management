@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const { v4: uuidv4 } = require('uuid');
 
 
 const ledger = require("../utils/blockchain/connection");
@@ -89,7 +90,9 @@ router.post("/doctors/prescriptions", async (req, res) => {
 	// FONDAMENTALE: qualsiasi array va convertito in stringa per essere correttamente passato al chaincode
 	const drugs = JSON.stringify(req.body.Drugs);
 	const description = req.body.Description;
-	const result = await contract.submitTransaction('CreatePrescription', docID, patID, drugs, description);
+	// Il prescription id deve essere uguale tra i peer quindi va generato prima
+	const prescID = uuidv4();
+	const result = await contract.submitTransaction('CreatePrescription', docID, patID, prescID, drugs, description);
 	const prescriptions = JSON.parse(result.toString());
 	res.json({ status: "OK", data: prescriptions });
 });
@@ -111,4 +114,23 @@ router.get("/doctors/patients/:patientID", async (req, res) => {
 	res.json({ status: "OK", data: patient });
 });
 
+router.post("/manufacturers/validate", async (req, res) => {
+	const { ccp, wallet } = require("../index");
+	const { contract } = await ledger.connect(ccp, wallet, 'admin', channelName, chaincodeName, 'ManufacturerContract');
+	const order = await contract.evaluateTransaction('GetOrder', req.body.OrderID);
+	const orderData = JSON.parse(order.toString());
+	const drugsNumber = orderData.Drugs.length;
+	let quantity = 0;
+	for (let i = 0; i < drugsNumber; i++) {
+		quantity += orderData.Drugs[i].Quantity;
+	}
+	// LA CREAZIONE DEGLI ID VA FATTA PER FORZA A LIVELLO APPLICATIVO PER GARANTIRE CHE SIANO UGUALI TRA I PEER
+	const drugIDs = [];
+	for (let i = 0; i < quantity; i++) {
+		drugIDs.push(uuidv4());
+	}
+	const result = await contract.submitTransaction('ValidateOrder', req.body.OrderID, req.body.ManufacturerID, JSON.stringify(drugIDs));
+	const orders = JSON.parse(result.toString());
+	res.json({ status: "OK", data: orders });
+});
 module.exports = router;

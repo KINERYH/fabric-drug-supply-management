@@ -1,18 +1,11 @@
 {
   "drugs": [
     {
-      "ID": "ec110aef-28ce-4d1b-a008-840e40390328",
+      "BoxID": "ec110aef-28ce-4d1b-a008-840e40390328",
+      "DrugID": "ec110aef-28ce-4d1b-a008-840e40390329",
       "Name": "drug1",
-      "Description": "drug1",
-      "Price": 100,
-      "ManufacturerID": "manufacturer1",
       "ExpirationDate": "2018-12-31T23:59:59.000Z",
-      "Composition": [
-        "element1",
-        "element2"
-      ],
-      "ManufactureDate": "2018-12-31T23:59:59.000Z",
-      "UOM": "mg"
+      "ProductionDate": "2018-12-31T23:59:59.000Z"
     }
   ],
   "prescriptions": [
@@ -21,11 +14,11 @@
       "DoctorID": "94ae7246-40c6-40fa-8d5a-fcc34d0edbca",
       "PatientID": "patient1",
       "PharmacyID": "pharmacy1",
-      "DrugIDs": [null, null],
+      "BoxIDs": [null, null],
       "Status": "pending",
       "Description": "Due supposte grosse per il culo",
       "Drugs":[{
-        "Name": "drug1",
+        "DrugID": "ec110aef-28ce-4d1b-a008-840e40390329",
         "Quantity": 10
       }]
 
@@ -35,11 +28,11 @@
       "DoctorID": "94ae7246-40c6-40fa-8d5a-fcc34d0edbca",
       "PatientID": "patient2",
       "PharmacyID": "pharmacy1",
-      "DrugIDs": [null, null],
+      "BoxIDs": [null, null],
       "Status": "pending",
       "Description": "Tachipirina 100",
       "Drugs":[{
-        "Name": "drug1",
+        "DrugID": "ec110aef-28ce-4d1b-a008-840e40390329",
         "Quantity": 10
       }]
     },
@@ -48,22 +41,14 @@
       "DoctorID": "94ae7246-40c6-40fa-8d5a-fcc3420edbca",
       "PatientID": "patient1",
       "PharmacyID": "pharmacy1",
-      "DrugIDs": [null, null],
+      "BoxIDs": [null, null],
       "Status": "pending",
       "Description": "Non dovrebbe prenderla",
       "Drugs":[{
-        "Name": "drug1",
+        "DrugID": "ec110aef-28ce-4d1b-a008-840e40390329",
         "Quantity": 10
       }]
 
-    },
-    {
-      "ID": "94ae7246-40c6-40fa-8d5a-fcc34d0edbca",
-      "DoctorID": "doctor1",
-      "PatientID": "patient1",
-      "DrugID": "drug1",
-      "Status": "pending",
-      "Description": "comment1"
     }
   ],
   "orders": [
@@ -71,11 +56,11 @@
       "ID": "94ae7246-40c6-40fa-8d5a-fcc34d0edbca",
       "PharmacyID": "pharmacy1",
       "ManufacturerID": "94ae7246-40c6-40fa-8d5a-fcc34d0edbca",
-      "DrugID": [null, null],
+      "BoxIDs": [null, null],
       "Status": "pending",
       "Description": "si richiedono 10 scatole di tachipirina",
       "Drugs":[{
-        "Name": "drug1",
+        "DrugID": "ec110aef-28ce-4d1b-a008-840e40390329",
         "Quantity": 10
       }]
     }
@@ -130,7 +115,18 @@
   "manufacturer": [
     {"ID": "94ae7246-40c6-40fa-8d5a-fcc34d0edbca",
     "Name": "manufacturer1",
-    "Address": "address1"
-  }
+    "Address": "address1",
+    "Drugs":
+      [{"Name": "drug1",
+        "DrugID": "ec110aef-28ce-4d1b-a008-840e40390329",
+        "Description": "drug1",
+        "Price": 100,
+        "Composition": [
+          "element1",
+          "element2"
+        ],
+        "UOM": "mg"
+      }]
+    }
   ]
 }

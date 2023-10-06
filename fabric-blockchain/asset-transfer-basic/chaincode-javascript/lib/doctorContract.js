@@ -166,11 +166,10 @@ class DoctorContract extends Contract {
    * @returns {Promise<Object[]>} - An array of all prescriptions
    * @throws {Error} - If the doctor or patient does not exist
    */
-  async CreatePrescription(ctx, docID, patientID, drugs, description) {
-    let prescriptionID = uuidv4();
+  async CreatePrescription(ctx, docID, patientID, prescriptionID, drugs, description) {
     const exists = await this.PresciptionExists(ctx, prescriptionID);
-    while (exists) {
-      prescriptionID = uuidv4();
+    if (exists == true) {
+      throw new Error(`Prescription ${prescriptionID} already exists`);
     }
     const docExists = await this.DoctorExists(ctx, docID);
     if (docExists == false) {
@@ -185,6 +184,7 @@ class DoctorContract extends Contract {
     const prescriptionsList = JSON.parse(serializedPrescriptionsList.toString());
 
     const prescription = {
+      ID: prescriptionID,
       DoctorID: docID,
       PatientID: patientID,
       Drugs: JSON.parse(drugs),
