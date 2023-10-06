@@ -1,6 +1,20 @@
 {
   "drugs": [
     {
+      "ID": "ec110aef-28ce-4d1b-a008-840e40390327", 
+      "Name": "drug1",
+      "Description": "drug1",
+      "Price": 100,
+      "Manufacturer": "manufacturer1",
+      "ExpirationDate": "2018-12-31T23:59:59.000Z",
+      "Composition": [
+        "element1",
+        "element2"
+      ],
+      "ManufactureDate": "2018-12-31T23:59:59.000Z",
+      "UOM": "mg"
+    },
+    {
       "ID": "ec110aef-28ce-4d1b-a008-840e40390328", 
       "Name": "drug1",
       "Description": "drug1",
@@ -40,7 +54,7 @@
       "Description": "Due supposte grosse per il culo",
       "Drugs":[{
         "Name": "drug1",
-        "Quantity": 2
+        "Quantity": 1
       },
       {
         "Name": "drug2",
@@ -109,9 +123,7 @@
       "Name": "pharmacy1",
       "Address": "address1",
       "DrugStorage": [
-        "ec110aef-28ce-4d1b-a008-840e40390328",
-        "ec110aef-28ce-4d1b-a008-840e40390329",
-        "ec110aef-28ce-4d1b-a008-840e40390328",
+        "ec110aef-28ce-4d1b-a008-840e40390327",
         "ec110aef-28ce-4d1b-a008-840e40390328",
         "ec110aef-28ce-4d1b-a008-840e40390329"
       ]

@@ -61,8 +61,13 @@ class PharmacyContract extends Contract {
 		if (!pharmacy) {
 			throw new Error(`Pharmacy with ID ${id} not found`);
 		}
-		return pharmacy.DrugStorage;
+		// console.log(`DrugStorage: ${pharmacy.DrugStorage}`);
+		// console.log(typeof(pharmacy.DrugStorage));
+		// const test = JSON.parse(pharmacy.DrugStorage.toString());
+		// console.log(`DrugStorage jsonparsetostring: ${test}`);
+		const drugStorageArray = pharmacy.DrugStorage.toString().split(',');
 
+		return drugStorageArray;
 	}
 
 	/**
@@ -179,23 +184,6 @@ class PharmacyContract extends Contract {
   		}
   		return prescription;
 	}
-
-	/**
-	 * 
-	 * @param {*} ctx 
-	 * @param {*} pharmacyID = pharmacy id
-	 * @param {*} drugName = drug name
-	 * @param {*} requestedQuantity = requested quantity for the drug
-	 * @returns true if the requested quantity is available in the pharmacy storage, false otherwise
-	 */
-	async CheckAvailability(ctx, pharmacyID, drugName, requestedQuantity) {
-		const actualQuantity = await this.GetDrugQuantity(ctx, pharmacyID, drugName);
-		if(requestedQuantity > actualQuantity){
-			return false;
-		} else {
-			return true;
-		}
-	}
 	
 	/**
 	 * 
@@ -206,10 +194,12 @@ class PharmacyContract extends Contract {
 	 */
 	async ProcessPrescription(ctx, prescriptionID, pharmacyID) {
 		let prescription = await this.GetPrescription(ctx, prescriptionID);
+		console.log(`*** PRESCRIPTION: ${prescription}`);
 		if(prescription.PharmacyID !== null){
 			throw new Error(`Prescription with ID ${prescriptionID} has already been processed`);
 		} else {
 			let listIDs = [];
+			console.log(`*** listIDs (before): ${listIDs}`);
 			const drugsList = prescription.Drugs;
 			for(let requestedDrug of drugsList){
 				const actualQuantity = await this.GetDrugQuantity(ctx, pharmacyID, requestedDrug.Name);
@@ -223,18 +213,32 @@ class PharmacyContract extends Contract {
 				} else {
 					// Take the drugIDs from the pharmacy storage
 					for(let i = 0; i < requestedQuantity; i++){
-						const drugId = this.GetDrugID(ctx, pharmacyID, requestedDrug.Name);
+						let drugId = await this.GetDrugID(ctx, pharmacyID, requestedDrug.Name);
+						// TODO: Remove the drug from the pharmacy storage otherwise it will be taken again the same
 						listIDs.push(drugId);
+						console.log(`*** listIDs (iteration ${i}): ${listIDs}`);
 					}
 				}
 			}
+			console.log(`*** listIDs (after): ${listIDs}`);
 			// Update the storage of the pharmacy:
 			// 1) Take the pharmacies and the specific pharmacy with the given id
-			let pharmacies = await ctx.stub.getState("pharmacies");
-			let pharmacy = pharmacies.find((p) => p.ID === pharmacyID);
+			const serializedPharmacies = await ctx.stub.getState("pharmacies"); 
+			if (!serializedPharmacies || serializedPharmacies.length === 0) {
+				throw new Error(`Pharmacies not found`);
+			}
+			const pharmacies = JSON.parse(serializedPharmacies.toString()); 
+			const pharmacyIndex = pharmacies.findIndex((p) => p.ID === pharmacyID);
+
+			// let pharmacy = pharmacies.find((p) => p.ID === pharmacyID);
+			// console.log("*** Pharmacy ***");
+			// console.log(typeof(pharmacy));
+			// console.log(`${pharmacy}`);
+
 			// 2) Update the pharmacy with the new storage:
 			// 2a) Take the old storage
-			const newStorage = await this.GetPharmacyStorage(ctx, pharmacyID);
+			let newStorage = await this.GetPharmacyStorage(ctx, pharmacyID);
+			console.log("New storage (original): " + newStorage);
 			// 2b) Remove the drugs in the listIDs from the storage 
 			for(let drugId of listIDs){
 				let index = newStorage.indexOf(drugId);
@@ -242,30 +246,59 @@ class PharmacyContract extends Contract {
 					newStorage.splice(index, 1);
 				}
 			}
+			console.log("(let) New storage (edited): " + newStorage);
 			// 2c) Update the pharmacy with the new storage
-			pharmacy.DrugStorage = newStorage;
+			pharmacies[pharmacyIndex].DrugStorage = newStorage;
 			// 3) Substitute the old pharmacy with the updated one
-			const pharmacyIndex = pharmacies.findIndex((p) => p.ID === pharmacyID);
-			pharmacies[pharmacyIndex] = pharmacy;
+			
+			// pharmacies[pharmacyIndex] = pharmacy;
 			// 4) Put the pharmacies list in the world state
-			await ctx.stub.putState("pharmacies", Buffer.from(JSON.stringify(sortKeysRecursive(pharmacies))));
+			await ctx.stub.putState("pharmacies", Buffer.from(stringify(sortKeysRecursive(pharmacies))));
 
 			// Add the drug IDs in the prescription and update the prescription state:
 			// 1) Take the prescriptions
-			let prescriptions = await ctx.stub.getState("prescriptions");
-			// 2) Update the prescription with the new status
-			prescription.Status = "processed";
-			// 3) Add the DrugIDs in the prescription
-			prescription.DrugIDs = listIDs;
-			// 4) Put the prescriptions list in the world state
+			const serializedPrescriptions = await ctx.stub.getState("prescriptions");
+			if (!serializedPrescriptions || serializedPrescriptions.length === 0) {
+				throw new Error(`Prescriptions not found`);
+			}
+			const prescriptions = JSON.parse(serializedPrescriptions.toString());
+
 			const prescriptionIndex = prescriptions.findIndex((p) => p.ID === prescriptionID);
-			prescriptions[prescriptionIndex] = prescription;
-			await ctx.stub.putState("prescriptions", Buffer.from(JSON.stringify(sortKeysRecursive(prescriptions))));
+
+			if(prescriptionIndex === -1){
+				throw new Error(`Prescription with ID ${prescriptionID} not found`);
+			}
+
+			prescriptions[prescriptionIndex].Status = "processed";
+
+			prescriptions[prescriptionIndex].DrugIDs = listIDs;
+
+			prescriptions[prescriptionIndex].PharmacyID = pharmacyID;
+
+			// // 2) Update the prescription with the new status
+			// prescription.Status = "processed";
+			// // 3) Add the DrugIDs in the prescription
+			// prescription.DrugIDs = listIDs;
+			// // 4) Add the pharmacyID in the prescription
+			// prescription.PharmacyID = pharmacyID;
+			// // 5) Put the prescriptions list in the world state
+			// const prescriptionIndex = prescriptions.findIndex((p) => p.ID === prescriptionID);
+			// prescriptions[prescriptionIndex] = prescription;
+
+
+			await ctx.stub.putState("prescriptions", Buffer.from(stringify(sortKeysRecursive(prescriptions))));
+
+			console.log(' *** PRESCRIPTIONS: ');
+			console.log(prescriptions);
+
+			console.log(" *** PHARMACIES: ");
+			console.log(pharmacies);
 
 			console.log("Prescription processed successfully");
-			return prescription.toString();
+			return { prescriptions, pharmacies };
 		}
 	}
+
 
 }
 

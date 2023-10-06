@@ -54,9 +54,8 @@ router.post("/prescriptions/:prescriptionID", async (req, res) => {
 	const { ccp, wallet } = require("../index");
 	const { contract } = await ledger.connect(ccp, wallet, 'admin', channelName, chaincodeName, 'PharmacyContract');
 	const result = await contract.evaluateTransaction('ProcessPrescription', req.params.prescriptionID, req.body.pharmacyID);
-	const map = JSON.parse(result.toString());
-	console.log('*** List:', JSON.stringify(map, null, 2));
-	res.json({ status: "OK", data: map });
+	console.log(JSON.parse(result.toString()));
+	res.json({ status: "OK", data: JSON.parse(result.toString()) });
 });
 
 module.exports = router;
