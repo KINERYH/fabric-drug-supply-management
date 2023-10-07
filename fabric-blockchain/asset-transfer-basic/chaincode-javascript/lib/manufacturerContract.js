@@ -27,7 +27,7 @@ class ManufacturerContract extends Contract{
   }
 
   async GetName(ctx, id){
-    const serializedManufacturers = await ctx.stub.getState('manufacturer');
+    const serializedManufacturers = await ctx.stub.getState('manufacturers');
     if (!serializedManufacturers || serializedManufacturers.length === 0){
       throw new Error('There are no manufacturers in the ledger');
     }
@@ -37,7 +37,7 @@ class ManufacturerContract extends Contract{
   }
 
   async GetManufacturer(ctx, id){
-    const serializedManufacturers = await ctx.stub.getState('manufacturer');
+    const serializedManufacturers = await ctx.stub.getState('manufacturers');
     if (!serializedManufacturers || serializedManufacturers.length === 0){
       throw new Error('There are no manufacturers in the ledger');
     }
@@ -47,7 +47,7 @@ class ManufacturerContract extends Contract{
   }
 
   async GetAddress(ctx, id){
-    const serializedManufacturers = await ctx.stub.getState('manufacturer');
+    const serializedManufacturers = await ctx.stub.getState('manufacturers');
     if (!serializedManufacturers || serializedManufacturers.length === 0){
       throw new Error('There are no manufacturers in the ledger');
     }
