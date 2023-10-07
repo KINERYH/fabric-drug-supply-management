@@ -53,9 +53,9 @@ router.get("/pharmacy/:pharmacyID/quantity", async (req, res) => {
 router.post("/prescriptions/:prescriptionID", async (req, res) => {
 	const { ccp, wallet } = require("../index");
 	const { contract } = await ledger.connect(ccp, wallet, 'admin', channelName, chaincodeName, 'PharmacyContract');
-	const result = await contract.submitTransaction('ProcessPrescription', req.params.prescriptionID, req.body.pharmacyID);
-	console.log(JSON.parse(result.toString()));
-	res.json({ status: "OK", data: JSON.parse(result.toString()) });
+	await contract.submitTransaction('ProcessPrescription', req.params.prescriptionID, req.body.pharmacyID);
+	// console.log(JSON.parse(result.toString()));
+	res.json({ status: "OK", data: "Prescription processed successfully" });
 });
 
 module.exports = router;
