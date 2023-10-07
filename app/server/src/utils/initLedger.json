@@ -67,7 +67,25 @@
       "Description": "si richiedono 10 scatole di tachipirina",
       "Drugs":[{
         "DrugID": "ec110aef-28ce-4d1b-a008-840e40390329",
-        "Quantity": 10
+        "Quantity": 10,
+        "BoxIDs": []
+      }]
+    },
+    {
+      "ID": "93ae7246-40c6-40fa-8d5a-fcc34d0edbca",
+      "PharmacyID": "pharmacy2",
+      "ManufacturerID": "94ae7246-40c6-40fa-8d5a-fcc34d0edbca",
+      "Status": "pending",
+      "Description": "si richiedono 5 scatole di tachipirina e 2 di trembolone",
+      "Drugs":[{
+        "DrugID": "ec110aef-28ce-4d1b-a008-840e40390329",
+        "Quantity": 5,
+        "BoxIDs": []
+      },
+      {
+        "DrugID": "ec110aef-28ce-4d1b-a008-840e40390328",
+        "Quantity": 2,
+        "BoxIDs": []
       }]
     },
     {
@@ -107,7 +125,7 @@
   "patients": [
     {
       "ID": "94ae7246-40c6-40fa-8d5a-fcc34d0edbc3a",
-      "Codice Fiscale": "VNTPLA95T31L219K",
+      "CodiceFiscale": "VNTPLA95T31L219K",
       "Name": "Pietro",
       "Surname": "Ventrella",
       "BirthDate": "1995-12-31",

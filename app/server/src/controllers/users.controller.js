@@ -55,7 +55,7 @@ const loginUser = async (req, res) => {
   try{
 
     //TODO: verificare se utilizzare token così o se utilizzare refresh token
-    token =jwt.sign({username: req.body.username, password: req.body.password},authMiddleware.sec, {expiresIn: '1h'});
+    token =jwt.sign({username: req.body.username, password: req.body.password}, authMiddleware.sec, {expiresIn: '1h'});
     await usersService.loginUser(req.body);
     res.status(200).json({
       message: "Login succeded: ",

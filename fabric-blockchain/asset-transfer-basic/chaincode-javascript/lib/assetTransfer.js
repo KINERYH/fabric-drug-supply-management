@@ -107,41 +107,41 @@ class AssetTransfer extends Contract {
 
     // GetAllAssets returns all assets found in the world state.
     async GetAllAssets(ctx) {
-        const stateData = {}; 
+        const stateData = {};
         const iterator = await ctx.stub.getStateByRange('', '');
-        let result = await iterator.next(); 
-    
+        let result = await iterator.next();
+
         while (!result.done) {
             const strValue = Buffer.from(result.value.value.toString()).toString('utf8');
             let record;
             try {
-                record = JSON.parse(strValue); 
+                record = JSON.parse(strValue);
             } catch (err) {
                 console.log(err);
                 record = strValue;
             }
-    
+
             // Extract the data type from the key.
             // Ex: result.value.key => "drugs:ec110aef-28ce-4d1b-a008-840e40390328"
             const key = result.value.key.toString('utf8');
             const dataType = key.split(':')[0]; // dataType = "drugs"
-    
+
             // If the data type doesn't exist in the stateData object, initialize it as an empty array.
             if (!stateData[dataType]) {
                 stateData[dataType] = [];
             }
-    
+
             // Add the record to the corresponding array.
             stateData[dataType].push(record);
-    
+
             result = await iterator.next();
         }
-    
+
         return JSON.stringify(stateData);
     }
-    
-    
-    
+
+
+
 }
 
 module.exports = AssetTransfer;
