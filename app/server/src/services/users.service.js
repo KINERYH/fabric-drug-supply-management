@@ -4,6 +4,7 @@ const fs = require("fs");
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
 const bcrypt = require("bcrypt");
+const authMid = require("../middlewares/auth.middleware");
 
 
 
@@ -32,18 +33,19 @@ const getUser = async (username) => {
 
 }
 
-const loginUser = async (user) => {
+const loginUser = async (userReq) => {
   try{
-    const userId = await db.users.find((u) => u.username === user.username);
-    if (!userId) {
-      throw Error("User " + user.username + " does not exist.");
+    const userDb = await db.users.find((u) => u.username === userReq.username);
+    if (!userDb) {
+      throw Error("User " + userReq.username + " does not exist.");
     }
-    if (await !(bcrypt.compare(user.password, userId.password))){
+    if (await !(bcrypt.compare(userReq.password, userDb.password))){
       throw Error("Wrong password.");
+    } else {
+      return authMid.releaseToken({username: userReq.username, role: userDb.role});
     }
-
   } catch(error){
-    console.error('Failed to login user: ' + user.username + '\n' + error);
+    console.error('Failed to login user: ' + userReq.username + '\n' + error);
     throw Error(error);
   }
 };
