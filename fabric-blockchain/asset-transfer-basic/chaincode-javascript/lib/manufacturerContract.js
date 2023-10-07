@@ -91,13 +91,13 @@ class ManufacturerContract extends Contract{
       throw new Error('The number of drugs is not correct');
     }
 
-    console.log(`Drug ids: ${boxIDs}`);
+    console.log(`Box ids: ${boxIDs}`);
     orders.find(o => o.ID === orderId).Status = 'shipped';
-    orders.find(o => o.ID === orderId).BoxIDs = boxIDs;
+    //orders.find(o => o.ID === orderId).BoxIDs = boxIDs;
+    let orderDrugs = orders.find(o => o.ID === orderId).Drugs;
     console.log("***Orders: ")
     console.log(orders);
-    await ctx.stub.putState('orders', Buffer.from(stringify(sortKeysRecursive(orders))));
-    console.log('*** Orders committed');
+
 
     const serLedgerOrders = await ctx.stub.getState('orders');
     console.log(`***Ledger: ${serLedgerOrders.toString()}`);
@@ -128,13 +128,18 @@ class ManufacturerContract extends Contract{
     console.log(`***ProducedDrugs: ${producedDrugs}`)
     // producedDrugs: lista di farmaci prodotti dal manufacturer
     // boxIDs: lista di numero di scatole di farmaci (la lunghezza è la quantità totale dell'ordine)
-    //
+    // orderDrugs: lista di farmaci dell'ordine (oggetti con id  quantità dove dobbiamo aggiungere boxid)
+    // drugsCodes: lista di codici di farmaci (la lunghezza è la quantità totale dell'ordine)
+
+
     for (let i=0; i<boxIDs.length; i++){
       console.log(i)
       try{
       let drugName = producedDrugs.find(d => d.DrugID === drugsCodes[i]).Name;
       console.log(`***DrugName: ${drugName}`)
       drugsList.push({BoxID: boxIDs[i], DrugID: drugsCodes[i], Name:drugName, ProductionDate: prodDate, ExpirationDate: expDate});
+      orderDrugs.find(d => d.DrugID === drugsCodes[i]).BoxIDs.push(boxIDs[i]);
+      console.log(`***OrderedDrugs: ${stringify(orderDrugs)}`);
       }
       catch(error){
 
@@ -142,13 +147,14 @@ class ManufacturerContract extends Contract{
       }
     }
     console.log(`***Drugs: ${drugsList}`);
+    orders.find(o => o.ID === orderId).Drugs = orderDrugs;
 
+    await ctx.stub.putState('orders', Buffer.from(stringify(sortKeysRecursive(orders))));
     await ctx.stub.putState('drugs', Buffer.from(stringify(sortKeysRecursive(drugsList))));
 
     console.log('*** Result: committed');
 
-    return order;
-
+    return orders.find(o => o.ID === orderId);
 
   }
 

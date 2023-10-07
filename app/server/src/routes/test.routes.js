@@ -132,5 +132,6 @@ router.post("/manufacturers/validate", async (req, res) => {
 	const result = await contract.submitTransaction('ValidateOrder', req.body.OrderID, req.body.ManufacturerID, JSON.stringify(drugIDs));
 	const orders = JSON.parse(result.toString());
 	res.json({ status: "OK", data: orders });
+	console.log("Orders: \n", orders);
 });
 module.exports = router;
