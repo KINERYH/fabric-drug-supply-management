@@ -87,7 +87,7 @@ router.post("/doctors/prescriptions", async (req, res) => {
 	const { contract } = await ledger.connect(ccp, wallet, 'admin', channelName, chaincodeName, 'DoctorContract');
 	const docID = req.body.DoctorID;
 	const patID = req.body.PatientID;
-	// FONDAMENTALE: qualsiasi array va convertito in stringa per essere correttamente passato al chaincode
+	// FONDAMENTALE: qualsiasi object va convertito in stringa per essere correttamente passato al chaincode
 	const drugs = JSON.stringify(req.body.Drugs);
 	const description = req.body.Description;
 	// Il prescription id deve essere uguale tra i peer quindi va generato prima
@@ -134,4 +134,32 @@ router.post("/manufacturers/validate", async (req, res) => {
 	res.json({ status: "OK", data: orders });
 	console.log("Orders: \n", orders);
 });
+
+router.get("/doctors/medhistory/:patientID", async (req, res) => {
+	const { ccp, wallet } = require("../index");
+	const { contract } = await ledger.connect(ccp, wallet,'admin', channelName, chaincodeName, 'DoctorContract');
+	const result = await contract.submitTransaction('UpdatePatientMedHistory', req.params.patientID, 'provaUpdate');
+	const medicalHistory = JSON.parse(result.toString());
+	res.json({ status: "OK", data: medicalHistory });
+	console.log("Medical History: \n", medicalHistory);
+});
+
+router.get("/patients/:patientID", async (req, res) => {
+	const { ccp, wallet } = require("../index");
+	const { contract } = await ledger.connect(ccp, wallet, 'admin', channelName, chaincodeName, 'PatientContract');
+	const result = await contract.evaluateTransaction('GetAllInfo', req.params.patientID);
+	const patient = JSON.parse(result.toString());
+	res.json({ status: "OK", data: patient });
+});
+
+router.post("/patients/update/:patientID", async (req, res) => {
+	const { ccp, wallet } = require("../index");
+	const { contract } = await ledger.connect(ccp, wallet,'admin', channelName, chaincodeName, 'PatientContract');
+	const result = await contract.submitTransaction('UpdateInfo', req.params.patientID, req.body.Name, req.body.Surname, req.body.Address,  req.body.Birthdate,  req.body.CodiceFiscale);
+	const patient = JSON.parse(result.toString());
+	res.json({ status: "OK", data: patient });
+	console.log("Patient: \n", patient);
+});
+
+
 module.exports = router;

@@ -27,7 +27,6 @@
       "DoctorID": "94ae7246-40c6-40fa-8d5a-fcc34d0edbca",
       "PatientID": "patient2",
       "PharmacyID": "pharmacy1",
-      "BoxIDs": [null, null],
       "Status": "pending",
       "Description": "Tachipirina 100",
       "Drugs":[{
@@ -40,7 +39,6 @@
       "DoctorID": "94ae7246-40c6-40fa-8d5a-fcc3420edbca",
       "PatientID": "patient1",
       "PharmacyID": "pharmacy1",
-      "BoxIDs": [null, null],
       "Status": "pending",
       "Description": "Non dovrebbe prenderla",
       "Drugs":[{
@@ -101,7 +99,7 @@
   "patients": [
     {
       "ID": "94ae7246-40c6-40fa-8d5a-fcc34d0edbc3a",
-      "Codice Fiscale": "VNTPLA95T31L219K",
+      "CodiceFiscale": "VNTPLA95T31L219K",
       "Name": "Pietro",
       "Surname": "Ventrella",
       "BirthDate": "1995-12-31",

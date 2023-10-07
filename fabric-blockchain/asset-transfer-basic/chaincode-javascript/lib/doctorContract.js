@@ -167,18 +167,6 @@ class DoctorContract extends Contract {
    * @throws {Error} - If the doctor or patient does not exist
    */
   async CreatePrescription(ctx, docID, patientID, prescriptionID, drugs, description) {
-    const exists = await this.PresciptionExists(ctx, prescriptionID);
-    if (exists == true) {
-      throw new Error(`Prescription ${prescriptionID} already exists`);
-    }
-    const docExists = await this.DoctorExists(ctx, docID);
-    if (docExists == false) {
-      throw new Error(`Doctor does not exist`, docExists);
-    }
-    const patientExists = await this.PatientExists(ctx, patientID);
-    if (patientExists == false) {
-      throw new Error(`Patient does not exist`);
-    }
 
     const serializedPrescriptionsList = await ctx.stub.getState('prescriptions');
     const prescriptionsList = JSON.parse(serializedPrescriptionsList.toString());
@@ -239,6 +227,32 @@ class DoctorContract extends Contract {
     const patients = JSON.parse(serializedPatients.toString());
     const patient = patients.find(patient => patient.ID === patientID);
     return patient;
+  }
+
+  /**
+   * Updates the medical history of a specific patient.
+   * @param {Context} ctx - The transaction context object.
+   * @param {string} patientID - The ID of the patient to retrieve.
+   * @param {string} newMedHistory - The new medical history to add.
+   * @returns {Promise<Object>} The patient object.
+   * @throws Will throw an error if there are no patients in the ledger or if the specified patient does not exist.
+   */
+  async UpdatePatientMedHistory(ctx, patientID, newMedHistory) {
+    const serializedPatients = await ctx.stub.getState('patients');
+    if (!serializedPatients || serializedPatients.length === 0) {
+      throw new Error(`There are no patients in the ledger`);
+    }
+    const patientExists = await this.PatientExists(ctx, patientID);
+    if(patientExists == false) {
+      throw new Error(`Patient does not exist`);
+    }
+    const patients = JSON.parse(serializedPatients.toString());
+    const patient = patients.find(patient => patient.ID === patientID);
+    let medHist = patient.MedicalHistory;
+    medHist.push(newMedHistory);
+    patient.MedicalHistory = medHist;
+    await ctx.stub.putState('patients', Buffer.from(stringify(sortKeysRecursive(patients))));
+    return patient.MedicalHistory;
   }
 
 }
