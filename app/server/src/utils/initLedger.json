@@ -63,7 +63,24 @@
         "DrugID": "ec110aef-28ce-4d1b-a008-840e40390329",
         "Quantity": 10
       }]
+    },
+    {
+      "ID": "93ae7246-40c6-40fa-8d5a-fcc34d0edbca",
+      "PharmacyID": "pharmacy2",
+      "ManufacturerID": "94ae7246-40c6-40fa-8d5a-fcc34d0edbca",
+      "BoxIDs": [null, null],
+      "Status": "pending",
+      "Description": "si richiedono 5 scatole di tachipirina e 2 di trembolone",
+      "Drugs":[{
+        "DrugID": "ec110aef-28ce-4d1b-a008-840e40390329",
+        "Quantity": 5
+      },
+      {
+        "DrugID": "ec110aef-28ce-4d1b-a008-840e40390328",
+        "Quantity": 2
+      }]
     }
+
   ],
   "doctors": [
     {
@@ -117,7 +134,7 @@
     "Name": "manufacturer1",
     "Address": "address1",
     "Drugs":
-      [{"Name": "drug1",
+      [{"Name": "Tachipirina 500",
         "DrugID": "ec110aef-28ce-4d1b-a008-840e40390329",
         "Description": "drug1",
         "Price": 100,
@@ -126,6 +143,17 @@
           "element2"
         ],
         "UOM": "mg"
+      },
+      {"Name": "Trembolone",
+        "DrugID": "ec110aef-28ce-4d1b-a008-840e40390328",
+        "Description": "ti fai i muscoli",
+        "Price": 1000,
+        "Composition": [
+          "tre ceres",
+          "una botta di cocaina",
+          "e ti senti come un cane della malesia"
+        ],
+        "UOM": "ml"
       }]
     }
   ]

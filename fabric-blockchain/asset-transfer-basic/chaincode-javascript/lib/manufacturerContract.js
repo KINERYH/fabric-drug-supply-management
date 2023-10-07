@@ -71,11 +71,17 @@ class ManufacturerContract extends Contract{
     if(order.Status !== 'pending'){
       throw new Error('This order is not pending');
     }
+
+
+    let drugsCodes = [];
     let quantity = 0;
     const drugs = order.Drugs;
     console.log(`***Drugs: ${typeof(drugs)}`);
     for (let i=0; i<drugs.length; i++){
       quantity += drugs[i].Quantity;
+      for (let j=0; j<drugs[i].Quantity; j++){
+        drugsCodes.push(drugs[i].DrugID);
+      }
     }
     console.log(`***Quantity: ${quantity}`)
     const boxIDs = JSON.parse(boxUUIDs);
@@ -84,9 +90,10 @@ class ManufacturerContract extends Contract{
       console.log(`***Quantity: ${quantity}`);
       throw new Error('The number of drugs is not correct');
     }
+
     console.log(`Drug ids: ${boxIDs}`);
     orders.find(o => o.ID === orderId).Status = 'shipped';
-    orders.find(o => o.ID === orderId).DrugID = boxIDs;
+    orders.find(o => o.ID === orderId).BoxIDs = boxIDs;
     console.log("***Orders: ")
     console.log(orders);
     await ctx.stub.putState('orders', Buffer.from(stringify(sortKeysRecursive(orders))));
@@ -95,17 +102,20 @@ class ManufacturerContract extends Contract{
     const serLedgerOrders = await ctx.stub.getState('orders');
     console.log(`***Ledger: ${serLedgerOrders.toString()}`);
 
+    // ottengo la lista attuale di tutti i farmaci nel ledger
     const serializedDrugs = await ctx.stub.getState('drugs');
     if (!serializedDrugs || serializedDrugs.length === 0){
       throw new Error('There are no drugs in the ledger');
     }
-    let drugsCodes = [];
-    for (let i=0; i<drugs.length; i++){
-      drugsCodes.push(drugs[i].DrugID);
-    }
+
+
     let drugsList = JSON.parse(serializedDrugs.toString());
-    console.log(`***Drugs: ${stringify(drugsList)}`);
-    const producedDrugs = this.GetManufacturer(ctx, maufacturerId).Drugs;
+    console.log(`***Drugs: ${drugsList}`);
+
+    const manufacturer = await this.GetManufacturer(ctx, maufacturerId);
+
+    const producedDrugs = manufacturer.Drugs;
+    console.log(`***Manufacturer: ${stringify(manufacturer)}`);
 
     const date = new Date();
     const prodDate = date.toISOString().slice(0,10);
@@ -113,10 +123,23 @@ class ManufacturerContract extends Contract{
     date.setFullYear(date.getFullYear() + 1);
     const expDate = date.toISOString().slice(0,10);
 
-
-    for (let i=0; i<drugsCodes.length; i++){
+    console.log(`***ExpDate: ${expDate}`)
+    console.log(`***DrugsCodes: ${drugsCodes}`)
+    console.log(`***ProducedDrugs: ${producedDrugs}`)
+    // producedDrugs: lista di farmaci prodotti dal manufacturer
+    // boxIDs: lista di numero di scatole di farmaci (la lunghezza è la quantità totale dell'ordine)
+    //
+    for (let i=0; i<boxIDs.length; i++){
+      console.log(i)
+      try{
       let drugName = producedDrugs.find(d => d.DrugID === drugsCodes[i]).Name;
+      console.log(`***DrugName: ${drugName}`)
       drugsList.push({BoxID: boxIDs[i], DrugID: drugsCodes[i], Name:drugName, ProductionDate: prodDate, ExpirationDate: expDate});
+      }
+      catch(error){
+
+        throw new Error(`The drug with ID ${drugsCodes[i]} is not produced by this manufacturer`);
+      }
     }
     console.log(`***Drugs: ${drugsList}`);
 
