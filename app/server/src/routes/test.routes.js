@@ -41,6 +41,26 @@ router.get("/pharmacy/:pharmacyID", async (req, res) => {
 	res.json({ status: "OK", data: storage });
 });
 
+
+// curl -X GET http://localhost:3001/api/test/pharmacy/94ae7246-40c6-40fa-8d5a-fcc34d0edbca/quantity
+router.get("/pharmacy/:pharmacyID/quantity", async (req, res) => {
+	const { ccp, wallet } = require("../index");
+	const { contract } = await ledger.connect(ccp, wallet, 'admin', channelName, chaincodeName, 'PharmacyContract');
+	const result = await contract.evaluateTransaction('GetAllDrugs', req.params.pharmacyID);
+	const map = JSON.parse(result.toString());
+	console.log('*** List:', JSON.stringify(map, null, 2));
+	res.json({ status: "OK", data: map });
+});
+
+// curl -X POST http://localhost:3001/api/test/prescriptions/6918bcdb-bf53-4a88-9f11-986b52a72fc4 -H "Content-Type: application/json" -d '{"pharmacyID":"94ae7246-40c6-40fa-8d5a-fcc34d0edbca"}'
+router.post("/prescriptions/:prescriptionID", async (req, res) => {
+	const { ccp, wallet } = require("../index");
+	const { contract } = await ledger.connect(ccp, wallet, 'admin', channelName, chaincodeName, 'PharmacyContract');
+	await contract.submitTransaction('ProcessPrescription', req.params.prescriptionID, req.body.pharmacyID);
+	// console.log(JSON.parse(result.toString()));
+	res.json({ status: "OK", data: "Prescription processed successfully" });
+});
+
 // Test route per il DoctorContract
 router.get("/doctors/prescription/:doctorID", async (req, res) => {
 	const { ccp, wallet } = require("../index");
@@ -87,7 +107,7 @@ router.post("/doctors/prescriptions", async (req, res) => {
 	const { contract } = await ledger.connect(ccp, wallet, 'admin', channelName, chaincodeName, 'DoctorContract');
 	const docID = req.body.DoctorID;
 	const patID = req.body.PatientID;
-	// FONDAMENTALE: qualsiasi array va convertito in stringa per essere correttamente passato al chaincode
+	// FONDAMENTALE: qualsiasi object va convertito in stringa per essere correttamente passato al chaincode
 	const drugs = JSON.stringify(req.body.Drugs);
 	const description = req.body.Description;
 	// Il prescription id deve essere uguale tra i peer quindi va generato prima
@@ -134,4 +154,31 @@ router.post("/manufacturers/validate", async (req, res) => {
 	res.json({ status: "OK", data: orders });
 	console.log("Orders: \n", orders);
 });
+
+router.get("/doctors/medhistory/:patientID", async (req, res) => {
+	const { ccp, wallet } = require("../index");
+	const { contract } = await ledger.connect(ccp, wallet,'admin', channelName, chaincodeName, 'DoctorContract');
+	const result = await contract.submitTransaction('UpdatePatientMedHistory', req.params.patientID, 'provaUpdate');
+	const medicalHistory = JSON.parse(result.toString());
+	res.json({ status: "OK", data: medicalHistory });
+	console.log("Medical History: \n", medicalHistory);
+});
+
+router.get("/patients/:patientID", async (req, res) => {
+	const { ccp, wallet } = require("../index");
+	const { contract } = await ledger.connect(ccp, wallet, 'admin', channelName, chaincodeName, 'PatientContract');
+	const result = await contract.evaluateTransaction('GetAllInfo', req.params.patientID);
+	const patient = JSON.parse(result.toString());
+	res.json({ status: "OK", data: patient });
+});
+
+router.post("/patients/update/:patientID", async (req, res) => {
+	const { ccp, wallet } = require("../index");
+	const { contract } = await ledger.connect(ccp, wallet,'admin', channelName, chaincodeName, 'PatientContract');
+	const result = await contract.submitTransaction('UpdateInfo', req.params.patientID, req.body.Name, req.body.Surname, req.body.Address,  req.body.Birthdate,  req.body.CodiceFiscale);
+	const patient = JSON.parse(result.toString());
+	res.json({ status: "OK", data: patient });
+	console.log("Patient: \n", patient);
+});
+
 module.exports = router;
