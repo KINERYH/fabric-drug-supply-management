@@ -295,6 +295,20 @@ class PharmacyContract extends Contract {
 
 	}
 
+	/**
+	 * 
+	 * @param {*} ctx 
+	 * @returns a list of all the manufacturers
+	 */
+	async GetAllManufacturers(ctx) {
+		const serializedManufacturers = await ctx.stub.getState("manufacturers");
+		if (!serializedManufacturers || serializedManufacturers.length === 0) {
+			throw new Error(`Manufacturers not found`);
+		}
+		const manufacturers = JSON.parse(serializedManufacturers.toString());
+		return manufacturers;
+	}
+
 
 }
 
