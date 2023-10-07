@@ -10,7 +10,9 @@ const getAllUsers = (req, res) => {
 
 const getUser = async (req, res) => {
   try{
-    user = await usersService.getUser(req.params.username);
+    console.log(req.user);
+    console.log('role: ' + req.user.role);
+    user = await usersService.getUser(req.params.userId);
     res.status(200).json({
       message: "Get an existing user: ",
       data: user});

@@ -6,7 +6,7 @@ const authMiddleware = require("../middlewares/auth.middleware");
 
 router.get("/", usersController.getAllUsers);
 // TODO: modificare, usata ora solamente per testare se il token funziona (vd. service)
-router.get("/:username", authMiddleware.authenticateToken, usersController.getUser);
+router.get("/:userId", authMiddleware.authenticateToken, usersController.getUser);
 
 router.post("/", usersController.createUser);
 

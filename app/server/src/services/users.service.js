@@ -12,9 +12,9 @@ const getAllUsers = async () => {
   return;
 };
 
-const getUser = async (username) => {
+const getUser = async (uuid) => {
   try{
-    const user = await db.users.find((u) => u.username === username);
+    const user = await db.users.find((u) => u.uuid === userId);
     if (!user) {
       throw Error("User " + username + " does not exist.");
     }
@@ -25,7 +25,7 @@ const getUser = async (username) => {
     //}
     const user_info = {"username": user.username, "role": user.role, "UUID": user.uuid};
     console.log(`\n--> User info correctly retrieved`);
-    return  user_info;
+    return user_info;
   } catch(error){
     console.error('Failed to get user: ' + username + '\n' + error);
     throw Error(error);
