@@ -17,5 +17,29 @@ Content-Type: "application/json"
 }
 
 ###
-GET http://localhost:3001/api/users/Pietro
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlBpZXRybyIsInBhc3N3b3JkIjoicHJvdmEiLCJpYXQiOjE2OTYxODI3NTQsImV4cCI6MTY5NjE4NjM1NH0.WIgmoreoc_q_RuRGWT0gt5TLyvOascm7uqMufv9sOCE
+GET http://localhost:3001/api/test/
+
+###
+GET http://localhost:3001/api/test/pharmacy/94ae7246-40c6-40fa-8d5a-fcc34d0edbca
+###
+GET http://localhost:3001/api/test/doctors/prescription/94ae7246-40c6-40fa-8d5a-fcc34d0edbca
+
+###
+GET http://localhost:3001/api/test/doctors/name/94ae7246-40c6-40fa-8d5a-fcc34d0edbca
+
+###
+GET http://localhost:3001/api/test/doctors/surname/94ae7246-40c6-40fa-8d5a-fcc34d0edbca
+
+###
+GET http://localhost:3001/api/test/doctors/hospital/94ae7246-40c6-40fa-8d5a-fcc34d0edbca
+
+###
+GET http://localhost:3001/api/test/doctors/specialization/94ae7246-40c6-40fa-8d5a-fcc34d0edbca
+
+###
+GET http://localhost:3001/api/test/doctors/patients/94ae7246-40c6-40fa-8d5a-fcc34d0edbc3a
+
+###
+
+GET http://localhost:3001/api/test//doctors/medhistory/94ae7246-40c6-40fa-8d5a-fcc34d0edbc3a
+

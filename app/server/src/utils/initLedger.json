@@ -1,74 +1,142 @@
 {
   "drugs": [
     {
-      "ID": "ec110aef-28ce-4d1b-a008-840e40390328",
+      "BoxID": "ec110aef-28ce-4d1b-a008-840e40390328",
+      "DrugID": "ec110aef-28ce-4d1b-a008-840e40390329",
       "Name": "drug1",
-      "Description": "drug1",
-      "Price": 100,
-      "Manufacturer": "manufacturer1",
       "ExpirationDate": "2018-12-31T23:59:59.000Z",
-      "Composition": [
-        "element1",
-        "element2"
-      ],
-      "ManufactureDate": "2018-12-31T23:59:59.000Z",
-      "UOM": "mg"
-    }
+      "ProductionDate": "2018-12-31T23:59:59.000Z"
+    },
+    {
+      "BoxID": "ec110aef-28ce-4d1b-a008-840e40390327",
+      "DrugID": "ec110aef-28ce-4d1b-a008-840e40390329",
+      "Name": "drug1",
+      "ExpirationDate": "2018-12-31T23:59:59.000Z",
+      "ProductionDate": "2018-12-31T23:59:59.000Z"
+    },
+    {
+      "BoxID": "ec110aef-28ce-4d1b-a008-840e40390323",
+      "DrugID": "ec110aef-28ce-4d1b-a008-840e40390330",
+      "Name": "drug2",
+      "ExpirationDate": "2018-12-31T23:59:59.000Z",
+      "ProductionDate": "2018-12-31T23:59:59.000Z"
+    } 
   ],
   "prescriptions": [
     {
       "ID": "6918bcdb-bf53-4a88-9f11-986b52a72fc4",
       "DoctorID": "94ae7246-40c6-40fa-8d5a-fcc34d0edbca",
       "PatientID": "patient1",
-      "DrugIDs": [null, null],
+      "PharmacyID": "pharmacy1",
       "Status": "pending",
       "Description": "Due supposte grosse per il culo",
-      "Drugs":{
-        "Name": "drug1",
-        "Quantity": 10
+      "Drugs":[
+      {
+        "DrugID": "ec110aef-28ce-4d1b-a008-840e40390329",
+        "Quantity": 1,
+        "BoxIDs": []
+      },
+      {
+        "DrugID": "ec110aef-28ce-4d1b-a008-840e40390330",
+        "Quantity": 1,
+        "BoxIDs": []
       }
+    ]
 
     },
     {
-      "ID": "94ae7246-40c6-40fa-8d5a-fcc34d0edbca",
-      "DoctorID": "doctor1",
-      "PatientID": "patient1",
-      "DrugID": "drug1",
+      "ID": "6918bcdb-bf53-4a88-9f11-986b53a72fc1",
+      "DoctorID": "94ae7246-40c6-40fa-8d5a-fcc34d0edbca",
+      "PatientID": "patient2",
+      "PharmacyID": "pharmacy1",
       "Status": "pending",
-      "Description": "comment1"
+      "Description": "Tachipirina 100",
+      "Drugs":[{
+        "DrugID": "ec110aef-28ce-4d1b-a008-840e40390329",
+        "Quantity": 10
+      }]
+    },
+    {
+      "ID": "6918bcdb-bf53-4a88-9f11-986b52a7dec4",
+      "DoctorID": "94ae7246-40c6-40fa-8d5a-fcc3420edbca",
+      "PatientID": "patient1",
+      "PharmacyID": "pharmacy1",
+      "Status": "pending",
+      "Description": "Non dovrebbe prenderla",
+      "Drugs":[{
+        "DrugID": "ec110aef-28ce-4d1b-a008-840e40390329",
+        "Quantity": 10
+      }]
     }
   ],
   "orders": [
     {
       "ID": "94ae7246-40c6-40fa-8d5a-fcc34d0edbca",
       "PharmacyID": "pharmacy1",
-      "DrugID": [null, null],
+      "ManufacturerID": "94ae7246-40c6-40fa-8d5a-fcc34d0edbca",
       "Status": "pending",
       "Description": "si richiedono 10 scatole di tachipirina",
-      "Drugs":{
-        "Name": "drug1",
-        "Quantity": 10
-      }
+      "Drugs":[{
+        "DrugID": "ec110aef-28ce-4d1b-a008-840e40390329",
+        "Quantity": 10,
+        "BoxIDs": []
+      }]
+    },
+    {
+      "ID": "93ae7246-40c6-40fa-8d5a-fcc34d0edbca",
+      "PharmacyID": "pharmacy2",
+      "ManufacturerID": "94ae7246-40c6-40fa-8d5a-fcc34d0edbca",
+      "Status": "pending",
+      "Description": "si richiedono 5 scatole di tachipirina e 2 di trembolone",
+      "Drugs":[{
+        "DrugID": "ec110aef-28ce-4d1b-a008-840e40390329",
+        "Quantity": 5,
+        "BoxIDs": []
+      },
+      {
+        "DrugID": "ec110aef-28ce-4d1b-a008-840e40390328",
+        "Quantity": 2,
+        "BoxIDs": []
+      }]
+    },
+    {
+      "ID": "93ae7246-40c6-40fa-8d5a-fcc34d0edbca",
+      "PharmacyID": "pharmacy2",
+      "ManufacturerID": "94ae7246-40c6-40fa-8d5a-fcc34d0edbca",
+      "BoxIDs": [null, null],
+      "Status": "pending",
+      "Description": "si richiedono 5 scatole di tachipirina e 2 di trembolone",
+      "Drugs":[{
+        "DrugID": "ec110aef-28ce-4d1b-a008-840e40390329",
+        "Quantity": 5
+      },
+      {
+        "DrugID": "ec110aef-28ce-4d1b-a008-840e40390328",
+        "Quantity": 2
+      }]
     }
+
   ],
   "doctors": [
     {
       "ID": "94ae7246-40c6-40fa-8d5a-fcc34d0edbca",
-      "Name": "doctor1",
+      "Name": "Francesco",
+      "Surname": "Ventrella",
       "Specialization": "Neonatologia",
       "Hospital": "Ospedale di Venere"
     },
     {
       "ID": "94ae7246-40c6-40fa-8d5a-fcc34d0edbcb",
-      "Name": "doctor2",
+      "Name": "Pietro",
+      "Surname": "Diana",
       "Specialization": "Cardiologia",
       "Hospital": "Ospedale San Paolo"
     }
   ],
   "patients": [
     {
-      "ID": "94ae7246-40c6-40fa-8d5a-fcc34d0edbca",
-      "Codice Fiscale": "VNTPLA95T31L219K",
+      "ID": "94ae7246-40c6-40fa-8d5a-fcc34d0edbc3a",
+      "CodiceFiscale": "VNTPLA95T31L219K",
       "Name": "Pietro",
       "Surname": "Ventrella",
       "BirthDate": "1995-12-31",
@@ -91,15 +159,45 @@
       "Name": "pharmacy1",
       "Address": "address1",
       "DrugStorage": [
-        "ec110aef-28ce-4d1b-a008-840e40390328",
-        "ec110aef-28ce-4d1b-a008-840e40390329"
+        {
+          "DrugID": "ec110aef-28ce-4d1b-a008-840e40390329",
+          "Quantity": 2,
+          "BoxIDs": ["ec110aef-28ce-4d1b-a008-840e40390328", "ec110aef-28ce-4d1b-a008-840e40390327"]
+        },
+        {
+          "DrugID": "ec110aef-28ce-4d1b-a008-840e40390330",
+          "Quantity": 1,
+          "BoxIDs": ["ec110aef-28ce-4d1b-a008-840e40390323"]
+        }
       ]
     }
   ],
-  "manufacturer": [
+  "manufacturers": [
     {"ID": "94ae7246-40c6-40fa-8d5a-fcc34d0edbca",
     "Name": "manufacturer1",
-    "Address": "address1"
-  }
+    "Address": "address1",
+    "Drugs":
+      [{"Name": "Tachipirina 500",
+        "DrugID": "ec110aef-28ce-4d1b-a008-840e40390329",
+        "Description": "drug1",
+        "Price": 100,
+        "Composition": [
+          "element1",
+          "element2"
+        ],
+        "UOM": "mg"
+      },
+      {"Name": "Trembolone",
+        "DrugID": "ec110aef-28ce-4d1b-a008-840e40390328",
+        "Description": "ti fai i muscoli",
+        "Price": 1000,
+        "Composition": [
+          "tre ceres",
+          "una botta di cocaina",
+          "e ti senti come un cane della malesia"
+        ],
+        "UOM": "ml"
+      }]
+    }
   ]
 }
