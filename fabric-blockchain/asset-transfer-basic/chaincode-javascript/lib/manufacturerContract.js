@@ -3,10 +3,18 @@
 const stringify  = require('json-stringify-deterministic');
 const sortKeysRecursive  = require('sort-keys-recursive');
 const { Contract } = require('fabric-contract-api');
-const { v4: uuidv4 } = require('uuid');
 
 class ManufacturerContract extends Contract{
 
+  /**
+   * Retrieves an order from the ledger by its ID.
+   * @async
+   * @function
+   * @param {Context} ctx - The transaction context object.
+   * @param {string} orderId - The ID of the order to retrieve.
+   * @returns {Promise<Object>} The order object.
+   * @throws Will throw an error if there are no orders in the ledger.
+   */
   async GetOrder(ctx, orderId){
     const serializedOrders = await ctx.stub.getState('orders');
     if (!serializedOrders || serializedOrders.length === 0){
@@ -14,8 +22,16 @@ class ManufacturerContract extends Contract{
     }
     const orders = JSON.parse(serializedOrders.toString());
     const order = orders.find(o => o.ID === orderId);
-    return order;}
+    return order;
+  }
 
+  /**
+   *
+   * @param {Context} ctx - The transaction context object.
+   * @param {string} manufacturerId - The ID of the manufacturer.
+   * @returns {Promise<Object>} The list of all orders as a string.
+   * @throws Will throw an error if there are no orders in the ledger.
+   */
   async GetAllOrders(ctx, manufacturerId){
     const serializedOrders = await ctx.stub.getState('orders');
     if (!serializedOrders || serializedOrders.length === 0){
@@ -26,6 +42,15 @@ class ManufacturerContract extends Contract{
     return manufacturerOrders;
   }
 
+
+
+  /**
+   * Retrieves an order from the ledger by its ID.
+   * @param {Context} ctx The transaction context.
+   * @param {string} orderId The ID of the order to retrieve.
+   * @returns {Promise<Object>} The order object.
+   * @throws Will throw an error if there are no orders in the ledger.
+   */
   async GetName(ctx, id){
     const serializedManufacturers = await ctx.stub.getState('manufacturer');
     if (!serializedManufacturers || serializedManufacturers.length === 0){
@@ -36,6 +61,16 @@ class ManufacturerContract extends Contract{
     return manufacturer.Name
   }
 
+
+  /**
+   * Retrieves a manufacturer from the ledger by ID.
+   * @async
+   * @function GetManufacturer
+   * @param {Context} ctx - The transaction context.
+   * @param {string} id - The ID of the manufacturer to retrieve.
+   * @returns {Promise<Object>} The manufacturer object.
+   * @throws Will throw an error if there are no manufacturers in the ledger.
+   */
   async GetManufacturer(ctx, id){
     const serializedManufacturers = await ctx.stub.getState('manufacturer');
     if (!serializedManufacturers || serializedManufacturers.length === 0){
@@ -46,6 +81,14 @@ class ManufacturerContract extends Contract{
     return manufacturer
   }
 
+
+  /**
+   * Retrieves an order from the ledger by its ID.
+   * @param {Context} ctx - The transaction context object
+   * @param {string} orderId - The ID of the order to retrieve
+   * @returns {Promise<Object>} The order object
+   * @throws Will throw an error if there are no orders in the ledger or if the specified order ID is not found
+   */
   async GetAddress(ctx, id){
     const serializedManufacturers = await ctx.stub.getState('manufacturer');
     if (!serializedManufacturers || serializedManufacturers.length === 0){
@@ -56,6 +99,21 @@ class ManufacturerContract extends Contract{
     return manufacturer.Address
   }
 
+
+  /**
+   * Validates an order by checking if it exists, is for the correct manufacturer, and is in a pending status.
+   * Also checks if the number of drugs in the order matches the number of box UUIDs provided.
+   * Updates the order status to "shipped" and adds box IDs to the order drugs.
+   * Adds the drugs to the ledger with their box IDs, production date, and expiration date.
+   * @param {Context} ctx - The transaction context object.
+   * @param {string} orderId - The ID of the order to validate.
+   * @param {string} maufacturerId - The ID of the manufacturer to validate the order for.
+   * @param {string} boxUUIDs - The UUIDs of the single drug boxes in the order.
+   * @returns {Promise<Object>} The validated order object.
+   * @throws {Error} If there are no orders or drugs in the ledger, if the order is not for the correct manufacturer,
+   * if the order is not in a pending status, if the number of drugs in the order does not match the number of box UUIDs provided,
+   * or if the drug with a certain ID is not produced by this manufacturer.
+   */
   async ValidateOrder(ctx, orderId, maufacturerId, boxUUIDs){
     const serializedOrders = await ctx.stub.getState('orders');
     if (!serializedOrders || serializedOrders.length === 0){

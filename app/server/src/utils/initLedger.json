@@ -53,8 +53,19 @@
       "Description": "Tachipirina 100",
       "Drugs":[{
         "DrugID": "ec110aef-28ce-4d1b-a008-840e40390329",
-        "Quantity": 10,
-        "BoxIDs": []
+        "Quantity": 10
+      }]
+    },
+    {
+      "ID": "6918bcdb-bf53-4a88-9f11-986b52a7dec4",
+      "DoctorID": "94ae7246-40c6-40fa-8d5a-fcc3420edbca",
+      "PatientID": "patient1",
+      "PharmacyID": "pharmacy1",
+      "Status": "pending",
+      "Description": "Non dovrebbe prenderla",
+      "Drugs":[{
+        "DrugID": "ec110aef-28ce-4d1b-a008-840e40390329",
+        "Quantity": 10
       }]
     }
   ],
