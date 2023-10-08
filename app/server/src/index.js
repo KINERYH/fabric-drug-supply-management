@@ -10,7 +10,7 @@ const { chaincodeName, channelName } = require("./config/blockchain");
 const ledger = require("./utils/blockchain/connection");
 
 async function main() {
-  // const { ccp, caClient, wallet } = await auth.setupBlockchainApplicationConfig();
+  const { ccp, caClient, wallet } = await auth.setupBlockchainApplicationConfig();
   
   if (process.env?.INIT_LEDGER){
     await init_ledger(ccp, wallet, 'admin');
@@ -37,7 +37,7 @@ async function main() {
     console.log(`Server listening on ${PORT}`);
   });
 
-  // return { ccp, caClient, wallet };
+  return { ccp, caClient, wallet };
 };
 
 // Chiamo la funzione main() e gestisco le promesse
@@ -45,7 +45,7 @@ main()
   .then((result) => {
     // Esporta result (che contiene ccp, caClient e wallet)
     // esportando ...result sto esportando { result.ccp, result.caClient, result.wallet}
-    // module.exports = { ...result };
+    module.exports = { ...result };
   })
   .catch((error) => {
     console.error(`Failed to startup the server: ${error}`);
@@ -64,7 +64,7 @@ async function init_ledger(ccp, wallet, adminId) {
   // This type of transaction would only be run once by an application the first time it was started after it
   // deployed the first time. Any updates to the chaincode deployed later would likely not need to run
   // an "init" type function.
-
+  console.log(initState);
   console.log('\n--> Submit Transaction: InitLedger, function creates the initial set of assets on the ledger');
   await contract.submitTransaction('InitLedger', JSON.stringify(initState));
   console.log('*** Result: committed');

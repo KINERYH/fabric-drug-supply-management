@@ -35,6 +35,7 @@ const { mspOrg1, walletPath } = require("../../config/blockchain.js");
 
 exports.registerUser = async (org1UserId) => {
 	try {
+    console.log(org1UserId);
     const { caClient, wallet } = require("../../index.js");
 		// in a real application this would be done only when a new user was required to be added
 		// and would be part of an administrative flow

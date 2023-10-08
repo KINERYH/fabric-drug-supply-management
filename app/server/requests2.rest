@@ -21,8 +21,7 @@ GET http://localhost:3001/api/users/Pietro
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlBpZXRybyIsInBhc3N3b3JkIjoicHJvdmEiLCJpYXQiOjE2OTYxODI3NTQsImV4cCI6MTY5NjE4NjM1NH0.WIgmoreoc_q_RuRGWT0gt5TLyvOascm7uqMufv9sOCE
 
 
-curl -X POST http://localhost:3001/api/users/login -H "Content-Type: application/json" -d '{"username":"
-Fra","password":"prova"}'
+curl -X POST http://localhost:3001/api/users/login -H "Content-Type: application/json" -d '{"username":"Fra","password":"prova"}'
 
 curl -X GET http://localhost:3001/api/users/31518575-86c5-4d25-b592-4a5118160921 
 -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkZyYSIsInJvbGUiOiJwYXRpZW50IiwiaWF0IjoxNjk2NzA0MDYxLCJleHAiOjE2OTY3MDc2NjF9.QZkXELJ_nJPbe2gNc7dNjRkzb934wOaT6R2X_rdVfn8"

@@ -10,34 +10,30 @@ const getAllUsers = (req, res) => {
 
 const getUser = async (req, res) => {
   try{
-    console.log(req.user);
-    console.log('role: ' + req.user.role);
     user = await usersService.getUser(req.params.userId);
     res.status(200).json({
       message: "Get an existing user: ",
-      data: user});
+      data: user
+    });
   } catch(error){
-    res.status(500).json({
+    res.status(error?.status || 500).json({
       message: "User not found.",
-      error: error.message
+      error: error?.message || error
     });
   }
 };
 
 const createUser = async (req, res) => {
   try{
-    const hashedPassword = await bcrypt.hash(req.body.password, 10);
     const createdUser = await usersService.createUser(req.body);
-    console.log("Salt: " + salt)
-    console.log("Hashed password: " + hashedPassword)
     res.status(201).json({
       message: "New user created.",
       data: createdUser
     });
   } catch(error){
-    res.status(500).json({
+    res.status(error?.status || 500).json({
       message: "User not created.",
-      error: error.message
+      error: error?.message || error
     });
   }
 };
@@ -56,12 +52,12 @@ const loginUser = async (req, res) => {
   try{
     const token = await usersService.loginUser(req.body);
     res.status(200).json({
-      message: "Login succeded: ",
+      message: "Login succeded.",
       token: token});
-  } catch(error){
-    res.status(500).json({
+  } catch(error) {
+    res.status(error?.status || 500).json({
       message: "Login failed.",
-      error: error.message
+      error: error?.message || error
     });
   }
 

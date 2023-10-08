@@ -3,7 +3,6 @@
 const stringify  = require('json-stringify-deterministic');
 const sortKeysRecursive  = require('sort-keys-recursive');
 const { Contract } = require('fabric-contract-api');
-const { v4: uuidv4 } = require('uuid');
 
 
 class DoctorContract extends Contract {
@@ -252,6 +251,28 @@ class DoctorContract extends Contract {
     medHist.push(newMedHistory);
     patient.MedicalHistory = medHist;
     await ctx.stub.putState('patients', Buffer.from(stringify(sortKeysRecursive(patients))));
+    return patient.MedicalHistory;
+  }
+
+  /**
+   * Updates the medical history of a specific patient.
+   * @param {Context} ctx - The transaction context object.
+   * @param {object} user - The user object with all properties but password.
+   * @returns {Promise<Object>} The doctor object.
+   * @throws Will throw an error if there is already a doctor with this uuid.
+   */
+  async putUser(ctx, user) {
+    user = JSON.parse(user);
+    const DoctorExists = await this.DoctorExists(ctx, user.uuid);
+    if(DoctorExists) {
+      throw new Error(`Doctor already exist`);
+    }
+
+    const serializedDoctors = await ctx.stub.getState('doctors');
+    const doctors = JSON.parse(serializedDoctors.toString());
+    doctors.push(user);
+    console.log(doctors);
+    await ctx.stub.putState('doctors', Buffer.from(stringify(sortKeysRecursive(patients))));
     return patient.MedicalHistory;
   }
 
