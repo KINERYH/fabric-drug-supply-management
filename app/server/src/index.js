@@ -64,7 +64,7 @@ async function init_ledger(ccp, wallet, adminId) {
   // This type of transaction would only be run once by an application the first time it was started after it
   // deployed the first time. Any updates to the chaincode deployed later would likely not need to run
   // an "init" type function.
-
+  console.log(initState);
   console.log('\n--> Submit Transaction: InitLedger, function creates the initial set of assets on the ledger');
   await contract.submitTransaction('InitLedger', JSON.stringify(initState));
   console.log('*** Result: committed');

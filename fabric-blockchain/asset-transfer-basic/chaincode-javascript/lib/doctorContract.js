@@ -3,7 +3,6 @@
 const stringify  = require('json-stringify-deterministic');
 const sortKeysRecursive  = require('sort-keys-recursive');
 const { Contract } = require('fabric-contract-api');
-const { v4: uuidv4 } = require('uuid');
 
 
 class DoctorContract extends Contract {

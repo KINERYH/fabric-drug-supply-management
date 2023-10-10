@@ -20,7 +20,7 @@
       "Name": "drug2",
       "ExpirationDate": "2018-12-31T23:59:59.000Z",
       "ProductionDate": "2018-12-31T23:59:59.000Z"
-    } 
+    }
   ],
   "prescriptions": [
     {
@@ -30,19 +30,18 @@
       "PharmacyID": "pharmacy1",
       "Status": "pending",
       "Description": "Due supposte grosse per il culo",
-      "Drugs":[
-      {
-        "DrugID": "ec110aef-28ce-4d1b-a008-840e40390329",
-        "Quantity": 1,
-        "BoxIDs": []
-      },
-      {
-        "DrugID": "ec110aef-28ce-4d1b-a008-840e40390330",
-        "Quantity": 1,
-        "BoxIDs": []
-      }
-    ]
-
+      "Drugs": [
+        {
+          "DrugID": "ec110aef-28ce-4d1b-a008-840e40390329",
+          "Quantity": 1,
+          "BoxIDs": []
+        },
+        {
+          "DrugID": "ec110aef-28ce-4d1b-a008-840e40390330",
+          "Quantity": 1,
+          "BoxIDs": []
+        }
+      ]
     },
     {
       "ID": "6918bcdb-bf53-4a88-9f11-986b53a72fc1",
@@ -51,10 +50,12 @@
       "PharmacyID": "pharmacy1",
       "Status": "pending",
       "Description": "Tachipirina 100",
-      "Drugs":[{
-        "DrugID": "ec110aef-28ce-4d1b-a008-840e40390329",
-        "Quantity": 10
-      }]
+      "Drugs": [
+        {
+          "DrugID": "ec110aef-28ce-4d1b-a008-840e40390329",
+          "Quantity": 10
+        }
+      ]
     },
     {
       "ID": "6918bcdb-bf53-4a88-9f11-986b52a7dec4",
@@ -63,10 +64,12 @@
       "PharmacyID": "pharmacy1",
       "Status": "pending",
       "Description": "Non dovrebbe prenderla",
-      "Drugs":[{
-        "DrugID": "ec110aef-28ce-4d1b-a008-840e40390329",
-        "Quantity": 10
-      }]
+      "Drugs": [
+        {
+          "DrugID": "ec110aef-28ce-4d1b-a008-840e40390329",
+          "Quantity": 10
+        }
+      ]
     }
   ],
   "orders": [
@@ -76,11 +79,13 @@
       "ManufacturerID": "94ae7246-40c6-40fa-8d5a-fcc34d0edbca",
       "Status": "pending",
       "Description": "si richiedono 10 scatole di tachipirina",
-      "Drugs":[{
-        "DrugID": "ec110aef-28ce-4d1b-a008-840e40390329",
-        "Quantity": 10,
-        "BoxIDs": []
-      }]
+      "Drugs": [
+        {
+          "DrugID": "ec110aef-28ce-4d1b-a008-840e40390329",
+          "Quantity": 10,
+          "BoxIDs": []
+        }
+      ]
     },
     {
       "ID": "93ae7246-40c6-40fa-8d5a-fcc34d0edbca",
@@ -88,34 +93,40 @@
       "ManufacturerID": "94ae7246-40c6-40fa-8d5a-fcc34d0edbca",
       "Status": "pending",
       "Description": "si richiedono 5 scatole di tachipirina e 2 di trembolone",
-      "Drugs":[{
-        "DrugID": "ec110aef-28ce-4d1b-a008-840e40390329",
-        "Quantity": 5,
-        "BoxIDs": []
-      },
-      {
-        "DrugID": "ec110aef-28ce-4d1b-a008-840e40390328",
-        "Quantity": 2,
-        "BoxIDs": []
-      }]
+      "Drugs": [
+        {
+          "DrugID": "ec110aef-28ce-4d1b-a008-840e40390329",
+          "Quantity": 5,
+          "BoxIDs": []
+        },
+        {
+          "DrugID": "ec110aef-28ce-4d1b-a008-840e40390328",
+          "Quantity": 2,
+          "BoxIDs": []
+        }
+      ]
     },
     {
       "ID": "93ae7246-40c6-40fa-8d5a-fcc34d0edbca",
       "PharmacyID": "pharmacy2",
       "ManufacturerID": "94ae7246-40c6-40fa-8d5a-fcc34d0edbca",
-      "BoxIDs": [null, null],
+      "BoxIDs": [
+        null,
+        null
+      ],
       "Status": "pending",
       "Description": "si richiedono 5 scatole di tachipirina e 2 di trembolone",
-      "Drugs":[{
-        "DrugID": "ec110aef-28ce-4d1b-a008-840e40390329",
-        "Quantity": 5
-      },
-      {
-        "DrugID": "ec110aef-28ce-4d1b-a008-840e40390328",
-        "Quantity": 2
-      }]
+      "Drugs": [
+        {
+          "DrugID": "ec110aef-28ce-4d1b-a008-840e40390329",
+          "Quantity": 5
+        },
+        {
+          "DrugID": "ec110aef-28ce-4d1b-a008-840e40390328",
+          "Quantity": 2
+        }
+      ]
     }
-
   ],
   "doctors": [
     {
@@ -162,42 +173,51 @@
         {
           "DrugID": "ec110aef-28ce-4d1b-a008-840e40390329",
           "Quantity": 2,
-          "BoxIDs": ["ec110aef-28ce-4d1b-a008-840e40390328", "ec110aef-28ce-4d1b-a008-840e40390327"]
+          "BoxIDs": [
+            "ec110aef-28ce-4d1b-a008-840e40390328",
+            "ec110aef-28ce-4d1b-a008-840e40390327"
+          ]
         },
         {
           "DrugID": "ec110aef-28ce-4d1b-a008-840e40390330",
           "Quantity": 1,
-          "BoxIDs": ["ec110aef-28ce-4d1b-a008-840e40390323"]
+          "BoxIDs": [
+            "ec110aef-28ce-4d1b-a008-840e40390323"
+          ]
         }
       ]
     }
   ],
   "manufacturers": [
-    {"ID": "94ae7246-40c6-40fa-8d5a-fcc34d0edbca",
-    "Name": "manufacturer1",
-    "Address": "address1",
-    "Drugs":
-      [{"Name": "Tachipirina 500",
-        "DrugID": "ec110aef-28ce-4d1b-a008-840e40390329",
-        "Description": "drug1",
-        "Price": 100,
-        "Composition": [
-          "element1",
-          "element2"
-        ],
-        "UOM": "mg"
-      },
-      {"Name": "Trembolone",
-        "DrugID": "ec110aef-28ce-4d1b-a008-840e40390328",
-        "Description": "ti fai i muscoli",
-        "Price": 1000,
-        "Composition": [
-          "tre ceres",
-          "una botta di cocaina",
-          "e ti senti come un cane della malesia"
-        ],
-        "UOM": "ml"
-      }]
+    {
+      "ID": "94ae7246-40c6-40fa-8d5a-fcc34d0edbca",
+      "Name": "manufacturer1",
+      "Address": "address1",
+      "Drugs": [
+        {
+          "Name": "Tachipirina 500",
+          "DrugID": "ec110aef-28ce-4d1b-a008-840e40390329",
+          "Description": "drug1",
+          "Price": 100,
+          "Composition": [
+            "element1",
+            "element2"
+          ],
+          "UOM": "mg"
+        },
+        {
+          "Name": "Trembolone",
+          "DrugID": "ec110aef-28ce-4d1b-a008-840e40390328",
+          "Description": "ti fai i muscoli",
+          "Price": 1000,
+          "Composition": [
+            "tre ceres",
+            "una botta di cocaina",
+            "e ti senti come un cane della malesia"
+          ],
+          "UOM": "ml"
+        }
+      ]
     }
   ]
 }

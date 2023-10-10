@@ -21,7 +21,7 @@ class AssetTransfer extends Contract {
         await ctx.stub.putState('doctors', Buffer.from(stringify(sortKeysRecursive(initState.doctors))));
         await ctx.stub.putState('patients', Buffer.from(stringify(sortKeysRecursive(initState.patients))));
         await ctx.stub.putState('pharmacies', Buffer.from(stringify(sortKeysRecursive(initState.pharmacies))));
-        await ctx.stub.putState('manufacturer', Buffer.from(stringify(sortKeysRecursive(initState.manufacturer))));
+        await ctx.stub.putState('manufacturer', Buffer.from(stringify(sortKeysRecursive(initState.manufacturers))));
         // for (const asset of assets) {
         //     asset.docType = 'asset';
         //     // example of how to write to world state deterministically
