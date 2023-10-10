@@ -254,28 +254,6 @@ class DoctorContract extends Contract {
     return patient.MedicalHistory;
   }
 
-  /**
-   * Updates the medical history of a specific patient.
-   * @param {Context} ctx - The transaction context object.
-   * @param {object} user - The user object with all properties but password.
-   * @returns {Promise<Object>} The doctor object.
-   * @throws Will throw an error if there is already a doctor with this uuid.
-   */
-  async putUser(ctx, user) {
-    user = JSON.parse(user);
-    const DoctorExists = await this.DoctorExists(ctx, user.uuid);
-    if(DoctorExists) {
-      throw new Error(`Doctor already exist`);
-    }
-
-    const serializedDoctors = await ctx.stub.getState('doctors');
-    const doctors = JSON.parse(serializedDoctors.toString());
-    doctors.push(user);
-    console.log(doctors);
-    await ctx.stub.putState('doctors', Buffer.from(stringify(sortKeysRecursive(patients))));
-    return patient.MedicalHistory;
-  }
-
 }
 
 module.exports = DoctorContract;

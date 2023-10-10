@@ -6,6 +6,8 @@ const salt = process.env.BCRYPT_SALT;
 const { v4: uuidv4 } = require('uuid');
 const bcrypt = require("bcrypt");
 const authMid = require("../middlewares/auth.middleware");
+const ledger = require("../utils/blockchain/connection");
+const { chaincodeName, channelName } = require("../config/blockchain");
 
 
 
@@ -31,7 +33,6 @@ const getUser = async (userId) => {
     console.error('Failed to get user: ' + user.username + '\n' + error?.message);
     throw error;
   }
-
 }
 
 const loginUser = async (userReq) => {
@@ -71,20 +72,22 @@ const loginUser = async (userReq) => {
 
 const createUser = async (user) => {
   const db = require('../database/db.json');
+  const uuid = uuidv4();
   try {
+    const { ccp, wallet } = require("../index");
+    
     console.log(user);
     if (!user.username) {
-      throw Error("Missing username.");
+      throw { status: 400, message: "Missing username."};
     }
     if (!user.password) {
-      throw Error("Missing password.");
+      throw { status: 400, message: "Missing password."};
     }
     const userDb = await db.users.find((u) => u.username === user.username);
     if (userDb) {
-      throw Error("User already exists.");
+      throw { status: 400, message: "User already exists."};
     }
 
-    const uuid = uuidv4();
     const hashedPassword = await bcrypt.hash(user.password, parseInt(salt));
     console.log("Hashed password: " + hashedPassword);
     const newUser = {
@@ -97,13 +100,35 @@ const createUser = async (user) => {
     console.log(newUser);
     db.users.push(newUser);
     fs.writeFileSync("./src/database/db.json", JSON.stringify(db, null, 2));
+    //register and enroll user
     await auth.registerUser(uuid);
-    return newUser;
+    //connect to the ledger getting his smart contract
+    const { gateway, contract } = await ledger.connect(ccp, wallet, uuid, channelName, chaincodeName, newUser.smartContract);
+    //register user in the state
+    let newUserLedger = {
+      "Name": user.username,
+      "Surname": user?.surname || '',
+      "ID": uuid,
+      "Address": user?.address || '',
+      "Allergies": user?.allergies || [],
+      "BirthDate": user?.birthDate || '',
+      "CodiceFiscale": user?.cf || '',
+      "MedicalHistory": user?.medicalHistory || [],
+      "Height": user?.height || '',
+      "Weight": user?.weight || ''
+    };
+    console.log('\n--> Submit Transaction: PutUser');
+    newUserLedger = await contract.submitTransaction('PutUser', JSON.stringify(newUserLedger));
+    console.log('*** Result: committed');
+    ledger.disconnect(gateway);
+    newUserLedger = JSON.parse(newUserLedger.toString());
+    return newUserLedger;
   } catch (error) {
-    console.error('Failed to register user: ' + user.username + '\n' + error);
+    console.error('Failed to register user: ' + user.username);
+    console.error(error);
     delete db.users[db.users.indexOf(uuid)];
     fs.writeFileSync("./src/database/db.json", JSON.stringify(db, null, 2));
-    throw Error(error);
+    throw error;
   }
 };
 

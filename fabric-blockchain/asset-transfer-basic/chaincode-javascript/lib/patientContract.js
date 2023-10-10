@@ -97,6 +97,35 @@ class PatientContract extends Contract {
     console.log("***patient: ", patient);
     return patient;
   }
+
+    /**
+   * Put the patient in the state.
+   * @param {Context} ctx - The transaction context object.
+   * @param {object} user - The user object with all properties but password.
+   * @returns {Promise<Object>} The patient object.
+   * @throws Will throw an error if there is already a doctor with this uuid.
+   */
+    async PutUser(ctx, user) {
+      user = JSON.parse(user);
+      console.log("try to insert in the ledger:");
+      console.log(user);
+      const serializedPatients = await ctx.stub.getState('patients');
+      const patients = JSON.parse(serializedPatients.toString());
+
+      const exists = patients.find(patient => patient.ID === user.ID)
+      if(exists) {
+        throw new Error(`Patients already exist`);
+      }
+
+      // remove password attribute if exists
+      delete user.password;
+      // put new user
+      patients.push(user);
+      console.log(patients);
+      await ctx.stub.putState('patients', Buffer.from(stringify(sortKeysRecursive(patients))));
+      console.log("Successfully added new user.")
+      return user;
+    }
 }
 
 module.exports = PatientContract;
