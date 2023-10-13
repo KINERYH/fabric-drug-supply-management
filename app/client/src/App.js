@@ -1,43 +1,37 @@
-import logo from './logo.svg';
 import './App.css';
-import { useState } from 'react';
+import {Link, Route, Routes} from 'react-router-dom';
+import Home from './Home';
+import About from './About';
+import Persona from './Persona';
 
 function App() {
-  const [data, setData] = useState(null);
-
-  const fetchData = async () => {
-    try {
-      const response = await fetch('/api/drugs');
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      const jsonData = await response.json();
-      setData(jsonData);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
-  };
-
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <div>
-          <button onClick={fetchData}>Get all drugs</button>
-          <div>
-            {data && (
-              <pre>
-                <code>{JSON.stringify(data, null, 2)}</code>
-              </pre>
-            )}
-          </div>
-        </div>
-      </header>
-    </div>
-  );
+    <>
+    <nav>
+      <ul>
+        <li>
+          <Link to="/">Home</Link>
+        </li>
+        <li><Link to="/about">About</Link>
+        </li>
+        <li>
+          <Link to="/kvnwlvwrn">Errore</Link>
+        </li>
+      </ul>
+    </nav>
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/about" element={<About />} />
+      <Route path="/about/:id" element={<Persona />} />
+      <Route path='about'>
+        <Route path=':id' element={<Persona/>}></Route>
+      </Route>
+      <Route path='*'>Not Found</Route>
+
+    </Routes>
+    </>
+  )
+
 }
 
 export default App;
