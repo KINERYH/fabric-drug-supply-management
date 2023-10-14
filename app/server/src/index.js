@@ -8,31 +8,36 @@ const testRouter = require("./routes/test.routes");
 const auth = require("./utils/blockchain/authentication");
 const { chaincodeName, channelName } = require("./config/blockchain");
 const ledger = require("./utils/blockchain/connection");
+const cors = require('cors');
 
 async function main() {
   const { ccp, caClient, wallet } = await auth.setupBlockchainApplicationConfig();
-  
+
   if (process.env?.INIT_LEDGER){
     await init_ledger(ccp, wallet, 'admin');
   }
 
+  app.use(cors({"origin": "*",
+  "methods": "GET,HEAD,PUT,PATCH,POST,DELETE"}));
+
   // Serves React frontend static files from 'build' directory
   app.use(express.static(path.join(__dirname, "../../client/build")));
 
-  
+
   app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "../../client/build", "index.html"));
   });
-  
+
   app.get("/api", (req, res) => {
       res.json({ message: "Hello from server!" });
   });
-  
+
   app.use(express.json());
   app.use("/api/drugs", drugsRouter);
   app.use("/api/users", usersRouter);
   app.use("/api/test", testRouter);
-  
+
+
   app.listen(PORT, () => {
     console.log(`Server listening on ${PORT}`);
   });
@@ -53,13 +58,13 @@ main()
 
 async function init_ledger(ccp, wallet, adminId) {
   console.log('Inizializing the ledger ...');
-  
+
   // Reading the initLedger json file
   const initState = require('./utils/initLedger.json');
 
   // Connect to the ledger
   const { gateway, contract } = await ledger.connect(ccp, wallet, adminId, channelName, chaincodeName);
-  
+
   // Initialize a set of asset data on the channel using the chaincode 'InitLedger' function.
   // This type of transaction would only be run once by an application the first time it was started after it
   // deployed the first time. Any updates to the chaincode deployed later would likely not need to run
@@ -70,6 +75,6 @@ async function init_ledger(ccp, wallet, adminId) {
   console.log('*** Result: committed');
 
   ledger.disconnect(gateway);
-  
+
   console.log('Ledger inizialized ...');
 }

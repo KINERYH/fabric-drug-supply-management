@@ -1,8 +1,8 @@
 import './App.css';
-import {Link, Route, Routes} from 'react-router-dom';
+import {Link, Route, Routes, NavLink} from 'react-router-dom';
 import Home from './Home';
-import About from './About';
-import Persona from './Persona';
+import SignIn from './SignIn';
+import SignUp from './SignUp';
 
 function App() {
   return (
@@ -10,22 +10,20 @@ function App() {
     <nav>
       <ul>
         <li>
-          <Link to="/">Home</Link>
-        </li>
-        <li><Link to="/about">About</Link>
+          <NavLink to="/">Home</NavLink>
         </li>
         <li>
-          <Link to="/kvnwlvwrn">Errore</Link>
+          <NavLink to="/signup">Registrati</NavLink>
+        </li>
+        <li>
+          <NavLink to="/signin">Login</NavLink>
         </li>
       </ul>
     </nav>
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="/about" element={<About />} />
-      <Route path="/about/:id" element={<Persona />} />
-      <Route path='about'>
-        <Route path=':id' element={<Persona/>}></Route>
-      </Route>
+      <Route path="/signin" element={<SignIn />} />
+      <Route path="/signup" element={<SignUp />} />
       <Route path='*'>Not Found</Route>
 
     </Routes>

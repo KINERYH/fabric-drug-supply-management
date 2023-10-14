@@ -43,7 +43,7 @@ const loginUser = async (userReq) => {
     if (!userDb) {
       throw { status: 401, message: "User " + userReq.username + " does not exist."};
     }
-    
+
     const matched = await new Promise((resolve, reject) => {
       bcrypt.compare(userReq.password, userDb.password, (err, result) => {
         (err) ? reject(err) : resolve(result);
@@ -55,10 +55,10 @@ const loginUser = async (userReq) => {
     });
     console.log("Password match: " + matched);
     if (matched) {
-      return authMid.releaseToken({ 
-        username: userReq.username, 
-        role: userDb.role, 
-        smartContract: userDb.smartContract 
+      return authMid.releaseToken({
+        username: userReq.username,
+        role: userDb.role,
+        smartContract: userDb.smartContract
       });
     } else {
       throw { status: 401, message: "Wrong credentials."};
@@ -75,7 +75,7 @@ const createUser = async (user) => {
   const uuid = uuidv4();
   try {
     const { ccp, wallet } = require("../index");
-    
+
     console.log(user);
     if (!user.username) {
       throw { status: 400, message: "Missing username."};
