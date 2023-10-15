@@ -34,6 +34,13 @@
       "role": "Doctor",
       "uuid": "547e99dc-ce76-4507-9b45-48bd38534b7a",
       "smartContract": "DoctorContract"
+    },
+    {
+      "username": "Fabry",
+      "password": "$2b$10$fepJ2beIfK6HlVvdK.DsYegC4asWKBMmFnYcoH9HXn4mKldr.OHnK",
+      "role": "Patient",
+      "uuid": "a47e117d-3a2f-4f08-b986-474b2dd7044f",
+      "smartContract": "PatientContract"
     }
   ]
 }

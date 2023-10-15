@@ -7,7 +7,7 @@ import CardContent from '@mui/joy/CardContent';
 import Typography from '@mui/joy/Typography';
 import Sheet from '@mui/joy/Sheet';
 
-export default function UserCard() {
+export default function UserCard(props) {
   return (
     <Box sx={{ width: '100%' }} >
       <Card
@@ -19,18 +19,17 @@ export default function UserCard() {
       >
         <AspectRatio flex ratio="1" maxHeight={70} sx={{ minWidth: 150 }}>
           <img
-            src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=286"
-            srcSet="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=286&dpr=2 2x"
+            src={ props.userProfile.src }
             loading="lazy"
             alt=""
           />
         </AspectRatio>
         <CardContent>
           <Typography fontSize="xl" fontWeight="lg">
-            Alex Morrison
+            { props.userProfile.firstName } { props.userProfile.lastName }
           </Typography>
           <Typography level="body-sm" fontWeight="lg" textColor="text.tertiary">
-            Senior Journalist
+            { props.userProfile.role }
           </Typography>
           <Sheet
             sx={{
@@ -47,19 +46,19 @@ export default function UserCard() {
               <Typography level="body-xs" fontWeight="lg">
                 Total prescriptions
               </Typography>
-              <Typography fontWeight="lg">34</Typography>
+              <Typography fontWeight="lg">{ props.userProfile.totPrescriptions }</Typography>
             </div>
             <div>
               <Typography level="body-xs" fontWeight="lg">
                 Pending prescriptions
               </Typography>
-              <Typography fontWeight="lg">980</Typography>
+              <Typography fontWeight="lg">{ props.userProfile.pendingPrescriptions }</Typography>
             </div>
             <div>
               <Typography level="body-xs" fontWeight="lg">
                 Processed prescriptions
               </Typography>
-              <Typography fontWeight="lg">8.9</Typography>
+              <Typography fontWeight="lg">{ props.userProfile.processedPrescriptions }</Typography>
             </div>
           </Sheet>
           <Box sx={{ display: 'flex', gap: 1.5, '& > button': { flex: 1 } }}>

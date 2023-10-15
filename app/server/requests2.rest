@@ -5,7 +5,7 @@ Content-Type: "application/json"
 {
     "username": "Fab",
     "password": "prova",
-    "role": "patient"
+    "role": "Patient"
 }
 ###
 

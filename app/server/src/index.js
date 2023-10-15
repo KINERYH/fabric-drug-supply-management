@@ -2,6 +2,7 @@ const express = require("express");
 const path = require("path");
 const PORT = process.env.PORT || 3001;
 const app = express();
+const cors = require('cors')
 const drugsRouter = require("./routes/drugs.routes");
 const usersRouter = require("./routes/users.routes");
 const testRouter = require("./routes/test.routes");
@@ -17,8 +18,9 @@ async function main() {
   }
 
   // Serves React frontend static files from 'build' directory
-  app.use(express.static(path.join(__dirname, "../../client/build")));
+  // app.use(express.static(path.join(__dirname, "../../client/build")));
 
+  app.use(cors());
   
   app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "../../client/build", "index.html"));
