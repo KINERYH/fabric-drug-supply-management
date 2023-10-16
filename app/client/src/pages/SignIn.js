@@ -13,7 +13,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {useNavigate} from "react-router-dom"
-
+import { useAuth } from '../provider/authProvider';
 
 function Copyright(props) {
   return (
@@ -35,6 +35,8 @@ const defaultTheme = createTheme();
 export default function SignIn() {
   //TODO: passa il token per poter accedere alla dashboard specifica
   const navigate = useNavigate();
+  const { setToken } = useAuth();
+
   //handler del form
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -55,11 +57,17 @@ export default function SignIn() {
           password: data.get('password'),
         })
       })
-      if (response.status === 200) {
-        console.log('login effettuato con successo')
-        navigate('/')      }
 
       const json =  await response.json()
+
+      if (response.status === 200) {
+        console.log('login effettuato con successo');
+        setToken(json.token)
+        console.log(json.token)
+        navigate('/');
+      if (response.status === 401) {
+        alert('Errore nella richiesta di login')
+      } }
       console.log(json)
     }
     catch(err){

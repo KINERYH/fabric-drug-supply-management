@@ -9,7 +9,7 @@ const authMid = require("../middlewares/auth.middleware");
 const ledger = require("../utils/blockchain/connection");
 const { chaincodeName, channelName } = require("../config/blockchain");
 
-
+//TODO: registrazione dell'utente con cofice fiscale e non con username
 
 const getAllUsers = async () => {
   return;
