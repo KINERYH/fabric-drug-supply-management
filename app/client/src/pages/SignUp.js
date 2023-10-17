@@ -1,133 +1,101 @@
 import * as React from 'react';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-
-function Copyright(props) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
-
-// TODO remove, this demo shouldn't need to reset the theme.
-
-const defaultTheme = createTheme();
+import { CssVarsProvider, useColorScheme } from '@mui/joy/styles';
+import GlobalStyles from '@mui/joy/GlobalStyles';
+import CssBaseline from '@mui/joy/CssBaseline';
+import Box from '@mui/joy/Box';
+import Button from '@mui/joy/Button';
+import FormControl from '@mui/joy/FormControl';
+import FormLabel, { formLabelClasses } from '@mui/joy/FormLabel';
+import Input from '@mui/joy/Input';
+import Typography from '@mui/joy/Typography';
+import Stack from '@mui/joy/Stack';
 
 export default function SignUp() {
   const handleSubmit = (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+    // Handle form submission logic here
   };
 
   return (
-    <ThemeProvider theme={defaultTheme}>
-      <Container component="main" maxWidth="xs">
-        <CssBaseline />
+    <CssVarsProvider defaultMode="dark" disableTransitionOnChange>
+      <CssBaseline />
+      <GlobalStyles
+        styles={{
+          ':root': {
+            '--Collapsed-breakpoint': '769px',
+            '--Cover-width': '50vw',
+            '--Form-maxWidth': '800px',
+            '--Transition-duration': '0.4s',
+          },
+        }}
+      />
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          minHeight: '100vh',
+          maxWidth: '100%',
+          px: 2,
+        }}
+      >
         <Box
+          component="main"
           sx={{
-            marginTop: 8,
+            my: 'auto',
+            py: 4,
+            px: 4,
+            pb: 5,
             display: 'flex',
             flexDirection: 'column',
-            alignItems: 'center',
+            width: '100%',
+            maxWidth: '800px',
+            mx: 'auto',
+            borderRadius: 'sm',
+            border: '1px solid #e0e0e0',
+            boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign up
-          </Typography>
-          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
-            <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  autoComplete="given-name"
-                  name="firstName"
-                  required
-                  fullWidth
-                  id="firstName"
-                  label="First Name"
-                  autoFocus
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  required
-                  fullWidth
-                  id="lastName"
-                  label="Last Name"
-                  name="lastName"
-                  autoComplete="family-name"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  id="email"
-                  label="Email Address"
-                  name="email"
-                  autoComplete="email"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  name="password"
-                  label="Password"
-                  type="password"
-                  id="password"
-                  autoComplete="new-password"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <FormControlLabel
-                  control={<Checkbox value="allowExtraEmails" color="primary" />}
-                  label="I want to receive inspiration, marketing promotions and updates via email."
-                />
-              </Grid>
-            </Grid>
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Sign Up
-            </Button>
-            <Grid container justifyContent="flex-end">
-              <Grid item>
-                <Link href="#" variant="body2">
-                  Already have an account? Sign in
-                </Link>
-              </Grid>
-            </Grid>
-          </Box>
+          <Stack gap={4} justifyContent="center" alignItems="center">
+            <Typography level="h3">Sign up</Typography>
+          </Stack>
+
+          <div style={{ padding: '25px' }}>
+            <form onSubmit={handleSubmit}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+				<FormField label="First name" type="text" name="firstName" required />
+				<FormField label="Last name" type="text" name="lastName" required />
+				<FormField label="CF" type="text" name="cf" required />
+				<FormField label="Address" type="text" name="address" required />
+				<FormField label="Password" type="password" name="password" required />
+				<FormField label="Birth Date" type="date" name="birthDate" required />
+				<FormField label="Weight (kg)" type="number" name="weight" required />
+				<FormField label="Height (cm)" type="number" name="height" required />
+              </div>
+              
+              <Stack gap={4} sx={{ mt: 2 }}>
+             
+                <Button type="submit" fullWidth>
+                  Sign up
+                </Button>
+              </Stack>
+            </form>
+          </div>
         </Box>
-        <Copyright sx={{ mt: 5 }} />
-      </Container>
-    </ThemeProvider>
+        <Box component="footer" sx={{ py: 3 }}>
+          <Typography level="body-xs" textAlign="center">
+            © Your company {new Date().getFullYear()}
+          </Typography>
+        </Box>
+      </Box>
+    </CssVarsProvider>
+  );
+}
+
+function FormField({ label, type, name, required }) {
+  return (
+    <FormControl required={required}>
+      <FormLabel>{label}</FormLabel>
+      <Input type={type} name={name} />
+    </FormControl>
   );
 }
