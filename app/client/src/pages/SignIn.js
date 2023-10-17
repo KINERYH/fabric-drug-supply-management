@@ -1,19 +1,28 @@
 import * as React from 'react';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
+import Button from '@mui/joy/Button';
+import { CssVarsProvider, extendTheme } from '@mui/joy/styles';
+import Sheet from '@mui/joy/Sheet';
+import FormControl from '@mui/joy/FormControl';
+import FormLabel from '@mui/joy/FormLabel';
+import Input from '@mui/joy/Input';
+import Link from '@mui/joy/Link';
+import Typography from '@mui/joy/Typography';
+
+
+
+import Avatar from '@mui/joy/Avatar';
+import CssBaseline from '@mui/joy/CssBaseline';
+import TextField from '@mui/joy/TextField';
+import Checkbox from '@mui/joy/Checkbox';
+//import Link from '@mui/material/Link';
+import Box from '@mui/joy/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
+//import Typography from '@mui/material/Typography';
+import Container from '@mui/joy/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {useNavigate} from "react-router-dom"
 import { useAuth } from '../provider/authProvider';
+import { Grid } from '@mui/joy';
 
 function Copyright(props) {
   return (
@@ -32,7 +41,7 @@ function Copyright(props) {
 
 const defaultTheme = createTheme();
 
-export default function SignIn() {
+export default function SignInAlt() {
   //TODO: passa il token per poter accedere alla dashboard specifica
   const navigate = useNavigate();
   const { setToken } = useAuth();
@@ -79,72 +88,60 @@ export default function SignIn() {
   };
 
   return (
-    <ThemeProvider theme={defaultTheme}>
+    <CssVarsProvider>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
           sx={{
             marginTop: 8,
+            margin: 'auto',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
+            justifyContent: 'center'
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-            <LockOutlinedIcon />
-          </Avatar>
+         <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }} size='lg'>
+          <LockOutlinedIcon color='primary' />
+         </Avatar>
           <Typography component="h1" variant="h5">
             Accedi
           </Typography>
-          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="username"
-              label="Username"
-              name="username"
-              autoComplete="username"
-              autoFocus
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-            />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            />
-            <Button
+        </Box>
+        <FormControl>
+          <FormLabel>Username</FormLabel>
+          <Input  type='username' name="username" placeholder="Username" autoComplete="username" autoFocus/>
+        </FormControl>
+        <FormControl>
+        <FormLabel>Password</FormLabel>
+        <Input  name="password" placeholder="Password" type='password' autoComplete="current-password"/>
+        </FormControl>
+        <Button
               type="submit"
               fullWidth
-              variant="contained"
+              variant="solid"
               sx={{ mt: 3, mb: 2 }}
-            >
-              Accedi
-            </Button>
-            <Grid container>
-              <Grid item xs>
-                <Link href="#" variant="body2">
-                  Hai dimenticato la password?
-                </Link>
-              </Grid>
-              <Grid item>
-                <Link href="/signup" variant="body2">
-                  {"Non hai un account? Registrati"}
-                </Link>
-              </Grid>
-            </Grid>
-          </Box>
-        </Box>
-        <Copyright sx={{ mt: 8, mb: 4 }} />
+            >Accedi</Button>
+        <Grid container spacing={2}>
+         <Grid item xs={6}>
+            <Link href="#">
+              Hai dimenticato la password?
+            </Link>
+          </Grid>
+          <Grid item xs={6}>
+            <Link href="/signup" >
+              {"Non hai un account? Registrati"}
+            </Link>
+         </Grid>
+         <Grid item >
+            <Link href="/" variant="body2">
+              {"Torna alla Home"}
+            </Link>
+          </Grid>
+        </Grid>
+
       </Container>
-    </ThemeProvider>
+
+    </CssVarsProvider>
   );
 }

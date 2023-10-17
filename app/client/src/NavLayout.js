@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, Outlet } from "react-router-dom";
 
 export default function NavLayout() {
   return (
@@ -9,13 +9,20 @@ export default function NavLayout() {
             <NavLink to="/">Home</NavLink>
           </li>
           <li>
-            <NavLink to="/users">Users</NavLink>
+            <NavLink to="/signup">Registrati</NavLink>
           </li>
           <li>
-            <NavLink to="/signin">Sign In</NavLink>
+            <NavLink to="/signin">Login</NavLink>
+          </li>
+          <li>
+            <NavLink to="/logout">Logout</NavLink>
+          </li>
+          <li>
+            <NavLink to="/dashboard">Dashboard</NavLink>
           </li>
         </ul>
       </nav>
+      <Outlet />
     </>
   );
 }
