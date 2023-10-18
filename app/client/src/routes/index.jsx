@@ -21,8 +21,8 @@ const Routes = () => {
   // route con autorizzazione
     { path: "/", element: <ProtectedRoute />,
       children: [
-        {path: "/dashboard",
-        element: <Dashboard />},
+        {path: "/home",
+        element: <Home />},
         {path: "/profile",
         element: <div>User Profile Page</div>},
         {path: "/logout", element: <Logout />}
