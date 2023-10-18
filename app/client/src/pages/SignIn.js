@@ -59,7 +59,7 @@ export default function SignIn() {
         console.log('login effettuato con successo');
         setToken(json.token)
         console.log(json)
-        navigate('/dashboard');}
+        navigate('/home');}
 
       if (response.status === 401) {
         //unauthorized

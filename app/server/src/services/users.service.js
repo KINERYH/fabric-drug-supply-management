@@ -61,12 +61,13 @@ const loginUser = async (userReq) => {
     });
     console.log("Password match: " + matched);
     if (matched) {
-      return authMid.releaseToken({ 
+      return {token: authMid.releaseToken({
         uuid: userDb.uuid,
-        username: userReq.username, 
-        role: userDb.role, 
-        smartContract: userDb.smartContract 
-      });
+        username: userReq.username,
+        role: userDb.role,
+        smartContract: userDb.smartContract
+      }),
+        uuid: userDb.uuid};
     } else {
       throw { status: 401, message: "Wrong credentials."};
     }
