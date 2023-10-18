@@ -27,7 +27,6 @@ import Alert from '@mui/joy/Alert';
 // TODO remove, this demo shouldn't need to reset the theme.
 
 export default function SignIn() {
-  //TODO: passa il token per poter accedere alla dashboard specifica
   const navigate = useNavigate();
   const { setToken } = useAuth();
   const [errorMessage, setErrorMessage] = useState();
@@ -41,10 +40,7 @@ export default function SignIn() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      cf: data.get('cf'),
-      password: data.get('password'),
-    });
+
 
     try{
       const response = await fetch(' http://localhost:3001/api/users/login', {
@@ -63,7 +59,7 @@ export default function SignIn() {
       if (response.status === 200) {
         console.log('login effettuato con successo');
         setToken(json.token)
-        console.log(json.token)
+        console.log(json)
         navigate('/dashboard');}
 
       if (response.status === 401) {

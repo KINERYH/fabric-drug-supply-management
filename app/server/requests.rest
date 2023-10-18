@@ -43,3 +43,5 @@ GET http://localhost:3001/api/test/doctors/patients/94ae7246-40c6-40fa-8d5a-fcc3
 
 GET http://localhost:3001/api/test//doctors/medhistory/94ae7246-40c6-40fa-8d5a-fcc34d0edbc3a
 
+###
+GET http://localhost:3001/api/users/a47e117d-3a2f-4f08-b986-474b2dd7044f
