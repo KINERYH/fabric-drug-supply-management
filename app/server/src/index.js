@@ -2,9 +2,10 @@ const express = require("express");
 const path = require("path");
 const PORT = process.env.PORT || 3001;
 const app = express();
-const cors = require('cors')
+const cors = require('cors');
 const drugsRouter = require("./routes/drugs.routes");
 const usersRouter = require("./routes/users.routes");
+const prescriptionsRouter = require("./routes/prescriptions.routes");
 const testRouter = require("./routes/test.routes");
 const auth = require("./utils/blockchain/authentication");
 const { chaincodeName, channelName } = require("./config/blockchain");
@@ -33,6 +34,7 @@ async function main() {
   app.use(express.json());
   app.use("/api/drugs", drugsRouter);
   app.use("/api/users", usersRouter);
+  app.use("/api/prescriptions", prescriptionsRouter);
   app.use("/api/test", testRouter);
   
   app.listen(PORT, () => {

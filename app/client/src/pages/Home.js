@@ -50,20 +50,23 @@ export default function Home() {
 
   const [navigation, setNavigation] = React.useState(defaultState.navigation);
   const [userProfile, setUserProfile] = React.useState(defaultState.userProfile);
+  const [userProfileCard, setUserProfileCard] = React.useState(userProfile);
+  const [prescriptions, setPrescriptions] = React.useState([]);
   const [dataTable, setDataTable] = React.useState(defaultState.dataTable);
   
   const fetchUserProfile = async () => {
     try{
-      const res = await fetch("http://localhost:3001/api/users/a47e117d-3a2f-4f08-b986-474b2dd7044f", {
+      const res = await fetch("http://localhost:3001/api/users/d1744d6f-e127-4206-845f-faa849ce1666", {
         method: 'GET', 
         headers: { 
-          'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkZhYnJ5Iiwicm9sZSI6IlBhdGllbnQiLCJzbWFydENvbnRyYWN0IjoiUGF0aWVudENvbnRyYWN0IiwiaWF0IjoxNjk3MzgwMTM0LCJleHAiOjE2OTczOTgxMzR9.yNCxholpgHBEKbVjuyr62kM800TaCaJTUhPrhHwbsag',
+          'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiZDE3NDRkNmYtZTEyNy00MjA2LTg0NWYtZmFhODQ5Y2UxNjY2IiwidXNlcm5hbWUiOiJGYWJyeTMiLCJyb2xlIjoiUGF0aWVudCIsInNtYXJ0Q29udHJhY3QiOiJQYXRpZW50Q29udHJhY3QiLCJpYXQiOjE2OTc2MjQ0MjYsImV4cCI6MTY5NzY0MjQyNn0.6UvRCvPwC8ZeHvlw__QtMsFNTyrDcqxI_K7UQqzNrb8',
         }
       });
-      console.log(res);
       if (res.status == 200) {
         const data = await res.json();
+        console.log("response fetch user");
         console.log(data);
+        setUserProfile(data.data);
       } else {
         console.error("userProfileFetch status code: " + res.status);
       }
@@ -71,17 +74,54 @@ export default function Home() {
       console.error(e);
     }
   }
+  const fetchPrescriptions = async () => {
+    try{
+      const res = await fetch("http://localhost:3001/api/prescriptions/", {
+        method: 'GET', 
+        headers: { 
+          'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiZDE3NDRkNmYtZTEyNy00MjA2LTg0NWYtZmFhODQ5Y2UxNjY2IiwidXNlcm5hbWUiOiJGYWJyeTMiLCJyb2xlIjoiUGF0aWVudCIsInNtYXJ0Q29udHJhY3QiOiJQYXRpZW50Q29udHJhY3QiLCJpYXQiOjE2OTc2MjQ0MjYsImV4cCI6MTY5NzY0MjQyNn0.6UvRCvPwC8ZeHvlw__QtMsFNTyrDcqxI_K7UQqzNrb8',
+        }
+      });
+      if (res.status == 200) {
+        const data = await res.json();
+        console.log("response fetch precsrip");
+        console.log(data);
+        setPrescriptions(data.data);
+      } else {
+        console.error("fetchPrescriptions status code: " + res.status);
+      }
+    } catch(e) {
+      console.error(e);
+    }
+  }
 
-  React.useEffect(() => {
-    fetchUserProfile();
-  }, [])
+  // React.useEffect( () => {
+  //   const fetchData = async () =>{
+  //     await fetchUserProfile();
+  //     await fetchPrescriptions();
+  //     console.log("prescr or user prof changed");
+  //     console.log(prescriptions);
+  //     console.log(userProfile);
+  //     setUserProfileCard({
+  //       firstName: userProfile.Name,
+  //       lastName: userProfile?.Surname,
+  //       src: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=286',
+  //       role: 'ruolo da ricavare dal token',
+  //       totPrescriptions: prescriptions.length,
+  //       pendingPrescriptions: prescriptions.filter( p => p.Status === 'pending' ).length,
+  //       processedPrescriptions: prescriptions.filter( p => p.Status !== 'pending' ).length
+  //     });
+  //   }
+  //   fetchData();
+
+  // }, [])
 
   return (
     <Box className="Home">
       <Box sx={{ maxWidth: '80%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: 5 }}>
         <Breadcrumbs navigation={ navigation } />
         <Box sx={{ maxWidth: '60%' }}>
-          <UserCard userProfile={ userProfile } />
+          <UserCard userProfile={ userProfileCard } />
         </Box>
         <div>
           <Box sx={{ maxWidth: '100%', display: 'flex', flexDirection: 'row' }}>
