@@ -1,57 +1,48 @@
 import * as React from 'react';
-import Button from '@mui/joy/Button';
-import { CssVarsProvider, extendTheme } from '@mui/joy/styles';
-import Sheet from '@mui/joy/Sheet';
-import FormControl from '@mui/joy/FormControl';
-import FormLabel from '@mui/joy/FormLabel';
-import Input from '@mui/joy/Input';
-import Link from '@mui/joy/Link';
-import Typography from '@mui/joy/Typography';
-
-
-
-import Avatar from '@mui/joy/Avatar';
+import { CssVarsProvider, useColorScheme } from '@mui/joy/styles';
+import GlobalStyles from '@mui/joy/GlobalStyles';
 import CssBaseline from '@mui/joy/CssBaseline';
-import TextField from '@mui/joy/TextField';
-import Checkbox from '@mui/joy/Checkbox';
-//import Link from '@mui/material/Link';
 import Box from '@mui/joy/Box';
+import Button from '@mui/joy/Button';
+import Checkbox from '@mui/joy/Checkbox';
+import Divider from '@mui/joy/Divider';
+import FormControl from '@mui/joy/FormControl';
+import FormLabel, { formLabelClasses } from '@mui/joy/FormLabel';
+import IconButton, { IconButtonProps } from '@mui/joy/IconButton';
+import Link from '@mui/joy/Link';
+import Input from '@mui/joy/Input';
+import Typography from '@mui/joy/Typography';
+import Stack from '@mui/joy/Stack';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-//import Typography from '@mui/material/Typography';
-import Container from '@mui/joy/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import Avatar from '@mui/joy/Avatar';
+import WarningIcon from '@mui/icons-material/Warning';
+import CloseIcon from '@mui/icons-material/Close';
+
+
+
 import {useNavigate} from "react-router-dom"
 import { useAuth } from '../provider/authProvider';
-import { Grid } from '@mui/joy';
-
-function Copyright(props) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
-
+import { useState } from 'react';
+import Alert from '@mui/joy/Alert';
 // TODO remove, this demo shouldn't need to reset the theme.
 
-const defaultTheme = createTheme();
-
-export default function SignInAlt() {
+export default function SignIn() {
   //TODO: passa il token per poter accedere alla dashboard specifica
   const navigate = useNavigate();
   const { setToken } = useAuth();
+  const [errorMessage, setErrorMessage] = useState();
+  const [isErrorVisible, setIsErrorVisible] = React.useState(true); // Add a state for controlling visibility
+
+  const handleHideError = () => {
+    setIsErrorVisible(false);
+    setErrorMessage('');}
 
   //handler del form
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     console.log({
-      username: data.get('username'),
+      cf: data.get('cf'),
       password: data.get('password'),
     });
 
@@ -62,7 +53,7 @@ export default function SignInAlt() {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          username: data.get('username'),
+          cf: data.get('cf'),
           password: data.get('password'),
         })
       })
@@ -73,10 +64,14 @@ export default function SignInAlt() {
         console.log('login effettuato con successo');
         setToken(json.token)
         console.log(json.token)
-        navigate('/');
+        navigate('/dashboard');}
+
       if (response.status === 401) {
-        alert('Errore nella richiesta di login')
-      } }
+        //unauthorized
+        setErrorMessage('Codice Fiscale o Password errati.');
+        setIsErrorVisible(true); // Show the error message
+
+      }
       console.log(json)
     }
     catch(err){
@@ -89,59 +84,112 @@ export default function SignInAlt() {
 
   return (
     <CssVarsProvider>
-      <Container component="main" maxWidth="xs">
-        <CssBaseline />
+      <GlobalStyles
+        styles={{
+          ':root': {
+            '--Collapsed-breakpoint': '769px', // form will stretch when viewport is below `769px`
+            '--Cover-width': '50vw', // must be `vw` only
+            '--Form-maxWidth': '800px',
+            '--Transition-duration': '5s', // set to `none` to disable transition
+          }
+        }}
+      />
+
         <Box
           sx={{
-            marginTop: 8,
-            margin: 'auto',
             display: 'flex',
             flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center'
+            maxWidth: '100%',
+            px: 2,
           }}
         >
-         <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }} size='lg'>
-          <LockOutlinedIcon color='primary' />
-         </Avatar>
-          <Typography component="h1" variant="h5">
-            Accedi
-          </Typography>
+          <Box component="header"
+            sx={{
+              py: 3,
+              display: 'flex',
+              alignItems: 'left',
+              justifyContent: 'space-between',
+            }}
+          >
+          </Box>
+          <Box
+            component="main"
+            sx={{
+              my: 'auto',
+              py: 2,
+              pb: 5,
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 2,
+              width: 400,
+              maxWidth: '100%',
+              mx: 'auto',
+              borderRadius: 'sm',
+              '& form': {
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 2,
+              },
+              [`& .${formLabelClasses.asterisk}`]: {
+                visibility: 'hidden',
+              },
+
+            }}
+          >
+            <Stack gap={4}   justifyContent="center" alignItems="center">
+              <Stack gap={1} justifyContent="center" alignItems="center">
+              <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }} size='lg'>
+                <LockOutlinedIcon color='primary' />
+              </Avatar>
+              </Stack>
+              <Stack gap={1} justifyContent="center" alignItems="center">
+                <Typography level="h3" >Accedi</Typography>
+                <Typography level="body-sm">
+                  Non sei ancora registrato?{' '}
+                  <Link href="/SignUp" level="title-sm">
+                    Registrati!
+                  </Link>
+                </Typography>
+              </Stack>
+              </Stack>
+              {isErrorVisible && errorMessage && (<Alert
+                  startDecorator={<WarningIcon />}
+                  variant="solid"
+                  color="danger"
+                  fullWidth>
+                    {errorMessage}
+                    <IconButton sx={{ position: 'absolute', top: 8, right: 8 }}
+                      onClick={handleHideError}>
+                    <CloseIcon />
+                    </IconButton>
+                  </Alert> )}
+            <Stack gap={4} sx={{ mt: 2 }}>
+              <form
+                onSubmit={handleSubmit}
+              >
+                <FormControl required>
+                  <FormLabel>Codice Fiscale</FormLabel>
+                  <Input  type='cf' name="cf" />
+                </FormControl>
+                <FormControl required>
+                  <FormLabel>Password</FormLabel>
+                  <Input type="password" name="password" />
+                </FormControl>
+                <Stack gap={4} sx={{ mt: 2 }}>
+
+                  <Button type="submit" fullWidth>
+                    Accedi
+                  </Button>
+                </Stack>
+              </form>
+            </Stack>
+          </Box>
+          <Box component="footer" sx={{ py: 3}}>
+            <Typography level="body-xs" textAlign="center">
+              © Your company {new Date().getFullYear()}
+            </Typography>
+          </Box>
         </Box>
-        <FormControl>
-          <FormLabel>Username</FormLabel>
-          <Input  type='username' name="username" placeholder="Username" autoComplete="username" autoFocus/>
-        </FormControl>
-        <FormControl>
-        <FormLabel>Password</FormLabel>
-        <Input  name="password" placeholder="Password" type='password' autoComplete="current-password"/>
-        </FormControl>
-        <Button
-              type="submit"
-              fullWidth
-              variant="solid"
-              sx={{ mt: 3, mb: 2 }}
-            >Accedi</Button>
-        <Grid container spacing={2}>
-         <Grid item xs={6}>
-            <Link href="#">
-              Hai dimenticato la password?
-            </Link>
-          </Grid>
-          <Grid item xs={6}>
-            <Link href="/signup" >
-              {"Non hai un account? Registrati"}
-            </Link>
-         </Grid>
-         <Grid item >
-            <Link href="/" variant="body2">
-              {"Torna alla Home"}
-            </Link>
-          </Grid>
-        </Grid>
-
-      </Container>
-
     </CssVarsProvider>
   );
 }

@@ -26,11 +26,11 @@ const getUser = async (userId) => {
     if (!wallet) {
       throw { status: 404, message: "Wallet not found."};
     }
-    const userInfo = { username: user.username, role: user.role, uuid: user.uuid };
+    const userInfo = { CodiceFiscale: user.cf, role: user.role, uuid: user.uuid };
     console.log(`\n--> User info correctly retrieved`);
     return userInfo;
   } catch (error) {
-    console.error('Failed to get user: ' + user.username + '\n' + error?.message);
+    console.error('Failed to get user: ' + user.cf + '\n' + error?.message);
     throw error;
   }
 }
@@ -38,10 +38,10 @@ const getUser = async (userId) => {
 const loginUser = async (userReq) => {
   try {
     const db = require('../database/db.json');
-    console.log("Try to login user: " + userReq.username);
-    const userDb = await db.users.find((u) => u.username === userReq.username);
+    console.log("Try to login user: " + userReq.cf);
+    const userDb = await db.users.find((u) => u.cf === userReq.cf);
     if (!userDb) {
-      throw { status: 401, message: "User " + userReq.username + " does not exist."};
+      throw { status: 401, message: "User " + userReq.cf + " does not exist."};
     }
 
     const matched = await new Promise((resolve, reject) => {
@@ -56,7 +56,7 @@ const loginUser = async (userReq) => {
     console.log("Password match: " + matched);
     if (matched) {
       return authMid.releaseToken({
-        username: userReq.username,
+        cf: userReq.cf,
         role: userDb.role,
         smartContract: userDb.smartContract
       });
@@ -64,7 +64,7 @@ const loginUser = async (userReq) => {
       throw { status: 401, message: "Wrong credentials."};
     }
   } catch (error) {
-    console.error('Failed to login user: ' + userReq.username + '\n  ' + error.message);
+    console.error('Failed to login user: ' + userReq.cf + '\n  ' + error.message);
     throw (error);
   }
 };
@@ -77,13 +77,13 @@ const createUser = async (user) => {
     const { ccp, wallet } = require("../index");
 
     console.log(user);
-    if (!user.username) {
-      throw { status: 400, message: "Missing username."};
+    if (!user.cf) {
+      throw { status: 400, message: "Missing codice fiscale."};
     }
     if (!user.password) {
       throw { status: 400, message: "Missing password."};
     }
-    const userDb = await db.users.find((u) => u.username === user.username);
+    const userDb = await db.users.find((u) => u.cf === user.cf);
     if (userDb) {
       throw { status: 400, message: "User already exists."};
     }
@@ -91,7 +91,7 @@ const createUser = async (user) => {
     const hashedPassword = await bcrypt.hash(user.password, parseInt(salt));
     console.log("Hashed password: " + hashedPassword);
     const newUser = {
-      "username": user.username,
+      "cf": user.cf,
       "password": hashedPassword,
       "role": user.role,
       "uuid": uuid,
@@ -106,13 +106,13 @@ const createUser = async (user) => {
     const { gateway, contract } = await ledger.connect(ccp, wallet, uuid, channelName, chaincodeName, newUser.smartContract);
     //register user in the state
     let newUserLedger = {
-      "Name": user.username,
+      "Name": user?.name || '',
       "Surname": user?.surname || '',
       "ID": uuid,
       "Address": user?.address || '',
       "Allergies": user?.allergies || [],
       "BirthDate": user?.birthDate || '',
-      "CodiceFiscale": user?.cf || '',
+      "CodiceFiscale": user.cf ,
       "MedicalHistory": user?.medicalHistory || [],
       "Height": user?.height || '',
       "Weight": user?.weight || ''
@@ -124,7 +124,7 @@ const createUser = async (user) => {
     newUserLedger = JSON.parse(newUserLedger.toString());
     return newUserLedger;
   } catch (error) {
-    console.error('Failed to register user: ' + user.username);
+    console.error('Failed to register user: ' + user.name + ' '+ user.surname + '\n' + error?.message);
     console.error(error);
     delete db.users[db.users.indexOf(uuid)];
     fs.writeFileSync("./src/database/db.json", JSON.stringify(db, null, 2));
