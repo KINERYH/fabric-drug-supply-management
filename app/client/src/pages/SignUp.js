@@ -9,11 +9,60 @@ import FormLabel, { formLabelClasses } from '@mui/joy/FormLabel';
 import Input from '@mui/joy/Input';
 import Typography from '@mui/joy/Typography';
 import Stack from '@mui/joy/Stack';
+import {useNavigate} from "react-router-dom"
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import { useState } from 'react';
+import Alert from '@mui/joy/Alert';
+import IconButton from '@mui/joy/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
+
 
 export default function SignUp() {
-  const handleSubmit = (event) => {
+
+  const navigate = useNavigate();
+  const [registeredVisible, setRegistedVisible] = useState(false);
+
+  const handleRegistrationAlert = () => {
+    setRegistedVisible(false);
+
+  }
+  const handleSubmit = async (event) => {
     event.preventDefault();
     // Handle form submission logic here
+    const data = new FormData(event.currentTarget);
+
+    try{
+      const response = await fetch('http://localhost:3001/api/users/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          firstName: data.get('firstName'),
+          lastName: data.get('lastName'),
+          cf: data.get('cf'),
+          address: data.get('address'),
+          password: data.get('password'),
+          birthDate: data.get('birthDate'),
+          weight: data.get('weight'),
+          height: data.get('height'),
+          role:'Patient'
+        })
+      })
+
+      console.log(response.status)
+      const json =  await response.json()
+      if (response.status === 201){
+        console.log('utente registrato con successo');
+        setRegistedVisible(true);
+      }
+      else{
+        alert('Errore nella registrazione')
+      }
+    }
+    catch{}
+
+
   };
 
   return (
@@ -71,12 +120,22 @@ export default function SignUp() {
 				<FormField label="Weight (kg)" type="number" name="weight" required />
 				<FormField label="Height (cm)" type="number" name="height" required />
               </div>
-              
+
               <Stack gap={4} sx={{ mt: 2 }}>
-             
+
                 <Button type="submit" fullWidth>
                   Sign up
                 </Button>
+                { registeredVisible && (<Alert
+                  startDecorator={<CheckCircleIcon/>}
+                  variant="solid"
+                  color='success'
+                  fullWidth>User successfully registered!
+                  <IconButton  sx={{ position: 'absolute', top: 8, right: 8 }}
+                  onClick={handleRegistrationAlert}>
+                    <CloseIcon />
+                  </IconButton>
+                  </Alert>)}
               </Stack>
             </form>
           </div>

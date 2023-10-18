@@ -30,11 +30,10 @@ export default function SignIn() {
   const navigate = useNavigate();
   const { setToken } = useAuth();
   const [errorMessage, setErrorMessage] = useState();
-  const [isErrorVisible, setIsErrorVisible] = React.useState(true); // Add a state for controlling visibility
+  const [isErrorVisible, setIsErrorVisible] = React.useState(false); // Add a state for controlling visibility
 
   const handleHideError = () => {
-    setIsErrorVisible(false);
-    setErrorMessage('');}
+    setIsErrorVisible(false);}
 
   //handler del form
   const handleSubmit = async (event) => {

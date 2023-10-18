@@ -10,7 +10,6 @@ const testRouter = require("./routes/test.routes");
 const auth = require("./utils/blockchain/authentication");
 const { chaincodeName, channelName } = require("./config/blockchain");
 const ledger = require("./utils/blockchain/connection");
-const cors = require('cors');
 
 async function main() {
   const { ccp, caClient, wallet } = await auth.setupBlockchainApplicationConfig();
