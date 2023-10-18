@@ -1,16 +1,14 @@
 const usersService = require("../services/users.service")
-const authMiddleware = require("../middlewares/auth.middleware");
-const bcrypt = require("bcrypt");
 
 
-const getAllUsers = (req, res) => {
+const getAllUsers = async (req, res) => {
   const allUsers = usersService.getAllUsers();
   res.json({ status: "OK", data: allUsers });
 };
 
 const getUser = async (req, res) => {
   try{
-    user = await usersService.getUser(req.params.userId);
+    user = await usersService.getUser(req.params.userId, req.currentUser);
     res.status(200).json({
       message: "Get an existing user: ",
       data: user
@@ -38,12 +36,12 @@ const createUser = async (req, res) => {
   }
 };
 
-const updateUser = (req, res) => {
+const updateUser = async (req, res) => {
   const updatedUser = usersService.updateUser();
   res.json({ message: "Update an existing user" });
 };
 
-const deleteUser = (req, res) => {
+const deleteUser = async (req, res) => {
   const deletedUser = usersService.deleteUser();
   res.json({ message: "Delete an existing user" });
 };

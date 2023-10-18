@@ -34,6 +34,27 @@
       "role": "Doctor",
       "uuid": "547e99dc-ce76-4507-9b45-48bd38534b7a",
       "smartContract": "DoctorContract"
+    },
+    {
+      "username": "Fabry",
+      "password": "$2b$10$fepJ2beIfK6HlVvdK.DsYegC4asWKBMmFnYcoH9HXn4mKldr.OHnK",
+      "role": "Patient",
+      "uuid": "a47e117d-3a2f-4f08-b986-474b2dd7044f",
+      "smartContract": "PatientContract"
+    },
+    {
+      "username": "Fabry2",
+      "password": "$2b$10$JqNwHiST9y2KPEjtupycDO6ZRhewq7NYeoTTvEGfO5tsocyTcyFDS",
+      "role": "Patient",
+      "uuid": "02918e13-aae4-47bb-bb5c-183615f1c379",
+      "smartContract": "PatientContract"
+    },
+    {
+      "username": "Fabry3",
+      "password": "$2b$10$mzUBwB0ufynx7Pl8EWbrfuheKCMCf6yUSgsiO2mskV1502g5yfJ9.",
+      "role": "Patient",
+      "uuid": "d1744d6f-e127-4206-845f-faa849ce1666",
+      "smartContract": "PatientContract"
     }
   ]
 }

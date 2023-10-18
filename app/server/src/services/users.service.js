@@ -15,18 +15,25 @@ const getAllUsers = async () => {
   return;
 };
 
-const getUser = async (userId) => {
+const getUser = async (userId, currentUser) => {
   const db = require('../database/db.json');
+  const { ccp, wallet } = require("../index");
   const user = await db.users.find((u) => u.uuid === userId);
   try {
     if (!user) {
       throw { status: 404, message: "User with id " + userId + " does not exist."};
     }
-    const wallet = fs.readdirSync(path.resolve(__dirname, '../config/wallet')).find((w) => w.includes(userId));
-    if (!wallet) {
+    const userWallet = fs.readdirSync(path.resolve(__dirname, '../config/wallet')).find((w) => w.includes(userId));
+    if (!userWallet) {
       throw { status: 404, message: "Wallet not found."};
     }
-    const userInfo = { username: user.username, role: user.role, uuid: user.uuid };
+    //connect to the ledger getting his smart contract
+    const { gateway, contract } = await ledger.connect(ccp, wallet, currentUser.uuid, channelName, chaincodeName, currentUser.smartContract);
+    console.log('\n--> Evaluate Transaction: GetUser');
+    const result = await contract.evaluateTransaction('GetAllInfo', userId);
+    ledger.disconnect(gateway);
+    const userInfo = JSON.parse(result.toString());
+    // const userInfo = { username: user.username, role: user.role, uuid: user.uuid };
     console.log(`\n--> User info correctly retrieved`);
     return userInfo;
   } catch (error) {
@@ -56,6 +63,7 @@ const loginUser = async (userReq) => {
     console.log("Password match: " + matched);
     if (matched) {
       return authMid.releaseToken({ 
+        uuid: userDb.uuid,
         username: userReq.username, 
         role: userDb.role, 
         smartContract: userDb.smartContract 

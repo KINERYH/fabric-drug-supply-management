@@ -11,7 +11,7 @@ const authenticateToken = async(req, res, next) => {
 
   jwt.verify(token, accessToken, (err, user) => {
     if (err) return res.status(401).json({ message: "Unauthorized. Invalid token."}); // token non valido
-    req.user = user; // in questo modo il controller può accedere a tutti i dati dell'utente perchè sono nella request
+    req.currentUser = user; // in questo modo il controller può accedere a tutti i dati dell'utente perchè sono nella request
     next() // a questo punto il token è valido e possiamo procedere
   })
 }
