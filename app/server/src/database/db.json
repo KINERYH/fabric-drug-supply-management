@@ -62,6 +62,13 @@
       "role": "Patient",
       "uuid": "9823e03c-27a8-4c58-97e1-bd03fb9464cc",
       "smartContract": "PatientContract"
+    },
+    {
+      "cf": "123",
+      "password": "$2b$10$6hm.20vdWtEZ3FjnYH.HK.quIjFqZVAS4oeKRrVjBwyNJfNJl49qq",
+      "role": "Patient",
+      "uuid": "895efd96-c1cb-424a-854b-eda0538e0f7d",
+      "smartContract": "PatientContract"
     }
   ]
 }

@@ -19,17 +19,17 @@ export default function UserCard(props) {
       >
         <AspectRatio flex ratio="1" maxHeight={70} sx={{ minWidth: 150 }}>
           <img
-            src={ props.userProfile.src }
+            src={ props.userProfile?.src }
             loading="lazy"
             alt=""
           />
         </AspectRatio>
         <CardContent>
           <Typography fontSize="xl" fontWeight="lg">
-            { props.userProfile.firstName } { props.userProfile.lastName }
+            { props.userProfile?.firstName } { props.userProfile?.lastName }
           </Typography>
           <Typography level="body-sm" fontWeight="lg" textColor="text.tertiary">
-            { props.userProfile.role }
+            { props.userProfile?.role }
           </Typography>
           <Sheet
             sx={{
@@ -46,19 +46,19 @@ export default function UserCard(props) {
               <Typography level="body-xs" fontWeight="lg">
                 Total prescriptions
               </Typography>
-              <Typography fontWeight="lg">{ props.userProfile.totPrescriptions }</Typography>
+              <Typography fontWeight="lg">{ props.userProfile?.totPrescriptions }</Typography>
             </div>
             <div>
               <Typography level="body-xs" fontWeight="lg">
                 Pending prescriptions
               </Typography>
-              <Typography fontWeight="lg">{ props.userProfile.pendingPrescriptions }</Typography>
+              <Typography fontWeight="lg">{ props.userProfile?.pendingPrescriptions }</Typography>
             </div>
             <div>
               <Typography level="body-xs" fontWeight="lg">
                 Processed prescriptions
               </Typography>
-              <Typography fontWeight="lg">{ props.userProfile.processedPrescriptions }</Typography>
+              <Typography fontWeight="lg">{ props.userProfile?.processedPrescriptions }</Typography>
             </div>
           </Sheet>
           <Box sx={{ display: 'flex', gap: 1.5, '& > button': { flex: 1 } }}>

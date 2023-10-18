@@ -26,7 +26,7 @@
     {
       "ID": "6918bcdb-bf53-4a88-9f11-986b52a72fc4",
       "DoctorID": "94ae7246-40c6-40fa-8d5a-fcc34d0edbca",
-      "PatientID": "d1744d6f-e127-4206-845f-faa849ce1666",
+      "PatientID": "895efd96-c1cb-424a-854b-eda0538e0f7d",
       "PharmacyID": "pharmacy1",
       "Status": "pending",
       "Description": "Due supposte grosse per il culo",
@@ -46,7 +46,7 @@
     {
       "ID": "6918bcdb-bf53-4a88-9f11-986b53a72fc1",
       "DoctorID": "94ae7246-40c6-40fa-8d5a-fcc34d0edbca",
-      "PatientID": "d1744d6f-e127-4206-845f-faa849ce1666",
+      "PatientID": "895efd96-c1cb-424a-854b-eda0538e0f7d",
       "PharmacyID": "pharmacy1",
       "Status": "pending",
       "Description": "Tachipirina 100",
@@ -169,9 +169,10 @@
       "BirthDate": "",
       "CodiceFiscale": "",
       "Height": "",
-      "ID": "d1744d6f-e127-4206-845f-faa849ce1666",
+      "ID": "895efd96-c1cb-424a-854b-eda0538e0f7d",
       "MedicalHistory": [],
       "Name": "Fabry3",
+      "cf": "123", 
       "Surname": "",
       "Weight": ""
     }

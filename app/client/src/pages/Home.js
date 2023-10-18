@@ -11,6 +11,8 @@ import Table from '../components/Table';
 
 
 export default function Home() {
+  const jwtToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiODk1ZWZkOTYtYzFjYi00MjRhLTg1NGItZWRhMDUzOGUwZjdkIiwicm9sZSI6IlBhdGllbnQiLCJzbWFydENvbnRyYWN0IjoiUGF0aWVudENvbnRyYWN0IiwiaWF0IjoxNjk3NjY2MjU2LCJleHAiOjE2OTc2ODQyNTZ9.r8x8vOgZ1ikJp_sTksd8jK1D3t_Lpcd7ZnmhNxCb2mo"
+
   const defaultState = {
     navigation: [
       { name: 'Dashboard', href: '/' },
@@ -49,24 +51,22 @@ export default function Home() {
   }
 
   const [navigation, setNavigation] = React.useState(defaultState.navigation);
-  const [userProfile, setUserProfile] = React.useState(defaultState.userProfile);
-  const [userProfileCard, setUserProfileCard] = React.useState(userProfile);
-  const [prescriptions, setPrescriptions] = React.useState([]);
+  const [userProfileCard, setUserProfileCard] = React.useState(defaultState.userProfile);
   const [dataTable, setDataTable] = React.useState(defaultState.dataTable);
   
   const fetchUserProfile = async () => {
     try{
-      const res = await fetch("http://localhost:3001/api/users/d1744d6f-e127-4206-845f-faa849ce1666", {
+      const res = await fetch("http://localhost:3001/api/users/895efd96-c1cb-424a-854b-eda0538e0f7d", {
         method: 'GET', 
         headers: { 
-          'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiZDE3NDRkNmYtZTEyNy00MjA2LTg0NWYtZmFhODQ5Y2UxNjY2IiwidXNlcm5hbWUiOiJGYWJyeTMiLCJyb2xlIjoiUGF0aWVudCIsInNtYXJ0Q29udHJhY3QiOiJQYXRpZW50Q29udHJhY3QiLCJpYXQiOjE2OTc2MjQ0MjYsImV4cCI6MTY5NzY0MjQyNn0.6UvRCvPwC8ZeHvlw__QtMsFNTyrDcqxI_K7UQqzNrb8',
+          'Authorization': 'Bearer '+ jwtToken,
         }
       });
       if (res.status == 200) {
         const data = await res.json();
         console.log("response fetch user");
         console.log(data);
-        setUserProfile(data.data);
+        return data.data;
       } else {
         console.error("userProfileFetch status code: " + res.status);
       }
@@ -79,14 +79,14 @@ export default function Home() {
       const res = await fetch("http://localhost:3001/api/prescriptions/", {
         method: 'GET', 
         headers: { 
-          'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiZDE3NDRkNmYtZTEyNy00MjA2LTg0NWYtZmFhODQ5Y2UxNjY2IiwidXNlcm5hbWUiOiJGYWJyeTMiLCJyb2xlIjoiUGF0aWVudCIsInNtYXJ0Q29udHJhY3QiOiJQYXRpZW50Q29udHJhY3QiLCJpYXQiOjE2OTc2MjQ0MjYsImV4cCI6MTY5NzY0MjQyNn0.6UvRCvPwC8ZeHvlw__QtMsFNTyrDcqxI_K7UQqzNrb8',
+          'Authorization': 'Bearer '+ jwtToken,
         }
       });
       if (res.status == 200) {
         const data = await res.json();
         console.log("response fetch precsrip");
         console.log(data);
-        setPrescriptions(data.data);
+        return data.data;
       } else {
         console.error("fetchPrescriptions status code: " + res.status);
       }
@@ -95,26 +95,43 @@ export default function Home() {
     }
   }
 
-  // React.useEffect( () => {
-  //   const fetchData = async () =>{
-  //     await fetchUserProfile();
-  //     await fetchPrescriptions();
-  //     console.log("prescr or user prof changed");
-  //     console.log(prescriptions);
-  //     console.log(userProfile);
-  //     setUserProfileCard({
-  //       firstName: userProfile.Name,
-  //       lastName: userProfile?.Surname,
-  //       src: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=286',
-  //       role: 'ruolo da ricavare dal token',
-  //       totPrescriptions: prescriptions.length,
-  //       pendingPrescriptions: prescriptions.filter( p => p.Status === 'pending' ).length,
-  //       processedPrescriptions: prescriptions.filter( p => p.Status !== 'pending' ).length
-  //     });
-  //   }
-  //   fetchData();
+  React.useEffect( () => {
+    const fetchData = async () => {
+      const userProfile = await fetchUserProfile();
+      const prescriptions = await fetchPrescriptions();
 
-  // }, [])
+      return { userProfile, prescriptions };
+    }
+
+    fetchData()
+      .then( ({ userProfile, prescriptions }) => {
+        console.log("setting profile card")
+        setUserProfileCard({
+          firstName: userProfile?.Name,
+          lastName: userProfile?.Surname,
+          src: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=286',
+          role: 'ruolo da ricavare dal token',
+          totPrescriptions: prescriptions?.length,
+          pendingPrescriptions: prescriptions?.filter( p => p.Status === 'pending' ).length,
+          processedPrescriptions: prescriptions?.filter( p => p.Status !== 'pending' ).length
+        }); 
+        
+
+        /* farei visualizzare il nome del dottore piuttosto che l'ID, quindi da fare altra chiamata per recuperare
+        *  nome del dottore e nome della farmacia
+        */
+        setDataTable({
+          header: ['ID', 'Status' ,'Doctor', 'Pharmacy', 'Description'],
+          body: prescriptions.map(prescription => [
+            { display: prescription?.ID, url: `/api/prescriptions/${prescription?.ID}` },
+            { display: prescription?.Status, chipStatus: true },
+            { display: prescription?.DoctorID, favicon: true, url: `/api/users/${prescription?.DoctorID}` },
+            { display: prescription?.PharmacyID, favicon: true, url: `/api/users/${prescription?.PharmacyID}` },
+            { display: prescription?.Description },
+          ])
+        }); 
+      });
+  }, []);
 
   return (
     <Box className="Home">
