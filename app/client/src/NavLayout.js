@@ -6,7 +6,7 @@ export default function NavLayout() {
       <nav>
         <ul>
           <li>
-            <NavLink to="/">Home</NavLink>
+            <NavLink to="/">Pagina Iniziale</NavLink>
           </li>
           <li>
             <NavLink to="/signup">Registrati</NavLink>
@@ -15,10 +15,7 @@ export default function NavLayout() {
             <NavLink to="/signin">Login</NavLink>
           </li>
           <li>
-            <NavLink to="/logout">Logout</NavLink>
-          </li>
-          <li>
-            <NavLink to="/dashboard">Dashboard</NavLink>
+            <NavLink to="/home">User Home</NavLink>
           </li>
         </ul>
       </nav>

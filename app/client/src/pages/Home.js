@@ -53,12 +53,12 @@ export default function Home() {
   const [navigation, setNavigation] = React.useState(defaultState.navigation);
   const [userProfileCard, setUserProfileCard] = React.useState(defaultState.userProfile);
   const [dataTable, setDataTable] = React.useState(defaultState.dataTable);
-  
+
   const fetchUserProfile = async () => {
     try{
       const res = await fetch("http://localhost:3001/api/users/895efd96-c1cb-424a-854b-eda0538e0f7d", {
-        method: 'GET', 
-        headers: { 
+        method: 'GET',
+        headers: {
           'Authorization': 'Bearer '+ jwtToken,
         }
       });
@@ -74,11 +74,11 @@ export default function Home() {
       console.error(e);
     }
   }
-  const fetchPrescriptions = async () => {
+  /*const fetchPrescriptions = async () => {
     try{
       const res = await fetch("http://localhost:3001/api/prescriptions/", {
-        method: 'GET', 
-        headers: { 
+        method: 'GET',
+        headers: {
           'Authorization': 'Bearer '+ jwtToken,
         }
       });
@@ -114,13 +114,13 @@ export default function Home() {
           totPrescriptions: prescriptions?.length,
           pendingPrescriptions: prescriptions?.filter( p => p.Status === 'pending' ).length,
           processedPrescriptions: prescriptions?.filter( p => p.Status !== 'pending' ).length
-        }); 
-        
+        });
+
 
         /* farei visualizzare il nome del dottore piuttosto che l'ID, quindi da fare altra chiamata per recuperare
         *  nome del dottore e nome della farmacia
         */
-        setDataTable({
+       /* setDataTable({
           header: ['ID', 'Status' ,'Doctor', 'Pharmacy', 'Description'],
           body: prescriptions.map(prescription => [
             { display: prescription?.ID, url: `/api/prescriptions/${prescription?.ID}` },
@@ -129,10 +129,10 @@ export default function Home() {
             { display: prescription?.PharmacyID, favicon: true, url: `/api/users/${prescription?.PharmacyID}` },
             { display: prescription?.Description },
           ])
-        }); 
+        });
       });
   }, []);
-
+*/
   return (
     <Box className="Home">
       <Box sx={{ maxWidth: '80%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: 5 }}>
