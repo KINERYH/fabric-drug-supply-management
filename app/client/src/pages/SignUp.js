@@ -38,8 +38,8 @@ export default function SignUp() {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          firstName: data.get('firstName'),
-          lastName: data.get('lastName'),
+          name: data.get('firstName'),
+          surname: data.get('lastName'),
           cf: data.get('cf'),
           address: data.get('address'),
           password: data.get('password'),
@@ -57,7 +57,7 @@ export default function SignUp() {
         setRegistedVisible(true);
       }
       else{
-        alert('Errore nella registrazione')
+        alert('Errore nella registrazione: \n' + json.message)
       }
     }
     catch{}
@@ -123,7 +123,7 @@ export default function SignUp() {
 
               <Stack gap={4} sx={{ mt: 2 }}>
 
-                <Button type="submit" fullWidth>
+                <Button type="submit" >
                   Sign up
                 </Button>
                 { registeredVisible && (<Alert
