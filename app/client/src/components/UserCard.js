@@ -11,11 +11,12 @@ import { useNavigate } from 'react-router-dom';
 
 export default function UserCard(props) {
   // gestione del logout
-  const { setToken } = useAuth();
+  const { setToken, setUser } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = () => {
      setToken();
+     setUser();
      navigate("/");
   }
   return (

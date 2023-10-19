@@ -10,10 +10,10 @@ import { useAuth } from '../provider/authProvider';
 
 // gestisce il routing
 const Routes = () => {
-  const {token}  = useAuth();
+  const {token, user}  = useAuth();
 
   const NonProtectedRoutes = [
-    { path: "/", element:<div>Pagina Iniziale {token}</div> },
+    { path: "/", element:<div>Pagina Iniziale {user}</div> },
     {path: "/about", element: <About/>},
     {path: '*', element: <div>Not Found</div>}]
 

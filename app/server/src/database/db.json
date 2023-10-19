@@ -57,17 +57,17 @@
       "smartContract": "PatientContract"
     },
     {
-      "cf": "DNIFNC99H24A662U",
-      "password": "$2b$10$cx/2W8NkN3Et2s/OWs6iM.1CQwtPyrXvQhlPszX.7zeDWyP6rVIee",
-      "role": "Patient",
-      "uuid": "9823e03c-27a8-4c58-97e1-bd03fb9464cc",
-      "smartContract": "PatientContract"
-    },
-    {
       "cf": "123",
       "password": "$2b$10$6hm.20vdWtEZ3FjnYH.HK.quIjFqZVAS4oeKRrVjBwyNJfNJl49qq",
       "role": "Patient",
       "uuid": "895efd96-c1cb-424a-854b-eda0538e0f7d",
+      "smartContract": "PatientContract"
+    },
+    {
+      "cf": "DNIFNC99H24A662U",
+      "password": "$2b$10$v44FGBoKQdWitCl3HOnUD.lKE.odgeubfLhdWvdAvj/jrpH1J4ZTy",
+      "role": "Patient",
+      "uuid": "b9ce9652-5ad7-4ae2-b523-3e8ea4b3bea5",
       "smartContract": "PatientContract"
     }
   ]
