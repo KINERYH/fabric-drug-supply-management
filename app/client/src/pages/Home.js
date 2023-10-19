@@ -7,11 +7,12 @@ import Button from '@mui/joy/Button';
 import UserCard from '../components/UserCard';
 import Breadcrumbs from '../components/Breadcrumbs';
 import Table from '../components/Table';
+import { useAuth } from '../provider/authProvider';
 
 
 
 export default function Home() {
-  const jwtToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiODk1ZWZkOTYtYzFjYi00MjRhLTg1NGItZWRhMDUzOGUwZjdkIiwicm9sZSI6IlBhdGllbnQiLCJzbWFydENvbnRyYWN0IjoiUGF0aWVudENvbnRyYWN0IiwiaWF0IjoxNjk3NjY2MjU2LCJleHAiOjE2OTc2ODQyNTZ9.r8x8vOgZ1ikJp_sTksd8jK1D3t_Lpcd7ZnmhNxCb2mo"
+  const {token} = useAuth();
 
   const defaultState = {
     navigation: [
@@ -24,7 +25,7 @@ export default function Home() {
       firstName: 'Alex',
       lastName: 'Morrison',
       src: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=286',
-      role: 'Patient',
+      role: '{Patient}',
       totPrescriptions: 34,
       pendingPrescriptions: 4,
       processedPrescriptions: 30
@@ -59,7 +60,7 @@ export default function Home() {
       const res = await fetch("http://localhost:3001/api/users/895efd96-c1cb-424a-854b-eda0538e0f7d", {
         method: 'GET',
         headers: {
-          'Authorization': 'Bearer '+ jwtToken,
+          'Authorization': `Bearer ${token}`,
         }
       });
       if (res.status == 200) {
@@ -74,12 +75,12 @@ export default function Home() {
       console.error(e);
     }
   }
-  /*const fetchPrescriptions = async () => {
+  const fetchPrescriptions = async () => {
     try{
       const res = await fetch("http://localhost:3001/api/prescriptions/", {
         method: 'GET',
         headers: {
-          'Authorization': 'Bearer '+ jwtToken,
+          'Authorization': 'Bearer '+ token,
         }
       });
       if (res.status == 200) {
@@ -120,7 +121,7 @@ export default function Home() {
         /* farei visualizzare il nome del dottore piuttosto che l'ID, quindi da fare altra chiamata per recuperare
         *  nome del dottore e nome della farmacia
         */
-       /* setDataTable({
+        setDataTable({
           header: ['ID', 'Status' ,'Doctor', 'Pharmacy', 'Description'],
           body: prescriptions.map(prescription => [
             { display: prescription?.ID, url: `/api/prescriptions/${prescription?.ID}` },
@@ -132,7 +133,7 @@ export default function Home() {
         });
       });
   }, []);
-*/
+
   return (
     <Box className="Home">
       <Box sx={{ maxWidth: '80%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: 5 }}>
