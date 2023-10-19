@@ -4,36 +4,41 @@ import SignIn from "../pages/SignIn";
 import SignUp from "../pages/SignUp";
 import Home from "../pages/Home";
 import About from "../About.js";
-import Logout from "../pages/Logout";
 import NavLayout from "../NavLayout";
-import Dashboard from "../pages/Dashboard";
+import { useAuth } from '../provider/authProvider';
 
 
 // gestisce il routing
 const Routes = () => {
+  const {token}  = useAuth();
 
-  const routes = [{element:<NavLayout/>, children:[
-    { path: "/", element: <Home /> },
-    { path: "/signin", element: <SignIn/> },
-    {path: "/signup", element: <SignUp />},
+  const NonProtectedRoutes = [
+    { path: "/", element:<div>Pagina Iniziale {token}</div> },
     {path: "/about", element: <About/>},
-    {path: '*', element: <div>Not Found</div>},
-  // route con autorizzazione
+    {path: '*', element: <div>Not Found</div>}]
+
+  const protectedRoutes = [
     { path: "/", element: <ProtectedRoute />,
       children: [
         {path: "/home",
         element: <Home />},
-        {path: "/profile",
-        element: <div>User Profile Page</div>},
-        {path: "/logout", element: <Logout />}
-    ] }
-]}]
+    ] }];
 
+  //route solo per utenti non loggati
+  const routesNonAuth = [
+    { path: "/signin", element: <SignIn/> },
+    {path: "/signup", element: <SignUp />},
+  ];
 
+  const routes = [{element:<NavLayout/>, children:[
+    ...NonProtectedRoutes,
+    ...(!token? routesNonAuth : []),
+    ...protectedRoutes
+  ]
+  }];
 
   const router = createBrowserRouter(
   routes
-
   );
   return <RouterProvider router={router} />;
 }

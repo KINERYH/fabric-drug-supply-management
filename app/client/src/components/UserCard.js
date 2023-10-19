@@ -6,8 +6,18 @@ import Card from '@mui/joy/Card';
 import CardContent from '@mui/joy/CardContent';
 import Typography from '@mui/joy/Typography';
 import Sheet from '@mui/joy/Sheet';
+import { useAuth } from '../provider/authProvider';
+import { useNavigate } from 'react-router-dom';
 
 export default function UserCard(props) {
+  // gestione del logout
+  const { setToken } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+     setToken();
+     navigate("/");
+  }
   return (
     <Box sx={{ width: '100%' }} >
       <Card
@@ -65,8 +75,8 @@ export default function UserCard(props) {
             <Button variant="outlined" color="neutral">
               Edit info
             </Button>
-            <Button variant="solid" color="primary">
-              Do something
+            <Button variant="solid" color="primary" onClick={handleLogout}>
+              Logout
             </Button>
           </Box>
         </CardContent>
