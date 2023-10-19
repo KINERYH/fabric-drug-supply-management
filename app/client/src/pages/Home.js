@@ -12,7 +12,7 @@ import { useAuth } from '../provider/authProvider';
 
 
 export default function Home() {
-  const {token} = useAuth();
+  const {token, user} = useAuth();
 
   const defaultState = {
     navigation: [
@@ -57,7 +57,7 @@ export default function Home() {
 
   const fetchUserProfile = async () => {
     try{
-      const res = await fetch("http://localhost:3001/api/users/895efd96-c1cb-424a-854b-eda0538e0f7d", {
+      const res = await fetch(`http://localhost:3001/api/users/${user}`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -66,7 +66,7 @@ export default function Home() {
       if (res.status == 200) {
         const data = await res.json();
         console.log("response fetch user");
-        console.log(data);
+        console.log(data.data);
         return data.data;
       } else {
         console.error("userProfileFetch status code: " + res.status);
@@ -111,7 +111,7 @@ export default function Home() {
           firstName: userProfile?.Name,
           lastName: userProfile?.Surname,
           src: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=286',
-          role: 'ruolo da ricavare dal token',
+          role: 'dovrebbe prenderlo dal token',
           totPrescriptions: prescriptions?.length,
           pendingPrescriptions: prescriptions?.filter( p => p.Status === 'pending' ).length,
           processedPrescriptions: prescriptions?.filter( p => p.Status !== 'pending' ).length

@@ -13,7 +13,7 @@ const Routes = () => {
   const {token, user}  = useAuth();
 
   const NonProtectedRoutes = [
-    { path: "/", element:<div>Pagina Iniziale {user}</div> },
+    { path: "/", element:<div>Pagina Iniziale {user}    {token}</div> },
     {path: "/about", element: <About/>},
     {path: '*', element: <div>Not Found</div>}]
 

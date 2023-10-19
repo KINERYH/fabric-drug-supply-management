@@ -15,10 +15,11 @@ Content-Type: "application/json"
     "username": "Pietro",
     "password": "prova"
 }
-
 ###
-GET http://localhost:3001/api/test/
-
+GET http://localhost:3001/api/test
+###
+GET http://localhost:3001/api/users/b9ce9652-5ad7-4ae2-b523-3e8ea4b3bea5
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiYjljZTk2NTItNWFkNy00YWUyLWI1MjMtM2U4ZWE0YjNiZWE1Iiwicm9sZSI6IlBhdGllbnQiLCJzbWFydENvbnRyYWN0IjoiUGF0aWVudENvbnRyYWN0IiwiaWF0IjoxNjk3NzI5NTgxLCJleHAiOjE2OTc3NDc1ODF9.hYLxCps6yOtObEJ2aSD0398-o-Xpfc4joZgIDgnWinU
 ###
 GET http://localhost:3001/api/test/pharmacy/94ae7246-40c6-40fa-8d5a-fcc34d0edbca
 ###

@@ -31,8 +31,11 @@ const getUser = async (userId, currentUser) => {
     const { gateway, contract } = await ledger.connect(ccp, wallet, currentUser.uuid, channelName, chaincodeName, currentUser.smartContract);
     console.log('\n--> Evaluate Transaction: GetUser');
     const result = await contract.evaluateTransaction('GetAllInfo', userId);
+    console.log('*** Result: committed');
     ledger.disconnect(gateway);
     const userInfo = JSON.parse(result.toString());
+    //  TODO: verifica perché da errore
+    console.log(userInfo);
     console.log(`\n--> User info correctly retrieved`);
     return userInfo;
   } catch (error) {
