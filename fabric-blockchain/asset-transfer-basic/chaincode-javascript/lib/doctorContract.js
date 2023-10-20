@@ -194,12 +194,33 @@ class DoctorContract extends Contract {
    * @param {string} drugs - The drugs prescribed, in JSON format
    * @param {string} description - The description of the prescription
    * @returns {Promise<Object[]>} - An array of all prescriptions
-   * @throws {Error} - If the doctor or patient does not exist
+   * @throws {Error} - If the doctor or patient does not exist or if the patient is allergic to any of the drugs
    */
   async CreatePrescription(ctx, docID, patientID, prescriptionID, drugs, description) {
 
     const serializedPrescriptionsList = await ctx.stub.getState('prescriptions');
     const prescriptionsList = JSON.parse(serializedPrescriptionsList.toString());
+
+    // Get allergies of the patient
+    const serializedPatients = await ctx.stub.getState('patients');
+    const patients = JSON.parse(serializedPatients.toString());
+    const patient = patients.find(patient => patient.ID === patientID);
+    const allergies = patient.Allergies;
+
+    const serializedManufacturers = await ctx.stub.getState('manufacturers');
+    const manufacturers = JSON.parse(serializedManufacturers.toString());
+    for(let drug of drugs){
+      const manufacturer = manufacturers.find(manufacturer => manufacturer.ID === drug.ManufacturerID);
+      if(manufacturer == null){
+        throw new Error(`Manufacturer ${drug.Manufacturer} does not exist`);
+      }
+      const composition = manufacturer.find(d => d.DrugID === drug.DrugID).Composition;
+      for(let component of composition){
+        if(allergies.includes(component)){
+          throw new Error(`Patient ${patient.Name} ${patient.Surname} is allergic to the component ${component} of the drug ${drug.Name}`);
+        }
+      }
+    }
 
     const prescription = {
       ID: prescriptionID,

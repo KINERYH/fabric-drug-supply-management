@@ -71,7 +71,7 @@
       "smartContract": "PatientContract"
     },
     {
-      "email": "12345@gmail.com",
+      "email": "12345@gmail.com"
       "password": "$2b$10$jjTraGT/ztIHhJzJ7kHj.OeEmZBr.4uRGNfOxnNBJkMn.f.eP5wBa",
       "role": "Patient",
       "uuid": "00106b10-abe4-475b-9500-13f77421011b",
