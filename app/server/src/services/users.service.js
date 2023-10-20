@@ -70,7 +70,8 @@ const loginUser = async (userReq) => {
         role: userDb.role,
         smartContract: userDb.smartContract
       }),
-        uuid: userDb.uuid};
+        uuid: userDb.uuid,
+        role: userDb.role};
     } else {
       throw { status: 401, message: "Wrong credentials."};
     }

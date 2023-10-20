@@ -12,7 +12,7 @@ import { useAuth } from '../provider/authProvider';
 
 
 export default function Home() {
-  const {token, user} = useAuth();
+  const {token, user, role} = useAuth();
 
   const defaultState = {
     navigation: [
@@ -111,7 +111,7 @@ export default function Home() {
           firstName: userProfile?.Name,
           lastName: userProfile?.Surname,
           src: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=286',
-          role: 'dovrebbe prenderlo dal token',
+          role: "Ruolo: " + role,
           totPrescriptions: prescriptions?.length,
           pendingPrescriptions: prescriptions?.filter( p => p.Status === 'pending' ).length,
           processedPrescriptions: prescriptions?.filter( p => p.Status !== 'pending' ).length

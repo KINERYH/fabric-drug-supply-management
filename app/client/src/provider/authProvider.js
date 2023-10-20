@@ -10,7 +10,7 @@ const AuthContext = createContext(); //contiene le informazioni che devono esser
 const AuthProvider = ({ children }) => {
   const [token, setToken_] = useState(localStorage.getItem("token")); //ottiene il valore del token dal local storage
   const [user, setUser_] = useState(localStorage.getItem("user")); //contiene le informazioni dell'utente loggato
-
+  const [role, setRole_] = useState(localStorage.getItem("role")); // ruolo dell'utente loggato
 const setToken = (newToken) => {
   setToken_(newToken);
 };
@@ -19,11 +19,16 @@ const setUser = (newUser) => {
   setUser_(newUser);
 }
 
+const setRole = (newRole) => {
+  setRole_(newRole);
+}
+
 // salva il token e l'user nel local storage
 useEffect(() => {
   localStorage.setItem("token", token);
   localStorage.setItem("user", user);
-}, [token, user]);
+  localStorage.setItem("role", role);
+}, [token, user, role]);
 
 
 
@@ -33,7 +38,9 @@ const contextValue = useMemo(
     token,
     setToken,
     user,
-    setUser
+    setUser,
+    role,
+    setRole
   }),
   [token, user]
 );
