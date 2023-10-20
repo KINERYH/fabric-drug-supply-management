@@ -127,7 +127,10 @@ const createUser = async (user) => {
       "CodiceFiscale": user.cf ,
       "MedicalHistory": user?.medicalHistory || [],
       "Height": user?.height || '',
-      "Weight": user?.weight || ''
+      "Weight": user?.weight || '',
+      //TODO: da rimuovere
+      "Hospital": user?.hospital || '',
+      "Specialization": user?.specialization || '',
     };
     console.log('\n--> Submit Transaction: PutUser');
     newUserLedger = await contract.submitTransaction('PutUser', JSON.stringify(newUserLedger));

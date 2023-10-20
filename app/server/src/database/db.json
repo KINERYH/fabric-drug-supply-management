@@ -32,7 +32,7 @@
       "cf": "Fra3",
       "password": "$2b$10$I2tMXfRzpU47/nFB.zahte.yiSIdjXOYGYWY6LsAgOfTWglq83A5C",
       "role": "Doctor",
-      "uuid": "547e99dc-ce76-4507-9b45-48bd38534b7a",
+      "uuid": "94ae7246-40c6-40fa-8d5a-fcc34d0edbca",
       "smartContract": "DoctorContract"
     },
     {
@@ -76,6 +76,13 @@
       "role": "Patient",
       "uuid": "00106b10-abe4-475b-9500-13f77421011b",
       "smartContract": "PatientContract"
+    },
+    {
+      "cf": "DOC",
+      "password": "$2b$10$cYn.pO6S5wU4ypw3xi8pyey3QgkQfyqByTFg6/OeqRpxMhgwXd1ai",
+      "role": "Doctor",
+      "uuid": "045edc66-ae1c-4706-9351-8126950ab314",
+      "smartContract": "DoctorContract"
     }
   ]
 }

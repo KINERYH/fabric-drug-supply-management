@@ -28,7 +28,7 @@
   "prescriptions": [
     {
       "ID": "6918bcdb-bf53-4a88-9f11-986b52a72fc4",
-      "DoctorID": "94ae7246-40c6-40fa-8d5a-fcc34d0edbca",
+      "DoctorID": "045edc66-ae1c-4706-9351-8126950ab314",
       "PatientID": "00106b10-abe4-475b-9500-13f77421011b",
       "PharmacyID": "pharmacy1",
       "Status": "pending",
@@ -48,7 +48,7 @@
     },
     {
       "ID": "6918bcdb-bf53-4a88-9f11-986b53a72fc1",
-      "DoctorID": "94ae7246-40c6-40fa-8d5a-fcc34d0edbca",
+      "DoctorID": "045edc66-ae1c-4706-9351-8126950ab314",
       "PatientID": "00106b10-abe4-475b-9500-13f77421011b",
       "PharmacyID": "pharmacy1",
       "Status": "pending",
@@ -62,7 +62,7 @@
     },
     {
       "ID": "6918bcdb-bf53-4a88-9f11-986b52a7dec4",
-      "DoctorID": "94ae7246-40c6-40fa-8d5a-fcc3420edbca",
+      "DoctorID": "045edc66-ae1c-4706-9351-8126950ab314",
       "PatientID": "00106b10-abe4-475b-9500-13f77421011b",
       "PharmacyID": "pharmacy1",
       "Status": "pending",
@@ -76,7 +76,7 @@
     },
     {
       "ID": "6918bcdb-bf53-4a88-9f11-986b52n7dec4",
-      "DoctorID": "94ae7246-40c6-40fa-8d5a-fcc3420edbca",
+      "DoctorID": "045edc66-ae1c-4706-9351-8126950ab314",
       "PatientID": "4702b1fb-6783-4690-8e5e-9b8e89a0f1ab",
       "PharmacyID": "pharmacy1",
       "Status": "pending",
@@ -180,6 +180,13 @@
       "Surname": "Ventrella",
       "Specialization": "Neonatologia",
       "Hospital": "Ospedale di Venere"
+    },
+    {
+          "Hospital": "Sacro Cuore",
+          "ID": "045edc66-ae1c-4706-9351-8126950ab314",
+          "Name": "Turk",
+          "Specialization": "Chirurgo",
+          "Surname": "Turkleton"
     },
     {
       "ID": "94ae7246-40c6-40fa-8d5a-fcc34d0edbcb",
