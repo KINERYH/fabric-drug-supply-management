@@ -95,7 +95,7 @@ const createUser = async (user) => {
     if (!user.password) {
       throw { status: 400, message: "Missing password."};
     }
-    const userDb = await db.users.find((u) => u.cf === user.cf);
+    const userDb = db.users.find((u) => u.cf === user.cf);
     if (userDb) {
       throw { status: 400, message: "User already exists."};
     }
