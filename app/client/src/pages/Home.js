@@ -138,11 +138,21 @@ export default function Home() {
                 { display: prescription?.ID, url: `/api/prescriptions/${prescription?.ID}` },
                 { display: prescription?.Status, chipStatus: true },
                 { display: prescription?.PatientID, favicon: true, url: `/api/users/${prescription?.PatientID}` },
-                { display: prescription?.Drugs },
-                { display: prescription?.Description },
+                { display: 'More Info', url: `/api/prescriptions/${prescription?.ID}/drugs` },
+                { display: prescription?.Description }
               ])
                             }
             break;
+            case 'Pharmacy':
+              table = {}
+              break;
+
+            case 'Manufacturer':
+              table = {}
+              break;
+
+            default:
+              table = dataTable;
         }
         console.log(table)
 
