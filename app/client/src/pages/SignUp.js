@@ -38,6 +38,7 @@ export default function SignUp() {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
+          email: data.get('email'),
           name: data.get('firstName'),
           surname: data.get('lastName'),
           cf: data.get('cf'),
@@ -111,16 +112,19 @@ export default function SignUp() {
 
           <div style={{ padding: '25px' }}>
             <form onSubmit={handleSubmit}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-				<FormField label="First name" type="text" name="firstName" required />
-				<FormField label="Last name" type="text" name="lastName" required />
-				<FormField label="CF" type="text" name="cf" required />
-				<FormField label="Address" type="text" name="address" required />
-				<FormField label="Password" type="password" name="password" required />
-				<FormField label="Birth Date" type="date" name="birthDate" required />
-				<FormField label="Weight (kg)" type="number" name="weight" required />
-				<FormField label="Height (cm)" type="number" name="height" required />
+              <FormField label="Email" type="email" name="email" required style={{ my: 'px' }}/>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginTop:'16px' }}>
+                <FormField label="First name" type="text" name="firstName" required />
+                <FormField label="Last name" type="text" name="lastName" required />
+                <FormField label="CF" type="text" name="cf" required />
+                <FormField label="Address" type="text" name="address" required />
+                <FormField label="Password" type="password" name="password" required />
+                <FormField label="Birth Date" type="date" name="birthDate" required />
+                <FormField label="Weight (kg)" type="number" name="weight" required />
+                <FormField label="Height (cm)" type="number" name="height" required />
               </div>
+
+
 
               <Stack gap={4} sx={{ mt: 2 }}>
 

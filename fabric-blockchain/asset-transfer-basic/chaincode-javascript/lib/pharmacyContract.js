@@ -5,6 +5,37 @@ const sortKeysRecursive = require('sort-keys-recursive');
 const { Contract } = require('fabric-contract-api');
 
 class PharmacyContract extends Contract {
+	async PutUser(ctx, user) {
+    user = JSON.parse(user);
+    console.log("try to insert in the ledger:");
+    console.log(user);
+    const serializedPharmacies = await ctx.stub.getState('pharmacies');
+    const pharmacies = JSON.parse(serializedPharmacies.toString());
+
+    const exists = pharmacies.find(pharmacy => pharmacy.ID === user.ID)
+    if(exists) {
+      throw new Error(`Pharmacy already exist`);
+    }
+    // remove password attribute if exists
+    delete user.password;
+    // put new user
+    doctors.push(user);
+    console.log(pharmacies);
+    await ctx.stub.putState('pharmacies', Buffer.from(stringify(sortKeysRecursive(pharmacies))));
+    console.log("Successfully added new pharmacy.")
+    return user;
+  }
+
+	async GetAllInfo(ctx, pharmacyID) {
+    const serializedPharmacies = await ctx.stub.getState('pharmacies');
+    if (!serializedPharmacies || serializedPharmacies.length === 0) {
+      throw new Error(`There are no pharmacies in the ledger`);
+    }
+    const pharmacies = JSON.parse(serializedPharmacies.toString());
+    const pharmacy = pharmacies.find(pharmacy => pharmacy.ID === pharmacyID);
+    return pharmacy;
+  }
+
 
 	/**
 	 *
@@ -71,7 +102,7 @@ class PharmacyContract extends Contract {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param {*} drugID = drug id
 	 * @param {*} pharmacyStorage = pharmacy storage
 	 * @returns the quantity of the drug with the given id in the pharmacy storage
@@ -87,7 +118,7 @@ class PharmacyContract extends Contract {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param {*} drugID = drug id
 	 * @param {*} drugStorage = drug storage of the pharmacy
 	 * @returns the boxID of the drug with the given id in the pharmacy storage
@@ -101,7 +132,7 @@ class PharmacyContract extends Contract {
 		}
 
 		throw new Error(`Drug with ID ${drugID} not found in the pharmacy storage`);
-		
+
 	}
 
 	/**
@@ -201,15 +232,15 @@ class PharmacyContract extends Contract {
 		}
 	}
 
-	
+
 	/**
-	 * 
-	 * @param {*} ctx 
+	 *
+	 * @param {*} ctx
 	 * @param {*} pharmacyID = pharmacy id
 	 * @param {*} orderID = order id
 	 * @param {*} manufacturerID = manufacturer id
 	 * @param {*} drugs = JSON list of objects {DrugID: "drug id", Quantity: "quantity"}
-	 * @param {*} description 
+	 * @param {*} description
 	 */
 	async RequestOrder(ctx, pharmacyID, orderID, manufacturerID, drugs, description) {
 		const serializedOrders = ctx.stub.getState("orders");
@@ -223,7 +254,7 @@ class PharmacyContract extends Contract {
 		if(exist){
 			throw new Error(`Order with ID ${orderID} already exists`);
 		}
-		
+
 		const order = {
 			ID: orderID,
 			PharmacyID: pharmacyID,
@@ -238,8 +269,8 @@ class PharmacyContract extends Contract {
 	}
 
 	/**
-	 * 
-	 * @param {*} ctx 
+	 *
+	 * @param {*} ctx
 	 * @param {*} pharmacyID = pharmacy id
 	 * @param {*} orderID = order id
 	 */
@@ -296,8 +327,8 @@ class PharmacyContract extends Contract {
 	}
 
 	/**
-	 * 
-	 * @param {*} ctx 
+	 *
+	 * @param {*} ctx
 	 * @returns a list of all the manufacturers
 	 */
 	async GetAllManufacturers(ctx) {

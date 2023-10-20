@@ -117,20 +117,49 @@ export default function Home() {
           processedPrescriptions: prescriptions?.filter( p => p.Status !== 'pending' ).length
         });
 
+        let table;
+        switch(role){
+          case 'Patient':
+            table = {
+              header: ['ID', 'Status' ,'Doctor', 'Pharmacy', 'Description'],
+              body: prescriptions.map(prescription => [
+                { display: prescription?.ID, url: `/api/prescriptions/${prescription?.ID}` },
+                { display: prescription?.Status, chipStatus: true },
+                { display: prescription?.DoctorID, favicon: true, url: `/api/users/${prescription?.DoctorID}` },
+                { display: prescription?.PharmacyID, favicon: true, url: `/api/users/${prescription?.PharmacyID}` },
+                { display: prescription?.Description },
+              ])
+            }
+            break;
+          case 'Doctor':
+            table = {
+              header: ['ID', 'Status', 'Patient', 'Drugs', 'Description'],
+              body: prescriptions.map(prescription => [
+                { display: prescription?.ID, url: `/api/prescriptions/${prescription?.ID}` },
+                { display: prescription?.Status, chipStatus: true },
+                { display: prescription?.PatientID, favicon: true, url: `/api/users/${prescription?.PatientID}` },
+                { display: 'More Info', url: `/api/prescriptions/${prescription?.ID}/drugs` },
+                { display: prescription?.Description }
+              ])
+                            }
+            break;
+            case 'Pharmacy':
+              table = {}
+              break;
+
+            case 'Manufacturer':
+              table = {}
+              break;
+
+            default:
+              table = dataTable;
+        }
+        console.log(table)
 
         /* farei visualizzare il nome del dottore piuttosto che l'ID, quindi da fare altra chiamata per recuperare
         *  nome del dottore e nome della farmacia
         */
-        setDataTable({
-          header: ['ID', 'Status' ,'Doctor', 'Pharmacy', 'Description'],
-          body: prescriptions.map(prescription => [
-            { display: prescription?.ID, url: `/api/prescriptions/${prescription?.ID}` },
-            { display: prescription?.Status, chipStatus: true },
-            { display: prescription?.DoctorID, favicon: true, url: `/api/users/${prescription?.DoctorID}` },
-            { display: prescription?.PharmacyID, favicon: true, url: `/api/users/${prescription?.PharmacyID}` },
-            { display: prescription?.Description },
-          ])
-        });
+        setDataTable(table);
       });
   }, []);
 
