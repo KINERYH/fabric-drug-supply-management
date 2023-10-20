@@ -10,10 +10,10 @@ const ledger = require("../utils/blockchain/connection");
 const { chaincodeName, channelName } = require("../config/blockchain");
 
 router.post("/", (async (req, res) => {
+  const db = require('../database/db.json');
+  const uuid = uuidv4();
+  const { ccp, wallet } = require("../index");
   try{
-    const db = require('../database/db.json');
-    const uuid = uuidv4();
-    const { ccp, wallet } = require("../index");
 
     if (!req.body.email) {
       throw { status: 400, message: "Missing email."};
@@ -76,6 +76,8 @@ router.post("/", (async (req, res) => {
     //   await contract.submitTransaction('CreatePharmacy', JSON.stringify(newUserLedger));
     // }
 
+    // ------------
+
     const roles = {
       "Doctor": {
         fields: ["CodiceFiscale", "Name", "Surname", "Specialization", "Hospital"],
@@ -108,6 +110,8 @@ router.post("/", (async (req, res) => {
     console.log(`\n--> Submit Transaction: ${roleInfo.transaction}`);
     await contract.submitTransaction(roleInfo.transaction, JSON.stringify(newUserLedger));
     console.log('*** Result: committed');
+
+    // ------------
 
     ledger.disconnect(gateway);
 
