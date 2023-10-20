@@ -4,6 +4,7 @@
       "BoxID": "ec110aef-28ce-4d1b-a008-840e40390328",
       "DrugID": "ec110aef-28ce-4d1b-a008-840e40390329",
       "Name": "drug1",
+      "ManufacturerID" : "94ae7246-40c6-40fa-8d5a-fcc34d0edcca",
       "ExpirationDate": "2018-12-31T23:59:59.000Z",
       "ProductionDate": "2018-12-31T23:59:59.000Z"
     },
@@ -11,6 +12,7 @@
       "BoxID": "ec110aef-28ce-4d1b-a008-840e40390327",
       "DrugID": "ec110aef-28ce-4d1b-a008-840e40390329",
       "Name": "drug1",
+      "ManufacturerID" : "94ae7246-40c6-40fa-8d5a-fcc34d0edcca",
       "ExpirationDate": "2018-12-31T23:59:59.000Z",
       "ProductionDate": "2018-12-31T23:59:59.000Z"
     },
@@ -18,6 +20,7 @@
       "BoxID": "ec110aef-28ce-4d1b-a008-840e40390323",
       "DrugID": "ec110aef-28ce-4d1b-a008-840e40390330",
       "Name": "drug2",
+      "ManufacturerID" : "94ae7246-40c6-40fa-8d5a-fcc34d0edcca",
       "ExpirationDate": "2018-12-31T23:59:59.000Z",
       "ProductionDate": "2018-12-31T23:59:59.000Z"
     }
@@ -74,7 +77,7 @@
     {
       "ID": "6918bcdb-bf53-4a88-9f11-986b52n7dec4",
       "DoctorID": "94ae7246-40c6-40fa-8d5a-fcc3420edbca",
-      "PatientID": "b9ce9652-5ad7-4ae2-b523-3e8ea4b3bea5",
+      "PatientID": "4702b1fb-6783-4690-8e5e-9b8e89a0f1ab",
       "PharmacyID": "pharmacy1",
       "Status": "pending",
       "Description": "Non dovrebbe prenderla",
@@ -88,7 +91,7 @@
     {
       "ID": "6918bcdb-bf53-4a88-9f11-986b52a7dec5",
       "DoctorID": "94ae7246-40c6-40fa-8d5a-fcc3420edbca",
-      "PatientID": "b9ce9652-5ad7-4ae2-b523-3e8ea4b3bea5",
+      "PatientID": "4702b1fb-6783-4690-8e5e-9b8e89a0f1ab",
       "PharmacyID": "pharmacy1",
       "Status": "pending",
       "Description": "Prendi la medicina o vieni bannato",
@@ -102,7 +105,7 @@
     {
       "ID": "6918bcdb-bf53-4a88-9f11-986b52a7deh4",
       "DoctorID": "94ae7246-40c6-40fa-8d5a-fcc3420edbca",
-      "PatientID": "b9ce9652-5ad7-4ae2-b523-3e8ea4b3bea5",
+      "PatientID": "4702b1fb-6783-4690-8e5e-9b8e89a0f1ab",
       "PharmacyID": "pharmacy1",
       "Status": "pending",
       "Description": "Trenbolone acetato",
@@ -118,7 +121,7 @@
     {
       "ID": "94ae7246-40c6-40fa-8d5a-fcc34d0edbca",
       "PharmacyID": "pharmacy1",
-      "ManufacturerID": "94ae7246-40c6-40fa-8d5a-fcc34d0edbca",
+      "ManufacturerID": "94ae7246-40c6-40fa-8d5a-fcc34d0edcca",
       "Status": "pending",
       "Description": "si richiedono 10 scatole di tachipirina",
       "Drugs": [
@@ -132,7 +135,7 @@
     {
       "ID": "93ae7246-40c6-40fa-8d5a-fcc34d0edbca",
       "PharmacyID": "pharmacy2",
-      "ManufacturerID": "94ae7246-40c6-40fa-8d5a-fcc34d0edbca",
+      "ManufacturerID": "94ae7246-40c6-40fa-8d5a-fcc34d0edcca",
       "Status": "pending",
       "Description": "si richiedono 5 scatole di tachipirina e 2 di trembolone",
       "Drugs": [
@@ -151,7 +154,7 @@
     {
       "ID": "93ae7246-40c6-40fa-8d5a-fcc34d0edbca",
       "PharmacyID": "pharmacy2",
-      "ManufacturerID": "94ae7246-40c6-40fa-8d5a-fcc34d0edbca",
+      "ManufacturerID": "94ae7246-40c6-40fa-8d5a-fcc34d0edcca",
       "BoxIDs": [
         null,
         null
@@ -245,7 +248,7 @@
   ],
   "manufacturers": [
     {
-      "ID": "94ae7246-40c6-40fa-8d5a-fcc34d0edbca",
+      "ID": "94ae7246-40c6-40fa-8d5a-fcc34d0edcca",
       "Name": "manufacturer1",
       "Address": "address1",
       "Drugs": [

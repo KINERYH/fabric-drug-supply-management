@@ -107,14 +107,14 @@ class ManufacturerContract extends Contract{
    * Adds the drugs to the ledger with their box IDs, production date, and expiration date.
    * @param {Context} ctx - The transaction context object.
    * @param {string} orderId - The ID of the order to validate.
-   * @param {string} maufacturerId - The ID of the manufacturer to validate the order for.
+   * @param {string} manufacturerId - The ID of the manufacturer to validate the order for.
    * @param {string} boxUUIDs - The UUIDs of the single drug boxes in the order.
    * @returns {Promise<Object>} The validated order object.
    * @throws {Error} If there are no orders or drugs in the ledger, if the order is not for the correct manufacturer,
    * if the order is not in a pending status, if the number of drugs in the order does not match the number of box UUIDs provided,
    * or if the drug with a certain ID is not produced by this manufacturer.
    */
-  async ValidateOrder(ctx, orderId, maufacturerId, boxUUIDs){
+  async ValidateOrder(ctx, orderId, manufacturerId, boxUUIDs){
     const serializedOrders = await ctx.stub.getState('orders');
     if (!serializedOrders || serializedOrders.length === 0){
       throw new Error('There are no orders in the ledger');
@@ -122,7 +122,7 @@ class ManufacturerContract extends Contract{
     let orders = JSON.parse(serializedOrders.toString());
     let order = orders.find(o => o.ID === orderId);
     console.log(`***Order: ${typeof(order)}`);
-    if(order.ManufacturerID !== maufacturerId){
+    if(order.ManufacturerID !== manufacturerId){
       throw new Error('This order is not for this manufacturer');
     }
 
@@ -170,7 +170,7 @@ class ManufacturerContract extends Contract{
     let drugsList = JSON.parse(serializedDrugs.toString());
     console.log(`***Drugs: ${drugsList}`);
 
-    const manufacturer = await this.GetManufacturer(ctx, maufacturerId);
+    const manufacturer = await this.GetManufacturer(ctx, manufacturerId);
 
     const producedDrugs = manufacturer.Drugs;
     console.log(`***Manufacturer: ${stringify(manufacturer)}`);
@@ -195,7 +195,13 @@ class ManufacturerContract extends Contract{
       try{
       let drugName = producedDrugs.find(d => d.DrugID === drugsCodes[i]).Name;
       console.log(`***DrugName: ${drugName}`)
-      drugsList.push({BoxID: boxIDs[i], DrugID: drugsCodes[i], Name:drugName, ProductionDate: prodDate, ExpirationDate: expDate});
+      drugsList.push(
+        {BoxID: boxIDs[i],
+         DrugID: drugsCodes[i],
+         Name:drugName,
+         ManufacturerID: manufacturerId,
+         ProductionDate: prodDate,
+         ExpirationDate: expDate});
       orderDrugs.find(d => d.DrugID === drugsCodes[i]).BoxIDs.push(boxIDs[i]);
       console.log(`***OrderedDrugs: ${stringify(orderDrugs)}`);
       }
