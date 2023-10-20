@@ -69,6 +69,13 @@
       "role": "Patient",
       "uuid": "b9ce9652-5ad7-4ae2-b523-3e8ea4b3bea5",
       "smartContract": "PatientContract"
+    },
+    {
+      "cf": "ciccio",
+      "password": "$2b$10$/JbGEGnqGJ.xz/yrYVoLOOvoU94Th2B7EKrHrvqVKpvoQC70MOSK6",
+      "role": "Patient",
+      "uuid": "4702b1fb-6783-4690-8e5e-9b8e89a0f1ab",
+      "smartContract": "PatientContract"
     }
   ]
 }

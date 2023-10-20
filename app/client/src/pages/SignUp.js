@@ -55,6 +55,7 @@ export default function SignUp() {
       if (response.status === 201){
         console.log('utente registrato con successo');
         setRegistedVisible(true);
+		navigate('/SignIn');
       }
       else{
         alert('Errore nella registrazione: \n' + json.message)

@@ -64,10 +64,10 @@ export default function Home() {
         }
       });
       if (res.status == 200) {
-        const data = await res.json();
+        const result = await res.json();
         console.log("response fetch user");
-        console.log(data.data);
-        return data.data;
+        console.log(result.data);
+        return result.data;
       } else {
         console.error("userProfileFetch status code: " + res.status);
       }
