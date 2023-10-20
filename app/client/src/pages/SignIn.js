@@ -28,7 +28,7 @@ import Alert from '@mui/joy/Alert';
 
 export default function SignIn() {
   const navigate = useNavigate();
-  const { setToken, setUser, user } = useAuth();
+  const { setToken, setUser, user, setRole } = useAuth();
   const [errorMessage, setErrorMessage] = useState();
   const [isErrorVisible, setIsErrorVisible] = React.useState(false); // Add a state for controlling visibility
 
@@ -59,8 +59,7 @@ export default function SignIn() {
         console.log('login effettuato con successo');
         setToken(json.token)
         setUser(json.uuid)
-        console.log("user "+ user);
-        console.log(localStorage);
+        setRole(json.role)
         navigate('/home');}
 
       if (response.status === 401) {
