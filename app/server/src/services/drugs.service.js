@@ -23,17 +23,20 @@ const getAllDrugs = async () => {
 };
 
 
-const getDrug = async (drugId) => {
+const getDrug = async (drugId, currentUser) => {
   const { ccp, wallet } = require("../index");
-  //TODO la connection non dovrebbe stare qui, deve essere collegate alla sessione utente
-  const { contract } = await ledger.connect(ccp, wallet, 'admin', channelName, chaincodeName);
-
-  console.log(`\n--> Evaluate Transaction: ReadAsset, function returns assets or participants list`);
-  let assets = await contract.evaluateTransaction('ReadAsset', 'assets');
-  console.log(`*** Result: ${prettyJSONString(assets.toString())}`);
-  assets = JSON.parse(assets.toString());
-  const drug = await assets.drugs.find((a) => a.ID == drugId) || {};
-  return drug;
+  try {
+    const { gateway, contract } = await ledger.connect(ccp, wallet, currentUser.uuid, channelName, chaincodeName, currentUser.smartContract);
+    console.log('\n--> Evaluate Transaction: GetDrug for a specific drugID.');
+    const result = await contract.evaluateTransaction('GetDrug', drugId);
+    ledger.disconnect(gateway);
+    const drug = JSON.parse(result.toString());
+    console.log("*** Drug:", JSON.stringify(drug, null, 2));
+    return drug;
+  } catch (error) {
+    console.error('Failed to get drug: ' + drugId + '\n' + error?.message);
+    throw error;
+  }
 };
 
 const createDrug = () => {

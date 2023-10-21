@@ -10,11 +10,17 @@ const getAllDrugs = async (req, res) => {
 };
 
 const getDrug = async (req, res) => {
-  try {
-    const drug = await drugsService.getDrug(req.params.drugId);
-    res.json({ status: "OK", data: drug });
-  } catch(error) {
-    res.status(500).json({ status: "Error", message: error.message });
+  try{
+    const drug = await drugsService.getDrug(req.params.drugId, req.currentUser);
+    res.status(200).json({
+      message: "Get an existing drug: ",
+      data: drug
+    });
+  } catch(error){
+    res.status(error?.status || 500).json({
+      message: "Failed to get drug.",
+      error: error?.message || error
+    });
   }
 };
 
