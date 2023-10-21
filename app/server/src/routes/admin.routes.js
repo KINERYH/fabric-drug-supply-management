@@ -117,7 +117,7 @@ router.post("/", (async (req, res) => {
 
     res.status(201).json({
       message: "New user created.",
-      data: JSON.parse(newUserLedger.toString())
+      data: JSON.parse(JSON.stringify(newUserLedger))
     });
 
   } catch(error){

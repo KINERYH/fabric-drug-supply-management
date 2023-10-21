@@ -8,30 +8,30 @@ const { Contract } = require('fabric-contract-api');
 class AdminContract extends Contract {
 
 
-	async CreateDoctor(ctx, doctorID, name, surname, hospital, specialization) {
+	async CreateDoctor(ctx, user) {
 		const serializedDoctors = await ctx.stub.getState('doctors');
 		const doctors = JSON.parse(serializedDoctors.toString());
 		
 		const doctor = {
-			"ID": doctorID,
-			"Name": name,
-			"Surname": surname,
-			"Hospital": hospital,
-			"Specialization": specialization
+			"ID": user.ID,
+			"Name": user.Name,
+			"Surname": user.Surname,
+			"Hospital": user.Hospital,
+			"Specialization": user.Specialization
 		};
 
 		doctors.push(doctor);
-		await ctx.stub.putState('doctors', Buffer.from(stringify(sortKeysRecursive(prescriptionsList))));
+		await ctx.stub.putState('doctors', Buffer.from(stringify(sortKeysRecursive(doctors))));
 	}
 
-	async CreateManufacturer(ctx, manufacturerID, name, address) {
+	async CreateManufacturer(ctx, user) {
 		const serializedManufacturers = await ctx.stub.getState('manufacturers');
 		const manufacturers = JSON.parse(serializedManufacturers.toString());
 		
 		const manufacturer = {
-			"ID": manufacturerID,
-			"Name": name,
-			"Address": address,
+			"ID": user.ID,
+			"Name": user.Name,
+			"Address": user.Address,
 			"Drugs": []
 		};
 
@@ -39,14 +39,14 @@ class AdminContract extends Contract {
 		await ctx.stub.putState('manufacturers', Buffer.from(stringify(sortKeysRecursive(manufacturers))));
 	}
 
-	async CreatePharmacy(ctx, pharmacyID, name, address) {
+	async CreatePharmacy(ctx, user) {
 		const serializedPharmacies = await ctx.stub.getState('pharmacies');
 		const pharmacies = JSON.parse(serializedPharmacies.toString());
 		
 		const pharmacy = {
-			"ID": pharmacyID,
-			"Name": name,
-			"Address": address,
+			"ID": user.ID,
+			"Name": user.Name,
+			"Address": user.Address,
 			"DrugStorage": []
 		};
 
