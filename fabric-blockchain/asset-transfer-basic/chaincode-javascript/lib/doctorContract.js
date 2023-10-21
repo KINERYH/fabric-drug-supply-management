@@ -7,6 +7,37 @@ const { Contract } = require('fabric-contract-api');
 
 class DoctorContract extends Contract {
 
+  //TODO: questa va tolta e va creata una admin route per aggiungere gli utenti che non siano patients, utilizzando l'admin contract
+  async PutUser(ctx, user) {
+    user = JSON.parse(user);
+    console.log("try to insert in the ledger:");
+    console.log(user);
+    const serializedDoctors = await ctx.stub.getState('doctors');
+    const doctors = JSON.parse(serializedDoctors.toString());
+
+    const exists = doctors.find(doc => doc.ID === user.ID)
+    if(exists) {
+      throw new Error(`Patients already exist`);
+    }
+    // remove password attribute if exists
+    delete user.password;
+    // put new user
+    doctors.push(user);
+    console.log(doctors);
+    await ctx.stub.putState('doctors', Buffer.from(stringify(sortKeysRecursive(doctors))));
+    console.log("Successfully added new doctor.")
+    return user;
+  }
+
+  async GetAllInfo(ctx, docID) {
+    const serializedDoctors = await ctx.stub.getState('doctors');
+    if (!serializedDoctors || serializedDoctors.length === 0) {
+      throw new Error(`There are no doctors in the ledger`);
+    }
+    const doctors = JSON.parse(serializedDoctors.toString());
+    const doctor = doctors.find(doctor => doctor.ID === docID);
+    return doctor;
+  }
 
   /**
    * Retrieves all the prescriptions made by a specific doctor from the ledger.

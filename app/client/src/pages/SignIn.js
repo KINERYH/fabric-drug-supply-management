@@ -48,7 +48,7 @@ export default function SignIn() {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          cf: data.get('cf'),
+          email: data.get('email'),
           password: data.get('password'),
         })
       })
@@ -64,7 +64,7 @@ export default function SignIn() {
 
       if (response.status === 401) {
         //unauthorized
-        setErrorMessage('Codice Fiscale o Password errati.');
+        setErrorMessage('Email o Password errati.');
         setIsErrorVisible(true); // Show the error message
 
       }
@@ -164,8 +164,8 @@ export default function SignIn() {
                 onSubmit={handleSubmit}
               >
                 <FormControl required>
-                  <FormLabel>Codice Fiscale</FormLabel>
-                  <Input  type='cf' name="cf" />
+                  <FormLabel> Email</FormLabel>
+                  <Input  type='email' name="email" />
                 </FormControl>
                 <FormControl required>
                   <FormLabel>Password</FormLabel>

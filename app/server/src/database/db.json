@@ -15,24 +15,24 @@
       "smartContract": "DoctorContract"
     },
     {
-      "cf": "Fab",
+      "email": "Fab",
       "password": "prova",
       "role": "patient",
       "uuid": "0fb4d1b3-17fd-4aa5-b01b-168030eab4af",
       "smartContract": "PharmacyContract"
     },
     {
-      "cf": "Fra2",
+      "email": "Fra2",
       "password": "$2b$10$oY7RJUu8YAVB6G77wABcteK8delRSuRAJnXeindonOl2sGdK2IP5.",
       "role": "patient",
       "uuid": "b00ef94e-1858-4929-93ad-9b070b8371ba",
       "smartContract": "patientContract"
     },
     {
-      "cf": "Fra3",
+      "email": "Fra3",
       "password": "$2b$10$I2tMXfRzpU47/nFB.zahte.yiSIdjXOYGYWY6LsAgOfTWglq83A5C",
       "role": "Doctor",
-      "uuid": "547e99dc-ce76-4507-9b45-48bd38534b7a",
+      "uuid": "94ae7246-40c6-40fa-8d5a-fcc34d0edbca",
       "smartContract": "DoctorContract"
     },
     {
@@ -50,39 +50,88 @@
       "smartContract": "PatientContract"
     },
     {
-      "username": "Fabry3",
+      "email": "Fabry3",
       "password": "$2b$10$mzUBwB0ufynx7Pl8EWbrfuheKCMCf6yUSgsiO2mskV1502g5yfJ9.",
       "role": "Patient",
       "uuid": "d1744d6f-e127-4206-845f-faa849ce1666",
       "smartContract": "PatientContract"
     },
     {
-      "cf": "123",
+      "email": "123",
       "password": "$2b$10$6hm.20vdWtEZ3FjnYH.HK.quIjFqZVAS4oeKRrVjBwyNJfNJl49qq",
       "role": "Patient",
       "uuid": "895efd96-c1cb-424a-854b-eda0538e0f7d",
       "smartContract": "PatientContract"
     },
     {
-      "cf": "DNIFNC99H24A662U",
+      "email": "DNIFNC99H24A662U",
       "password": "$2b$10$v44FGBoKQdWitCl3HOnUD.lKE.odgeubfLhdWvdAvj/jrpH1J4ZTy",
       "role": "Patient",
       "uuid": "b9ce9652-5ad7-4ae2-b523-3e8ea4b3bea5",
       "smartContract": "PatientContract"
     },
     {
-      "cf": "ciccio",
-      "password": "$2b$10$/JbGEGnqGJ.xz/yrYVoLOOvoU94Th2B7EKrHrvqVKpvoQC70MOSK6",
-      "role": "Patient",
-      "uuid": "4702b1fb-6783-4690-8e5e-9b8e89a0f1ab",
-      "smartContract": "PatientContract"
-    },
-    {
-      "cf": "12345",
+      "email": "12345@gmail.com",
       "password": "$2b$10$jjTraGT/ztIHhJzJ7kHj.OeEmZBr.4uRGNfOxnNBJkMn.f.eP5wBa",
       "role": "Patient",
       "uuid": "00106b10-abe4-475b-9500-13f77421011b",
       "smartContract": "PatientContract"
+    },
+    {
+      "email": "DOC@gmail.com",
+      "password": "$2b$10$cYn.pO6S5wU4ypw3xi8pyey3QgkQfyqByTFg6/OeqRpxMhgwXd1ai",
+      "role": "Doctor",
+      "uuid": "045edc66-ae1c-4706-9351-8126950ab314",
+      "smartContract": "DoctorContract"
+    },
+    {
+      "email": "prova@gmail.com",
+      "password": "$2b$10$YMVsnTy6oysVDtlFx1iOt.DhP50K6OG/TUdxGCIMZDF9WwlbnlVYK",
+      "role": "Patient",
+      "uuid": "cd1949b7-7142-4d58-912f-41c52fd4469d",
+      "smartContract": "PatientContract"
+    },
+    {
+      "email": "ciccio@gmail.com",
+      "password": "$2b$10$yn9jlgS9.ha4g52a7bNPZOV0NZ709k3PPRKnN.BBLxUJsKLBOnyuS",
+      "role": "Doctor",
+      "uuid": "2438e922-5bca-41a8-a071-6957a24c2e31",
+      "smartContract": "DoctorContract"
+    },
+    {
+      "email": "ciccio2@gmail.com",
+      "password": "$2b$10$Ui9LOaxSfQr1HSoQpw6tZuGcWmy6L.1drhzzLiFxFsfAaPq2Vh1wC",
+      "role": "Doctor",
+      "uuid": "ad9c15b6-9046-4c0f-a58e-99c94e29283e",
+      "smartContract": "DoctorContract"
+    },
+    {
+      "email": "ciccio3@gmail.com",
+      "password": "$2b$10$RFS3f4OurDRWUXOtnF13kewp5P2KTpUWSxcUIzn155xQBzxCzFyy.",
+      "role": "Doctor",
+      "uuid": "ea95dd7e-e4d8-46a0-a17f-3252d05d70e2",
+      "smartContract": "DoctorContract"
+    },
+    {
+      "email": "ciccio33@gmail.com",
+      "password": "$2b$10$s02QPEGUSo9BUasHBlHCPOW2MVkzafifWvPfBKCq3EDlb6NC4ua6y",
+      "role": "Doctor",
+      "uuid": "1ef803f7-9334-4769-8cbd-ee1a2a40cfa4",
+      "smartContract": "DoctorContract"
+    },
+    {
+      "email": "ciccio43@gmail.com",
+      "password": "$2b$10$6hlU/.R9UZdGZaH7kS2jC.BkjofSSdLyepiZfM21tqZJDuN0N3Tey",
+      "role": "Doctor",
+      "uuid": "67d59f78-7b3b-4a4d-904d-5a782cb731f1",
+      "smartContract": "DoctorContract"
+    },
+    {
+      "email": "ciccio53@gmail.com",
+      "password": "$2b$10$h6WrIFUY7.0uMSfvEPL3IedFK8fom9S8mTvGj4XuguE.aiCZEY9W6",
+      "role": "Doctor",
+      "uuid": "aa056927-0dea-4649-80fb-0319722b1e36",
+      "smartContract": "DoctorContract"
     }
   ]
 }

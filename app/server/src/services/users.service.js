@@ -39,7 +39,7 @@ const getUser = async (userId, currentUser) => {
     console.log(`\n--> User info correctly retrieved`);
     return userInfo;
   } catch (error) {
-    console.error('Failed to get user: ' + user.cf + '\n' + error?.message);
+    console.error('Failed to get user: ' + user.email + '\n' + error?.message);
     throw error;
   }
 }
@@ -47,10 +47,10 @@ const getUser = async (userId, currentUser) => {
 const loginUser = async (userReq) => {
   try {
     const db = require('../database/db.json');
-    console.log("Try to login user: " + userReq.cf);
-    const userDb = await db.users.find((u) => u.cf === userReq.cf);
+    console.log("Try to login user: " + userReq.email);
+    const userDb = await db.users.find((u) => u.email === userReq.email);
     if (!userDb) {
-      throw { status: 401, message: "User " + userReq.cf + " does not exist."};
+      throw { status: 401, message: "User " + userReq.email + " does not exist."};
     }
 
     const matched = await new Promise((resolve, reject) => {
@@ -76,7 +76,7 @@ const loginUser = async (userReq) => {
       throw { status: 401, message: "Wrong credentials."};
     }
   } catch (error) {
-    console.error('Failed to login user: ' + userReq.cf + '\n  ' + error.message);
+    console.error('Failed to login user: ' + userReq.email + '\n  ' + error.message);
     throw (error);
   }
 };
@@ -89,13 +89,13 @@ const createUser = async (user) => {
     const { ccp, wallet } = require("../index");
 
     console.log(user);
-    if (!user.cf) {
-      throw { status: 400, message: "Missing codice fiscale."};
+    if (!user.email) {
+      throw { status: 400, message: "Missing email."};
     }
     if (!user.password) {
       throw { status: 400, message: "Missing password."};
     }
-    const userDb = await db.users.find((u) => u.cf === user.cf);
+    const userDb = db.users.find((u) => u.email === user.email);
     if (userDb) {
       throw { status: 400, message: "User already exists."};
     }
@@ -103,7 +103,7 @@ const createUser = async (user) => {
     const hashedPassword = await bcrypt.hash(user.password, parseInt(salt));
     console.log("Hashed password: " + hashedPassword);
     const newUser = {
-      "cf": user.cf,
+      "email": user.email,
       "password": hashedPassword,
       "role": user.role,
       "uuid": uuid,
@@ -127,7 +127,10 @@ const createUser = async (user) => {
       "CodiceFiscale": user.cf ,
       "MedicalHistory": user?.medicalHistory || [],
       "Height": user?.height || '',
-      "Weight": user?.weight || ''
+      "Weight": user?.weight || '',
+      //TODO: da rimuovere
+      "Hospital": user?.hospital || '',
+      "Specialization": user?.specialization || '',
     };
     console.log('\n--> Submit Transaction: PutUser');
     newUserLedger = await contract.submitTransaction('PutUser', JSON.stringify(newUserLedger));
