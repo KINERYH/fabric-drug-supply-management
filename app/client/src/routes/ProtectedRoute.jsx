@@ -5,8 +5,8 @@ export const ProtectedRoute = () => {
   const { token } = useAuth();
 
   // check if user is logged in
-  if(!token) {
-    return <Navigate to="/login" />;
+  if(!token || token == undefined) {
+    return <Navigate to="/signin" />;
   }
 
   // if user is logged in, render the protected page

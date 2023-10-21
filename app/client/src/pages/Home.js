@@ -121,23 +121,25 @@ export default function Home() {
         /* farei visualizzare il nome del dottore piuttosto che l'ID, quindi da fare altra chiamata per recuperare
         *  nome del dottore e nome della farmacia
         */
-        setDataTable({
-          header: ['ID', 'Status' ,'Doctor', 'Pharmacy', 'Description'],
-          body: prescriptions.map(prescription => [
-            { display: prescription?.ID, url: `/api/prescriptions/${prescription?.ID}` },
-            { display: prescription?.Status, chipStatus: true },
-            { display: prescription?.DoctorID, favicon: true, url: `/api/users/${prescription?.DoctorID}` },
-            { display: prescription?.PharmacyID, favicon: true, url: `/api/users/${prescription?.PharmacyID}` },
-            { display: prescription?.Description },
-          ])
-        });
+        if (prescriptions) {
+          setDataTable({
+            header: ['ID', 'Status' ,'Doctor', 'Pharmacy', 'Description'],
+            body: prescriptions.map(prescription => [
+              { display: prescription?.ID, url: `/api/prescriptions/${prescription?.ID}` },
+              { display: prescription?.Status, chipStatus: true },
+              { display: prescription?.DoctorID, favicon: true, url: `/api/users/${prescription?.DoctorID}` },
+              { display: prescription?.PharmacyID, favicon: true, url: `/api/users/${prescription?.PharmacyID}` },
+              { display: prescription?.Description },
+            ])
+          });
+        }
       });
   }, []);
 
   return (
     <Box className="Home">
       <Box sx={{ maxWidth: '80%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: 5 }}>
-        <Breadcrumbs navigation={ navigation } />
+        {/* <Breadcrumbs navigation={ navigation } /> */}
         <Box sx={{ maxWidth: '60%' }}>
           <UserCard userProfile={ userProfileCard } />
         </Box>

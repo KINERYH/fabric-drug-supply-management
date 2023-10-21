@@ -86,6 +86,7 @@ export default function SignUp() {
           minHeight: '100vh',
           maxWidth: '100%',
           px: 2,
+          paddingTop: '100px'
         }}
       >
         <Box
