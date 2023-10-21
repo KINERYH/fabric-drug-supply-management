@@ -39,7 +39,7 @@ const getUser = async (userId, currentUser) => {
     console.log(`\n--> User info correctly retrieved`);
     return userInfo;
   } catch (error) {
-    console.error('Failed to get user: ' + user.email + '\n' + error?.message);
+    console.error('Failed to get user: ' + userId + '\n' + error?.message);
     throw error;
   }
 }
@@ -76,7 +76,7 @@ const loginUser = async (userReq) => {
       throw { status: 401, message: "Wrong credentials."};
     }
   } catch (error) {
-    console.error('Failed to login user: ' + userReq.email + '\n  ' + error.message);
+    console.error('Failed to login user: ' + userReq?.email + '\n  ' + error?.message);
     throw (error);
   }
 };

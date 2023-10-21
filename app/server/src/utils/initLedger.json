@@ -4,7 +4,7 @@
       "BoxID": "ec110aef-28ce-4d1b-a008-840e40390328",
       "DrugID": "ec110aef-28ce-4d1b-a008-840e40390329",
       "Name": "drug1",
-      "ManufacturerID" : "94ae7246-40c6-40fa-8d5a-fcc34d0edcca",
+      "ManufacturerID": "94ae7246-40c6-40fa-8d5a-fcc34d0edcca",
       "ExpirationDate": "2018-12-31T23:59:59.000Z",
       "ProductionDate": "2018-12-31T23:59:59.000Z"
     },
@@ -12,7 +12,7 @@
       "BoxID": "ec110aef-28ce-4d1b-a008-840e40390327",
       "DrugID": "ec110aef-28ce-4d1b-a008-840e40390329",
       "Name": "drug1",
-      "ManufacturerID" : "94ae7246-40c6-40fa-8d5a-fcc34d0edcca",
+      "ManufacturerID": "94ae7246-40c6-40fa-8d5a-fcc34d0edcca",
       "ExpirationDate": "2018-12-31T23:59:59.000Z",
       "ProductionDate": "2018-12-31T23:59:59.000Z"
     },
@@ -20,7 +20,7 @@
       "BoxID": "ec110aef-28ce-4d1b-a008-840e40390323",
       "DrugID": "ec110aef-28ce-4d1b-a008-840e40390330",
       "Name": "drug2",
-      "ManufacturerID" : "94ae7246-40c6-40fa-8d5a-fcc34d0edcca",
+      "ManufacturerID": "94ae7246-40c6-40fa-8d5a-fcc34d0edcca",
       "ExpirationDate": "2018-12-31T23:59:59.000Z",
       "ProductionDate": "2018-12-31T23:59:59.000Z"
     }
@@ -29,8 +29,8 @@
     {
       "ID": "6918bcdb-bf53-4a88-9f11-986b52a72fc4",
       "DoctorID": "045edc66-ae1c-4706-9351-8126950ab314",
-      "PatientID": "00106b10-abe4-475b-9500-13f77421011b",
-      "PharmacyID": "pharmacy1",
+      "PatientID": "5a4e61fe-4c58-4ce8-92d6-0b4e6e5defbb",
+      "PharmacyID": "94ae7246-40c6-40fa-8d5a-fcc34d0edbgg",
       "Status": "pending",
       "Description": "Due supposte grosse per il culo",
       "Drugs": [
@@ -49,28 +49,33 @@
     {
       "ID": "6918bcdb-bf53-4a88-9f11-986b53a72fc1",
       "DoctorID": "045edc66-ae1c-4706-9351-8126950ab314",
-      "PatientID": "00106b10-abe4-475b-9500-13f77421011b",
-      "PharmacyID": "pharmacy1",
-      "Status": "pending",
+      "PatientID": "5a4e61fe-4c58-4ce8-92d6-0b4e6e5defbb",
+      "PharmacyID": "94ae7246-40c6-40fa-8d5a-fcc34d0edbgg",
+      "Status": "processed",
       "Description": "Tachipirina 100",
       "Drugs": [
         {
           "DrugID": "ec110aef-28ce-4d1b-a008-840e40390329",
-          "Quantity": 10
+          "Quantity": 10,
+          "BoxIDs": [
+            "ec110aef-28ce-4d1b-a008-840e40390327",
+            "ec110aef-28ce-4d1b-a008-840e40390328"
+          ]
         }
       ]
     },
     {
       "ID": "6918bcdb-bf53-4a88-9f11-986b52a7dec4",
       "DoctorID": "045edc66-ae1c-4706-9351-8126950ab314",
-      "PatientID": "00106b10-abe4-475b-9500-13f77421011b",
-      "PharmacyID": "pharmacy1",
+      "PatientID": "5a4e61fe-4c58-4ce8-92d6-0b4e6e5defbb",
+      "PharmacyID": "94ae7246-40c6-40fa-8d5a-fcc34d0edbgg",
       "Status": "pending",
       "Description": "Non dovrebbe prenderla",
       "Drugs": [
         {
           "DrugID": "ec110aef-28ce-4d1b-a008-840e40390329",
-          "Quantity": 10
+          "Quantity": 10,
+          "BoxIDs": []
         }
       ]
     },
@@ -78,13 +83,14 @@
       "ID": "6918bcdb-bf53-4a88-9f11-986b52n7dec4",
       "DoctorID": "045edc66-ae1c-4706-9351-8126950ab314",
       "PatientID": "4702b1fb-6783-4690-8e5e-9b8e89a0f1ab",
-      "PharmacyID": "pharmacy1",
+      "PharmacyID": "94ae7246-40c6-40fa-8d5a-fcc34d0edbgg",
       "Status": "pending",
       "Description": "Non dovrebbe prenderla",
       "Drugs": [
         {
           "DrugID": "ec110aef-28ce-4d1b-a008-840e40390329",
-          "Quantity": 10
+          "Quantity": 10,
+          "BoxIDs": []
         }
       ]
     },
@@ -92,7 +98,7 @@
       "ID": "6918bcdb-bf53-4a88-9f11-986b52a7dec5",
       "DoctorID": "94ae7246-40c6-40fa-8d5a-fcc3420edbca",
       "PatientID": "00106b10-abe4-475b-9500-13f77421011b",
-      "PharmacyID": "pharmacy1",
+      "PharmacyID": "94ae7246-40c6-40fa-8d5a-fcc34d0edbgg",
       "Status": "pending",
       "Description": "Prendi la medicina o vieni bannato",
       "Drugs": [
@@ -106,7 +112,7 @@
       "ID": "6918bcdb-bf53-4a88-9f11-986b52a7deh4",
       "DoctorID": "94ae7246-40c6-40fa-8d5a-fcc3420edbca",
       "PatientID": "4702b1fb-6783-4690-8e5e-9b8e89a0f1ab",
-      "PharmacyID": "pharmacy1",
+      "PharmacyID": "94ae7246-40c6-40fa-8d5a-fcc34d0edbgg",
       "Status": "pending",
       "Description": "Trenbolone acetato",
       "Drugs": [
@@ -182,11 +188,11 @@
       "Hospital": "Ospedale di Venere"
     },
     {
-          "Hospital": "Sacro Cuore",
-          "ID": "045edc66-ae1c-4706-9351-8126950ab314",
-          "Name": "Turk",
-          "Specialization": "Chirurgo",
-          "Surname": "Turkleton"
+      "Hospital": "Sacro Cuore",
+      "ID": "045edc66-ae1c-4706-9351-8126950ab314",
+      "Name": "Turk",
+      "Specialization": "Chirurgo",
+      "Surname": "Turkleton"
     },
     {
       "ID": "94ae7246-40c6-40fa-8d5a-fcc34d0edbcb",
@@ -239,11 +245,25 @@
       "cf": "123",
       "Surname": "",
       "Weight": ""
+    },
+    {
+      "Address": "prova",
+      "Allergies": [],
+      "BirthDate": "2023-10-11",
+      "CodiceFiscale": "prova",
+      "Height": "50",
+      "Hospital": "",
+      "ID": "5a4e61fe-4c58-4ce8-92d6-0b4e6e5defbb",
+      "MedicalHistory": [],
+      "Name": "prova",
+      "Specialization": "",
+      "Surname": "prova",
+      "Weight": "50"
     }
   ],
   "pharmacies": [
     {
-      "ID": "94ae7246-40c6-40fa-8d5a-fcc34d0edbca",
+      "ID": "94ae7246-40c6-40fa-8d5a-fcc34d0edbgg",
       "Name": "pharmacy1",
       "Address": "address1",
       "DrugStorage": [

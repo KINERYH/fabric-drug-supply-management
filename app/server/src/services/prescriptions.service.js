@@ -22,8 +22,17 @@ const getAllPrescriptions = async (currentUser) => {
 };
 
 
-const getPrescription = async (prescriptionId) => {
-  return;
+const getPrescription = async (prescriptionId, currentUser) => {
+  try {
+    const prescriptions = await getAllPrescriptions(currentUser);
+    
+    // filter for the specified prescription
+    const prescription = prescriptions.find(prescription => prescription.ID === prescriptionId);
+    return prescription;
+  } catch (error) {
+    console.error('Failed to get prescription: ' + prescriptionId + '\n' + error?.message);
+    throw error;
+  }
 };
 
 const createPrescription = () => {

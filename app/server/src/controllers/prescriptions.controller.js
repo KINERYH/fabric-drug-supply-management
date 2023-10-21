@@ -20,14 +20,14 @@ const getAllPrescriptions = async (req, res) => {
 
 const getPrescription = async (req, res) => {
   try{
-    prescription = await prescriptionsService.getPrescription(req.params.prescriptionId, req.currentUser);
+    const prescription = await prescriptionsService.getPrescription(req.params.prescriptionId, req.currentUser);
     res.status(200).json({
       message: "Get an existing prescription: ",
       data: prescription
     });
   } catch(error){
     res.status(error?.status || 500).json({
-      message: "Prescription not found.",
+      message: "Failed to get prescription.",
       error: error?.message || error
     });
   }
