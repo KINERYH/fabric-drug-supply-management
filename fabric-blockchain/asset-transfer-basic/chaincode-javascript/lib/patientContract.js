@@ -11,18 +11,33 @@ class PatientContract extends Contract {
    * Retrieves all information about a patient from the ledger.
    * @async
    * @param {Context} ctx - The transaction context object
-   * @param {string} patientID - The ID of the patient to retrieve information for
-   * @returns {Promise<Object>} - The patient object containing all information
+   * @param {string} userID - The ID of the patient to retrieve information for
+   * @returns {Promise<Object>} - The user object containing all information
    * @throws Will throw an error if there are no patients in the ledger
    */
-  async GetAllInfo(ctx, patientID) {
+  async GetAllInfo(ctx, userID) {
     const serializedPatients = await ctx.stub.getState('patients');
-    if (!serializedPatients || serializedPatients.length === 0) {
-      throw new Error(`There are no patients in the ledger`);
+    const serializedDoctors = await ctx.stub.getState('doctors');
+    const serializedPharmacies = await ctx.stub.getState('pharmacies');
+    if ( 
+      (!serializedPatients || serializedPatients.length === 0) && 
+      (!serializedDoctors || serializedDoctors.length === 0)   &&
+      (!serializedPharmacies || serializedPharmacies.length === 0)
+    ) {
+      throw new Error(`There are no users in the ledger`);
     }
+
     const patients = JSON.parse(serializedPatients.toString());
-    const patient = patients.find(patient => patient.ID === patientID);
-    return patient;
+    const doctors = JSON.parse(serializedDoctors.toString());
+    const pharmacies = JSON.parse(serializedPharmacies.toString());
+    const users = patients.concat(doctors, pharmacies);
+
+    const user = users.find(user => user.ID === userID);
+    if (!user){
+      throw new Error(`No user with id ${userID} in the ledger`);
+    }
+
+    return user;
   }
 
 
@@ -61,6 +76,22 @@ class PatientContract extends Contract {
     return patientPrescriptions;
   }
 
+  /**
+   * Retrieves info for a given drugID.
+   * @param {Context} ctx - The transaction context object.
+   * @param {string} drugID - The ID of the drug.
+   * @returns {Promise<Object>} - An object of drug.
+   * @throws Will throw an error if there are no drug with the specified drugID.
+   */
+  async GetDrug(ctx, drugID) {
+    const serializedDrugs = await ctx.stub.getState('drugs');
+    if (!serializedDrugs || serializedDrugs.length === 0) {
+      throw new Error(`There are no drugs in the ledger`);
+    }
+    const drugs = JSON.parse(serializedDrugs.toString());
+    const drug = drugs.find(drug => drug.ID === drugID);
+    return drug;
+  }
 
   /**
    * Updates the information of a patient with the given ID.
@@ -98,34 +129,34 @@ class PatientContract extends Contract {
     return patient;
   }
 
-    /**
-   * Put the patient in the state.
-   * @param {Context} ctx - The transaction context object.
-   * @param {object} user - The user object with all properties but password.
-   * @returns {Promise<Object>} The patient object.
-   * @throws Will throw an error if there is already a doctor with this uuid.
-   */
-    async PutUser(ctx, user) {
-      user = JSON.parse(user);
-      console.log("try to insert in the ledger:");
-      console.log(user);
-      const serializedPatients = await ctx.stub.getState('patients');
-      const patients = JSON.parse(serializedPatients.toString());
+  /**
+ * Put the patient in the state.
+ * @param {Context} ctx - The transaction context object.
+ * @param {object} user - The user object with all properties but password.
+ * @returns {Promise<Object>} The patient object.
+ * @throws Will throw an error if there is already a doctor with this uuid.
+ */
+  async PutUser(ctx, user) {
+    user = JSON.parse(user);
+    console.log("try to insert in the ledger:");
+    console.log(user);
+    const serializedPatients = await ctx.stub.getState('patients');
+    const patients = JSON.parse(serializedPatients.toString());
 
-      const exists = patients.find(patient => patient.ID === user.ID)
-      if(exists) {
-        throw new Error(`Patients already exist`);
-      }
-
-      // remove password attribute if exists
-      delete user.password;
-      // put new user
-      patients.push(user);
-      console.log(patients);
-      await ctx.stub.putState('patients', Buffer.from(stringify(sortKeysRecursive(patients))));
-      console.log("Successfully added new user.")
-      return user;
+    const exists = patients.find(patient => patient.ID === user.ID)
+    if(exists) {
+      throw new Error(`Patients already exist`);
     }
+
+    // remove password attribute if exists
+    delete user.password;
+    // put new user
+    patients.push(user);
+    console.log(patients);
+    await ctx.stub.putState('patients', Buffer.from(stringify(sortKeysRecursive(patients))));
+    console.log("Successfully added new user.")
+    return user;
+  }
 }
 
 module.exports = PatientContract;
