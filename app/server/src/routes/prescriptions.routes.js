@@ -10,7 +10,7 @@ router.get("/:prescriptionId", authMiddleware.authenticateToken, prescriptionsCo
 
 router.post("/", authMiddleware.authenticateToken, prescriptionsController.createPrescription);
 
-router.patch("/:prescriptionId", authMiddleware.authenticateToken, prescriptionsController.updatePrescription);
+router.patch("/:prescriptionId", authMiddleware.authenticateToken, prescriptionsController.processPrescription);
 
 router.delete("/:prescriptionId", authMiddleware.authenticateToken, prescriptionsController.deletePrescription);
 

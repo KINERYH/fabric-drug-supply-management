@@ -181,6 +181,13 @@
       "role": "Doctor",
       "uuid": "ef30e376-1879-46f8-aa9d-62ef092cbad7",
       "smartContract": "DoctorContract"
+    },
+    {
+      "email": "f@rmacia.it",
+      "password": "$2b$10$Ms1vXI7irpx.8dFQcl3RR.6NYXONTq0ulKZEmqYStzDauvsbU9mMK",
+      "role": "Pharmacy",
+      "uuid": "4da86e26-abd9-4162-a5dd-889e90b4d77e",
+      "smartContract": "PharmacyContract"
     }
   ]
 }

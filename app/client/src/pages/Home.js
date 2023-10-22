@@ -4,6 +4,15 @@ import Box from '@mui/joy/Box';
 import Typography from '@mui/joy/Typography';
 import ButtonGroup from '@mui/joy/ButtonGroup';
 import Button from '@mui/joy/Button';
+import FormControl from '@mui/joy/FormControl';
+import FormLabel from '@mui/joy/FormLabel';
+import Input from '@mui/joy/Input';
+import Modal from '@mui/joy/Modal';
+import ModalDialog from '@mui/joy/ModalDialog';
+import DialogTitle from '@mui/joy/DialogTitle';
+import DialogContent from '@mui/joy/DialogContent';
+import Stack from '@mui/joy/Stack';
+import Add from '@mui/icons-material/Add';
 import UserCard from '../components/UserCard';
 import Breadcrumbs from '../components/Breadcrumbs';
 import Table from '../components/Table';
@@ -54,7 +63,57 @@ export default function Home() {
   const [navigation, setNavigation] = React.useState(defaultState.navigation);
   const [userProfileCard, setUserProfileCard] = React.useState(defaultState.userProfile);
   const [dataTable, setDataTable] = React.useState(defaultState.dataTable);
+  const [isAddPrescrModalOpen, setAddPrescrModalOpen] = React.useState(false);
+  const [isProcPrescrModalOpen, setProcPrescrModalOpen] = React.useState(false);
+  const [isAddOrderModalOpen, setAddOrderModalOpen] = React.useState(false);
+  const [isProcOrderModalOpen, setProcOrderModalOpen] = React.useState(false);
 
+  //TODO: da finire
+  const handleSubmitAddPrescr = async (event) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    console.log(data.get('patientCF'));
+    console.log(data.get('description'));
+    console.log(data.get('drugsList'));
+
+    try{
+      const response = await fetch('http://localhost:3001/api/prescriptions/', {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer '+ token,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          PatientCF: data.get('patientCF'),
+          Description: data.get('description'),
+          DrugsList: data.get('drugsList'),
+        })
+      });
+
+    } catch(e) {
+      console.error(e);
+    }
+  }
+
+  const handleSubmitProcPrescr = async (event) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    const prescriptionID = data.get('prescriptionID');
+    try{
+      const response = await fetch(`http://localhost:3001/api/prescriptions/${prescriptionID}`, {
+        method: 'PATCH',
+        headers: {
+          'Authorization': 'Bearer '+ token,
+          'Content-Type': 'application/json'
+        },
+      });
+
+      console.log("Response: " + response.status)
+    } catch(e) {
+      console.error(e);
+    }
+  }
+  
   const fetchUserProfile = async () => {
     try{
       const res = await fetch(`http://localhost:3001/api/users/${user}`, {
@@ -141,11 +200,20 @@ export default function Home() {
                 { display: 'More Info', url: `/api/prescriptions/${prescription?.ID}/drugs` },
                 { display: prescription?.Description }
               ])
-                            }
+            }
             break;
-            case 'Pharmacy':
-              table = {}
-              break;
+          case 'Pharmacy':
+            table = {
+              header: ['ID', 'Status', 'Patient', 'Drugs', 'Description'],
+              body: prescriptions.map(prescription => [
+                { display: prescription?.ID, url: `/api/prescriptions/${prescription?.ID}` },
+                { display: prescription?.Status, chipStatus: true },
+                { display: prescription?.PatientID, favicon: true, url: `/api/users/${prescription?.PatientID}` },
+                { display: 'More Info', url: `/api/prescriptions/${prescription?.ID}/drugs` },
+                { display: prescription?.Description }
+              ])
+            }
+            break;
 
             case 'Manufacturer':
               table = {}
@@ -179,9 +247,16 @@ export default function Home() {
             </Box>
             <Box sx={{ minWidth: '50%', display: 'flex', justifyContent: 'right', marginBottom:'8px' }}>
               <ButtonGroup variant="solid" color="primary">
-                <Button>Add prescription</Button>
-                <Button>Process prescription</Button>
-                <Button>Add order</Button>
+                {role === "Doctor" && (
+                  <Button onClick={() => setAddPrescrModalOpen(true)}>Add prescription</Button>
+                )}
+                {role === "Pharmacy" && (
+                  <>
+                  <Button onClick={() => setProcPrescrModalOpen(true)}>Process prescription</Button>
+                  <Button>Add order</Button>
+                  <Button>Process Order</Button>
+                  </>
+                )}
               </ButtonGroup>
             </Box>
           </Box>
@@ -190,6 +265,76 @@ export default function Home() {
           </Box>
         </div>
       </Box>
+
+      {/* TODO: finire -> Add prescription Modal */}
+      <Modal open={isAddPrescrModalOpen} onClose={() => setAddPrescrModalOpen(false)}>
+        <ModalDialog style={{ width: "60%" }}>
+          <DialogTitle>Create new prescription</DialogTitle>
+          <DialogContent>Fill in the prescription information.</DialogContent>
+          <form
+            onSubmit={async (event) => {
+              event.preventDefault();
+              await handleSubmitAddPrescr(event);
+              setAddPrescrModalOpen(false);
+            }}
+          >
+            <Stack spacing={2}>
+              <FormControl>
+                <FormLabel>Patient CF</FormLabel>
+                <Input name="patientCF" autoFocus required />
+              </FormControl>
+              <FormControl>
+                <FormLabel>Description</FormLabel>
+                <textarea
+                  name="description"
+                  rows="4"
+                  placeholder="Enter a description of the prescription"
+                  required
+                />
+              </FormControl>
+              <FormControl>
+                <FormLabel>Drug List</FormLabel>
+                <textarea
+                  // TODO: Boundare la massima estensione della textarea a quella massima del modal
+                  name="drugsList"
+                  rows="4"
+                  placeholder="Enter a list of drugs"
+                  required
+                />
+              </FormControl>
+              <Button type="submit">Submit</Button>
+              {/* <Button type="submit" onClick={handleSubmitAddPrescr}>Submit</Button> */}
+            </Stack>
+          </form>
+        </ModalDialog>
+      </Modal>
+
+      {/* Process prescription Modal */}
+      <Modal open={isProcPrescrModalOpen} onClose={() => setProcPrescrModalOpen(false)}>
+        <ModalDialog style={{ width: "60%" }}>
+          <DialogTitle>Process a prescription</DialogTitle>
+          <DialogContent>Insert the prescription ID.</DialogContent>
+          <form
+            onSubmit={async (event) => {
+              event.preventDefault();
+              await handleSubmitProcPrescr(event);
+              // TODO: far apparire un messaggio di successo + aggiornare la tabella delle prescrizioni
+              setProcPrescrModalOpen(false);
+            }}
+          >
+            <Stack spacing={2}>
+              <FormControl>
+                <FormLabel>Prescription ID</FormLabel>
+                <Input autoFocus required name="prescriptionID"/>
+              </FormControl>
+              <Button type="submit">Submit</Button>
+            </Stack>
+          </form>
+        </ModalDialog>
+      </Modal>
+
+
     </Box>
+
   );
 }

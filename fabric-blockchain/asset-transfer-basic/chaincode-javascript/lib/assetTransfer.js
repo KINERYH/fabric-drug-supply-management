@@ -16,6 +16,7 @@ class AssetTransfer extends Contract {
     async InitLedger(ctx, initState) {
         initState = JSON.parse(initState);
         await ctx.stub.putState('drugs', Buffer.from(stringify(sortKeysRecursive(initState.drugs))));
+        await ctx.stub.putState('boxes', Buffer.from(stringify(sortKeysRecursive(initState.boxes))));
         await ctx.stub.putState('prescriptions', Buffer.from(stringify(sortKeysRecursive(initState.prescriptions))));
         await ctx.stub.putState('orders', Buffer.from(stringify(sortKeysRecursive(initState.orders))));
         await ctx.stub.putState('doctors', Buffer.from(stringify(sortKeysRecursive(initState.doctors))));

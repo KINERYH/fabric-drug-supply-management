@@ -101,7 +101,7 @@ class ManufacturerContract extends Contract{
 
 
   /**
-   * Validates an order by checking if it exists, is for the correct manufacturer, and is in a pending status.
+   * Validates an order by checking if it exists, if it is for the correct manufacturer, and if it is in a pending status.
    * Also checks if the number of drugs in the order matches the number of box UUIDs provided.
    * Updates the order status to "shipped" and adds box IDs to the order drugs.
    * Adds the drugs to the ledger with their box IDs, production date, and expiration date.
@@ -114,6 +114,7 @@ class ManufacturerContract extends Contract{
    * if the order is not in a pending status, if the number of drugs in the order does not match the number of box UUIDs provided,
    * or if the drug with a certain ID is not produced by this manufacturer.
    */
+  // TODO: da refactorizzare (abbiamo tolto le info delle drugs dal manufacturer)
   async ValidateOrder(ctx, orderId, manufacturerId, boxUUIDs){
     const serializedOrders = await ctx.stub.getState('orders');
     if (!serializedOrders || serializedOrders.length === 0){

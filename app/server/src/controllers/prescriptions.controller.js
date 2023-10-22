@@ -48,9 +48,19 @@ const createPrescription = async (req, res) => {
   }
 };
 
-const updatePrescription = async (req, res) => {
-  const updatedPrescription = prescriptionsService.updatePrescription();
-  res.json({ message: "Update an existing prescription" });
+const processPrescription = async (req, res) => {
+  try{
+    const prescription = await prescriptionsService.processPrescription(req.params.prescriptionId, req.currentUser);
+    res.status(200).json({
+      message: "Process prescription: ",
+      data: prescription
+    });
+  } catch(error){
+    res.status(error?.status || 500).json({
+      message: "Failed to get prescription.",
+      error: error?.message || error
+    });
+  }
 };
 
 const deletePrescription = async (req, res) => {
@@ -62,6 +72,6 @@ module.exports = {
   getAllPrescriptions,
   getPrescription,
   createPrescription,
-  updatePrescription,
-  deletePrescription
+  deletePrescription,
+  processPrescription
 };

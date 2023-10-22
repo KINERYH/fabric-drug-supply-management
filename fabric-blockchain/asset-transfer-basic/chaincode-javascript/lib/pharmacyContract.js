@@ -135,6 +135,23 @@ class PharmacyContract extends Contract {
 
 	}
 
+	  /**
+   * Retrieves all prescriptions that have been processed by the pharmacy.
+   * @param {Context} ctx The transaction context
+   * @param {string} pharmacyID The ID of the pharmacy to retrieve prescriptions for
+   * @returns {Promise<Array>} An array of prescriptions for the given pharmacy
+   * @throws Will throw an error if there are no prescriptions in the ledger
+   */
+		async GetAllPrescriptions(ctx, pharmacyID) {
+			const serializedPrescriptions = await ctx.stub.getState('prescriptions');
+			if (!serializedPrescriptions || serializedPrescriptions.length === 0) {
+				throw new Error(`There are no prescriptions in the ledger`);
+			}
+			const prescriptions = JSON.parse(serializedPrescriptions.toString());
+			const pharmacyPrescriptions = prescriptions.filter(prescription => prescription.PharmacyID === pharmacyID);
+			return pharmacyPrescriptions;
+		}
+
 	/**
 	 *
 	 * @param {*} ctx
@@ -160,6 +177,7 @@ class PharmacyContract extends Contract {
 	 * @param {*} pharmacyID = pharmacy id
 	 * @param {*} prescriptionID = prescription id
 	 * @param {*} drugsList = list of drugs in the prescription
+	 * returns the updated prescription
 	 */
 	async ProcessPrescription(ctx, prescriptionID, pharmacyID) {
 		// Get the pharmacy
@@ -208,7 +226,7 @@ class PharmacyContract extends Contract {
 						let boxID = this.GetBoxID(requestedDrug.DrugID, pharmacy.DrugStorage);
 						listIDs.push(boxID);
 						// Remove the boxID from the pharmacy storage and update the quantity
-						drugIndex = pharmacy.DrugStorage.findIndex((d) => d.DrugID === requestedDrug.DrugID);
+						let drugIndex = pharmacy.DrugStorage.findIndex((d) => d.DrugID === requestedDrug.DrugID);
 						pharmacy.DrugStorage[drugIndex].Quantity--;
 						// Since I took the first element of the array, I should remove it from the list
 						pharmacy.DrugStorage[drugIndex].BoxIDs.shift();
@@ -229,6 +247,8 @@ class PharmacyContract extends Contract {
 			prescriptions[prescriptionIndex].PharmacyID = pharmacyID;
 
 			await ctx.stub.putState("prescriptions", Buffer.from(stringify(sortKeysRecursive(prescriptions))));
+
+			return prescriptions[prescriptionIndex];
 		}
 	}
 

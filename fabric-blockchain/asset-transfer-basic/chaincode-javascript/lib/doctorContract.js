@@ -207,14 +207,10 @@ class DoctorContract extends Contract {
     const patient = patients.find(patient => patient.ID === patientID);
     const allergies = patient.Allergies;
 
-    const serializedManufacturers = await ctx.stub.getState('manufacturers');
-    const manufacturers = JSON.parse(serializedManufacturers.toString());
+    const serializedDrugs = await ctx.stub.getState('drugs');
+    const ledgerDrugs = JSON.parse(serializedDrugs.toString());
     for(let drug of drugs){
-      const manufacturer = manufacturers.find(manufacturer => manufacturer.ID === drug.ManufacturerID);
-      if(manufacturer == null){
-        throw new Error(`Manufacturer ${drug.Manufacturer} does not exist`);
-      }
-      const composition = manufacturer.find(d => d.DrugID === drug.DrugID).Composition;
+      const composition = ledgerDrugs.find(d => d.DrugID === drug.DrugID).Composition;
       for(let component of composition){
         if(allergies.includes(component)){
           throw new Error(`Patient ${patient.Name} ${patient.Surname} is allergic to the component ${component} of the drug ${drug.Name}`);
@@ -228,7 +224,8 @@ class DoctorContract extends Contract {
       PatientID: patientID,
       Drugs: JSON.parse(drugs),
       Description: description,
-      Status: "pending"
+      Status: "pending",
+      PharmacyID: ""
     };
     console.log(drugs)
     prescriptionsList.push(prescription)
