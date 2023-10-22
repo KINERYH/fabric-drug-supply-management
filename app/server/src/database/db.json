@@ -188,6 +188,12 @@
       "role": "Pharmacy",
       "uuid": "4da86e26-abd9-4162-a5dd-889e90b4d77e",
       "smartContract": "PharmacyContract"
+    },{
+      "email": "fabri@prova.com",
+      "password": "$2b$10$U3/9f6bynIJq.TzTyseCxuvriXvITkV3dVhdAwAgm5uI/ISCGcslS",
+      "role": "Patient",
+      "uuid": "44c87b23-7359-4cdf-afef-6fc8794d1b1d",
+      "smartContract": "PatientContract"
     }
   ]
 }

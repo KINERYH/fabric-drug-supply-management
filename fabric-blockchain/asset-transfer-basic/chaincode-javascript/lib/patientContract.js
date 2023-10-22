@@ -58,6 +58,22 @@ class PatientContract extends Contract {
     return patientPrescriptions;
   }
 
+    /**
+   * Retrieves all prescriptions for a given patient from the ledger.
+   * @param {Context} ctx The transaction context
+   * @param {string} patientID The ID of the patient to retrieve prescriptions for
+   * @returns {Promise<Array>} An array of prescriptions for the given patient
+   * @throws Will throw an error if there are no prescriptions in the ledger
+   */
+    async GetAllBoxes(ctx) {
+      const serializedBoxes = await ctx.stub.getState('boxes');
+      if (!serializedBoxes || serializedBoxes.length === 0) {
+        throw new Error(`There are no boxes in the ledger`);
+      }
+      const boxes = JSON.parse(serializedBoxes.toString());
+      return boxes;
+    }
+
 
   /**
    * Retrieves all pending prescriptions for a given patient from the ledger.
@@ -89,7 +105,10 @@ class PatientContract extends Contract {
       throw new Error(`There are no drugs in the ledger`);
     }
     const drugs = JSON.parse(serializedDrugs.toString());
-    const drug = drugs.find(drug => drug.ID === drugID);
+    const drug = drugs.find(drug => drug.DrugID === drugID);
+    if (!drug){
+      throw new Error(`No drug with id ${drugID} in the ledger`);
+    }
     return drug;
   }
 

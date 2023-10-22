@@ -39,7 +39,7 @@ export default function ExtendedTable(props) {
                 <td>
                   { column?.favicon && column?.url
                     ? <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
-                        <Avatar size="sm">{column.display.charAt(0)}</Avatar>
+                        <Avatar size="sm">{column?.display?.charAt(0)}</Avatar>
                         <Link href={ column.url }>{ column.display }</Link>
                       </Box>
                     : column?.url
