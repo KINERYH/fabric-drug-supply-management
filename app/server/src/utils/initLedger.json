@@ -1,26 +1,48 @@
 {
   "drugs": [
     {
-      "BoxID": "ec110aef-28ce-4d1b-a008-840e40390328",
       "DrugID": "ec110aef-28ce-4d1b-a008-840e40390329",
+      "ManufacturerID" : "94ae7246-40c6-40fa-8d5a-fcc34d0edcca",
       "Name": "drug1",
-      "ManufacturerID": "94ae7246-40c6-40fa-8d5a-fcc34d0edcca",
-      "ExpirationDate": "2018-12-31T23:59:59.000Z",
-      "ProductionDate": "2018-12-31T23:59:59.000Z"
+      "Description": "drug1",
+      "Price": 100,
+      "Composition": [
+        "element1",
+        "element2"
+      ],
+      "UOM": "mg"
     },
     {
-      "BoxID": "ec110aef-28ce-4d1b-a008-840e40390327",
-      "DrugID": "ec110aef-28ce-4d1b-a008-840e40390329",
-      "Name": "drug1",
-      "ManufacturerID": "94ae7246-40c6-40fa-8d5a-fcc34d0edcca",
-      "ExpirationDate": "2018-12-31T23:59:59.000Z",
-      "ProductionDate": "2018-12-31T23:59:59.000Z"
-    },
-    {
-      "BoxID": "ec110aef-28ce-4d1b-a008-840e40390323",
+      
       "DrugID": "ec110aef-28ce-4d1b-a008-840e40390330",
-      "Name": "drug2",
-      "ManufacturerID": "94ae7246-40c6-40fa-8d5a-fcc34d0edcca",
+      "ManufacturerID" : "94ae7246-40c6-40fa-8d5a-fcc34d0edcca",
+      "Name": "Trembolone",
+      "Description": "ti fai i muscoli",
+      "Price": 1000,
+      "Composition": [
+        "tre ceres",
+        "una botta di cocaina",
+        "e ti senti come un cane della malesia"
+      ],
+      "UOM": "ml"
+    }
+  ],
+  "boxes" : [
+    {
+      "DrugID" : "ec110aef-28ce-4d1b-a008-840e40390329",
+      "BoxID" : "ec110aef-28ce-4d1b-a008-840e40390328",
+      "ExpirationDate": "2018-12-31T23:59:59.000Z",
+      "ProductionDate": "2018-12-31T23:59:59.000Z"
+    },
+    {
+      "DrugID": "ec110aef-28ce-4d1b-a008-840e40390329",
+      "BoxID": "ec110aef-28ce-4d1b-a008-840e40390327",
+      "ExpirationDate": "2018-12-31T23:59:59.000Z",
+      "ProductionDate": "2018-12-31T23:59:59.000Z"
+    },
+    {
+      "DrugID": "ec110aef-28ce-4d1b-a008-840e40390330",
+      "BoxID": "ec110aef-28ce-4d1b-a008-840e40390323",
       "ExpirationDate": "2018-12-31T23:59:59.000Z",
       "ProductionDate": "2018-12-31T23:59:59.000Z"
     }
@@ -291,29 +313,8 @@
       "Name": "manufacturer1",
       "Address": "address1",
       "Drugs": [
-        {
-          "Name": "Tachipirina 500",
-          "DrugID": "ec110aef-28ce-4d1b-a008-840e40390329",
-          "Description": "drug1",
-          "Price": 100,
-          "Composition": [
-            "element1",
-            "element2"
-          ],
-          "UOM": "mg"
-        },
-        {
-          "Name": "Trembolone",
-          "DrugID": "ec110aef-28ce-4d1b-a008-840e40390328",
-          "Description": "ti fai i muscoli",
-          "Price": 1000,
-          "Composition": [
-            "tre ceres",
-            "una botta di cocaina",
-            "e ti senti come un cane della malesia"
-          ],
-          "UOM": "ml"
-        }
+        "ec110aef-28ce-4d1b-a008-840e40390329",
+        "ec110aef-28ce-4d1b-a008-840e40390330"
       ]
     }
   ]

@@ -146,6 +146,41 @@
       "role": "Pharmacy",
       "uuid": "94ae7246-40c6-40fa-8d5a-fcc34d0edbgg",
       "smartContract": "PharmacyContract"
+    },
+    {
+      "email": "ciccio73@gmail.com",
+      "password": "$2b$10$vYZTDvb5.dPlOHONgC9tI.WtrXp6zIycSDqUQZwZMJ3HGXokGlNhC",
+      "role": "Doctor",
+      "uuid": "bf09ef31-9e7d-4fac-83e5-f7cda2aad104",
+      "smartContract": "DoctorContract"
+    },
+    {
+      "email": "ciccio073@gmail.com",
+      "password": "$2b$10$PRMkx29KbZ.TYa2QsTNqCuAeI4/.MKwvEvTAMVXqbfUWazgC7KZXm",
+      "role": "Doctor",
+      "uuid": "7d116d4f-51dc-473b-9784-3e3b5efe6bad",
+      "smartContract": "DoctorContract"
+    },
+    {
+      "email": "ciccio673@gmail.com",
+      "password": "$2b$10$GptdnTVLbH0ZNV555sYcquuPfvLEk.4xi8RSLWfeATgSOT84zYeqS",
+      "role": "Doctor",
+      "uuid": "aa44b167-33fc-4d51-9ead-dedbd856c709",
+      "smartContract": "DoctorContract"
+    },
+    {
+      "email": "ciccio683@gmail.com",
+      "password": "$2b$10$9T8MQLEb4dWXRO7TgsFll.V4P5GXO3KgwPsdvUGGppbtmHWClSBXy",
+      "role": "Doctor",
+      "uuid": "5b68227a-4834-42e3-8953-43e61b1097fc",
+      "smartContract": "DoctorContract"
+    },
+    {
+      "email": "ciccio1@gmail.com",
+      "password": "$2b$10$37I.d.j0psbPCYDLPXELyeSbA/qqhIMVwD2vyWFHVGLjWXTf3jg.W",
+      "role": "Doctor",
+      "uuid": "ef30e376-1879-46f8-aa9d-62ef092cbad7",
+      "smartContract": "DoctorContract"
     }
   ]
 }
