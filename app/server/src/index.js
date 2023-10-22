@@ -4,6 +4,7 @@ const PORT = process.env.PORT || 3001;
 const app = express();
 const cors = require('cors');
 const drugsRouter = require("./routes/drugs.routes");
+const boxesRouter = require("./routes/boxes.routes");
 const usersRouter = require("./routes/users.routes");
 const adminRouter = require("./routes/admin.routes");
 const prescriptionsRouter = require("./routes/prescriptions.routes");
@@ -29,6 +30,7 @@ async function main() {
   app.use(express.json());
   app.use("/api/admin", adminRouter);
   app.use("/api/drugs", drugsRouter);
+  app.use("/api/boxes", boxesRouter);
   app.use("/api/users", usersRouter);
   app.use("/api/prescriptions", prescriptionsRouter);
   app.use("/api/test", testRouter);

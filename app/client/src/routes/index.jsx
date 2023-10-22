@@ -4,6 +4,7 @@ import SignIn from "../pages/SignIn";
 import SignUp from "../pages/SignUp";
 import InitPage from "../pages/InitPage";
 import Home from "../pages/Home";
+import Prescription from "../pages/Prescription";
 import About from "../pages/About.js";
 import NavLayout from "../components/NavLayout";
 import { useAuth } from '../provider/authProvider';
@@ -26,6 +27,9 @@ const Routes = () => {
       children: [
         { path: "/home",
           element: <Home />
+        },
+        { path: "/prescriptions/:prescriptionId",
+          element: <Prescription />
         },
       ] 
     }];

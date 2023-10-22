@@ -158,7 +158,7 @@ export default function Home() {
   React.useEffect( () => {
     const fetchData = async () => {
       const userProfile = await fetchUserProfile();
-      const prescriptions = await fetchPrescriptions();
+      const prescriptions = await fetchPrescriptions() || [];
 
       return { userProfile, prescriptions };
     }
@@ -182,7 +182,7 @@ export default function Home() {
             table = {
               header: ['ID', 'Status' ,'Doctor', 'Pharmacy', 'Description'],
               body: prescriptions.map(prescription => [
-                { display: prescription?.ID, url: `/api/prescriptions/${prescription?.ID}` },
+                { display: prescription?.ID, url: `/prescriptions/${prescription?.ID}` },
                 { display: prescription?.Status, chipStatus: true },
                 { display: prescription?.DoctorID, favicon: true, url: `/api/users/${prescription?.DoctorID}` },
                 { display: prescription?.PharmacyID, favicon: true, url: `/api/users/${prescription?.PharmacyID}` },
@@ -194,7 +194,7 @@ export default function Home() {
             table = {
               header: ['ID', 'Status', 'Patient', 'Drugs', 'Description'],
               body: prescriptions.map(prescription => [
-                { display: prescription?.ID, url: `/api/prescriptions/${prescription?.ID}` },
+                { display: prescription?.ID, url: `/prescriptions/${prescription?.ID}` },
                 { display: prescription?.Status, chipStatus: true },
                 { display: prescription?.PatientID, favicon: true, url: `/api/users/${prescription?.PatientID}` },
                 { display: 'More Info', url: `/api/prescriptions/${prescription?.ID}/drugs` },
@@ -214,13 +214,11 @@ export default function Home() {
               ])
             }
             break;
-
-            case 'Manufacturer':
-              table = {}
-              break;
-
-            default:
-              table = dataTable;
+          case 'Manufacturer':
+            table = {}
+            break;
+          default:
+            table = dataTable;
         }
         console.log(table)
 
