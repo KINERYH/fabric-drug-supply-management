@@ -57,12 +57,33 @@ export default function Home() {
           { display: 'Tachipirina 500g, 2 volte al giorno'},
         ]
       ]
+    },
+    orderTable: {
+      header: ['ID', 'Status' ,'Manufacturer', 'Doctor', 'Description'],
+      body: [
+        [
+          { display: '6918bcdb-bf53-4a88-9f11-986b52a72fc4', url: '/api/prescriptions/6918bcdb-bf53-4a88-9f11-986b52a72fc4' },
+          { display: 'pending', chipStatus: true },
+          { display: 'Pietro Ventr', favicon: true, url: '/api/users/6918bcdb-bf53-4a88-9f11-986b52a72fc4' },
+          { display: 'La tua farmacia', favicon: true, url: '/api/users/6918bcdb-bf53-4a88-9f11-986b52a72fc4' },
+          { display: 'Tachipirina 500g, 2 volte al giorno'},
+        ],
+        [
+          { display: '6918bcdb-bf53-4a88-9f11-986b52a72fc5', url: '/api/prescriptions/6918bcdb-bf53-4a88-9f11-986b52a72fc4' },
+          { display: 'processed', chipStatus: true },
+          { display: 'Pietro Ventr', favicon: true, url: '/api/users/6918bcdb-bf53-4a88-9f11-986b52a72fc4' },
+          { display: 'La tua farmacia', favicon: true, url: '/api/users/6918bcdb-bf53-4a88-9f11-986b52a72fc4' },
+          { display: 'Tachipirina 500g, 2 volte al giorno'},
+        ]
+      ]
     }
+
   }
 
   const [navigation, setNavigation] = React.useState(defaultState.navigation);
   const [userProfileCard, setUserProfileCard] = React.useState(defaultState.userProfile);
   const [dataTable, setDataTable] = React.useState(defaultState.dataTable);
+  const [orderTable, setOrderTable] = React.useState(defaultState.orderTable);
   const [isAddPrescrModalOpen, setAddPrescrModalOpen] = React.useState(false);
   const [isProcPrescrModalOpen, setProcPrescrModalOpen] = React.useState(false);
   const [isAddOrderModalOpen, setAddOrderModalOpen] = React.useState(false);
@@ -113,7 +134,7 @@ export default function Home() {
       console.error(e);
     }
   }
-  
+
   const fetchUserProfile = async () => {
     try{
       const res = await fetch(`http://localhost:3001/api/users/${user}`, {
@@ -155,16 +176,40 @@ export default function Home() {
     }
   }
 
+  const fetchOrders = async () => {
+    try{
+      const res = await fetch("http://localhost:3001/api/orders/", {
+        method: 'GET',
+        headers: {
+          'Authorization': 'Bearer '+ token,
+        }
+      });
+      if (res.status == 200) {
+        const data = await res.json();
+        console.log("response fetch orders");
+        console.log(data);
+        return data.data;
+      } else {
+        console.error("fetchOrders status code: " + res.status);
+      }
+    } catch(e) {
+      console.error(e);
+    }
+
+  }
+
   React.useEffect( () => {
     const fetchData = async () => {
       const userProfile = await fetchUserProfile();
       const prescriptions = await fetchPrescriptions() || [];
+      const orders = await fetchOrders() || [];
 
-      return { userProfile, prescriptions };
+      return { userProfile, prescriptions, orders };
     }
 
+
     fetchData()
-      .then( ({ userProfile, prescriptions }) => {
+      .then( ({ userProfile, prescriptions, orders }) => {
         console.log("setting profile card")
         setUserProfileCard({
           firstName: userProfile?.Name,
@@ -177,6 +222,7 @@ export default function Home() {
         });
 
         let table;
+        let tableOrders;
         switch(role){
           case 'Patient':
             table = {
@@ -204,13 +250,24 @@ export default function Home() {
             break;
           case 'Pharmacy':
             table = {
-              header: ['ID', 'Status', 'Patient', 'Drugs', 'Description'],
+              header: ['ID', 'Status', 'Patient', 'Doctor', 'Description'],
               body: prescriptions.map(prescription => [
                 { display: prescription?.ID, url: `/api/prescriptions/${prescription?.ID}` },
                 { display: prescription?.Status, chipStatus: true },
                 { display: prescription?.PatientID, favicon: true, url: `/api/users/${prescription?.PatientID}` },
-                { display: 'More Info', url: `/api/prescriptions/${prescription?.ID}/drugs` },
+                { display: prescription?.DoctorID, favicon: true, url: `/api/users/${prescription?.DoctorID}` },
                 { display: prescription?.Description }
+              ])
+            }
+
+            tableOrders = {
+              header: ['ID', 'Status', 'Manufacturer', 'Drugs', 'Description'],
+              body: orders.map(order => [
+                { display: order?.ID, url: `/api/prescriptions/${order?.ID}` },
+                { display: order?.Status, chipStatus: true },
+                { display: order?.ManufacturerID, favicon: true, url: `/api/users/${order?.PatientID}` },
+                { display: 'More Info', url: `/api/prescriptions/${order?.ID}/drugs` },
+                { display: order?.Description }
               ])
             }
             break;
@@ -219,6 +276,7 @@ export default function Home() {
             break;
           default:
             table = dataTable;
+            tableOrders = orderTable;
         }
         console.log(table)
 
@@ -226,6 +284,7 @@ export default function Home() {
         *  nome del dottore e nome della farmacia
         */
         setDataTable(table);
+        setOrderTable(tableOrders);
       });
   }, []);
 
@@ -236,6 +295,7 @@ export default function Home() {
         <Box sx={{ maxWidth: '60%' }}>
           <UserCard userProfile={ userProfileCard } />
         </Box>
+        <Stack>
         <div>
           <Box sx={{ maxWidth: '100%', display: 'flex', flexDirection: 'row' }}>
             <Box sx={{ minWidth: '50%' }}>
@@ -251,18 +311,27 @@ export default function Home() {
                 {role === "Pharmacy" && (
                   <>
                   <Button onClick={() => setProcPrescrModalOpen(true)}>Process prescription</Button>
-                  <Button>Add order</Button>
-                  <Button>Process Order</Button>
+                  <Button  onClick={setAddOrderModalOpen}>Add order</Button>
+                  <Button onClick={setProcOrderModalOpen}>Process Order</Button>
                   </>
                 )}
               </ButtonGroup>
             </Box>
           </Box>
-          <Box sx={{ width: '100%', height: 250, }} >
+          <Box sx={{ width: '100%', height: 250}} >
+            <Stack spacing={5}>
             <Table dataTable={ dataTable } />
+              <Typography level="h4" textAlign="left" sx={{ mb: 2, marginBottom: 0 }}>
+                Current orders.
+              </Typography>
+            <Table dataTable={ orderTable } />
+            </Stack>
           </Box>
         </div>
+        </Stack>
       </Box>
+
+
 
       {/* TODO: finire -> Add prescription Modal */}
       <Modal open={isAddPrescrModalOpen} onClose={() => setAddPrescrModalOpen(false)}>
