@@ -12,10 +12,14 @@ import ModalDialog from '@mui/joy/ModalDialog';
 import DialogTitle from '@mui/joy/DialogTitle';
 import DialogContent from '@mui/joy/DialogContent';
 import Stack from '@mui/joy/Stack';
+import WarningIcon from '@mui/icons-material/Warning';
 import Add from '@mui/icons-material/Add';
 import UserCard from '../components/UserCard';
 import Breadcrumbs from '../components/Breadcrumbs';
 import Table from '../components/Table';
+import Autocomplete from '@mui/joy/Autocomplete';
+import PlaylistAddCheckCircleRoundedIcon from '@mui/icons-material/PlaylistAddCheckCircleRounded';
+import Alert from '@mui/joy/Alert';
 import { useAuth } from '../provider/authProvider';
 
 
@@ -67,7 +71,28 @@ export default function Home() {
   const [isProcPrescrModalOpen, setProcPrescrModalOpen] = React.useState(false);
   const [isAddOrderModalOpen, setAddOrderModalOpen] = React.useState(false);
   const [isProcOrderModalOpen, setProcOrderModalOpen] = React.useState(false);
+  const [showSuccessAlert, setShowSuccessAlert] = React.useState(false);
+  const [showErrorAlert, setShowErrorAlert] = React.useState(false);
+  const [alertMessage, setAlertMessage] = React.useState("");
 
+  //TODO: mettere una duration di default appropriata
+  const showAlertMessage = (message, type, duration = 10000) => {
+    // Determine which state variables to set based on the type
+    const showStateVariable = type === 'success' ? setShowSuccessAlert : type === 'error' ? setShowErrorAlert : null;
+  
+    if (showStateVariable) {
+      setAlertMessage(message);
+      showStateVariable(true);
+  
+      setTimeout(() => {
+        showStateVariable(false);
+        setAlertMessage('');
+      }, duration);
+    }
+  }
+  
+
+  
   //TODO: da finire
   const handleSubmitAddPrescr = async (event) => {
     event.preventDefault();
@@ -108,9 +133,21 @@ export default function Home() {
         },
       });
 
-      console.log("Response: " + response.status)
+      if(response.status == 200) {
+        showAlertMessage("Prescription processed successfully", 'success');
+      } else {
+        // TODO: gestire la propagazione degli errori
+        const errorResponse = await response.json();
+        if(errorResponse && errorResponse.message){
+          showAlertMessage(errorResponse.message, 'error');
+        } else {
+          // In case of generic/unknown error
+          showAlertMessage("Error processing prescription", 'error');
+        }
+      }
     } catch(e) {
       console.error(e);
+      showAlertMessage("An error occurred while processing the prescription.", 'error');
     }
   }
   
@@ -155,6 +192,58 @@ export default function Home() {
     }
   }
 
+  // Update the data table
+  const updateDataTable = async () => {
+    const prescriptions = await fetchPrescriptions() || [];
+    
+    let table;
+    switch(role){
+      case 'Patient':
+        table = {
+          header: ['ID', 'Status' ,'Doctor', 'Pharmacy', 'Description'],
+          body: prescriptions.map(prescription => [
+            { display: prescription?.ID, url: `/prescriptions/${prescription?.ID}` },
+            { display: prescription?.Status, chipStatus: true },
+            { display: prescription?.DoctorID, favicon: true, url: `/api/users/${prescription?.DoctorID}` },
+            { display: prescription?.PharmacyID, favicon: true, url: `/api/users/${prescription?.PharmacyID}` },
+            { display: prescription?.Description },
+          ])
+        }
+        break;
+      case 'Doctor':
+        table = {
+          header: ['ID', 'Status', 'Patient', 'Drugs', 'Description'],
+          body: prescriptions.map(prescription => [
+            { display: prescription?.ID, url: `/prescriptions/${prescription?.ID}` },
+            { display: prescription?.Status, chipStatus: true },
+            { display: prescription?.PatientID, favicon: true, url: `/api/users/${prescription?.PatientID}` },
+            { display: 'More Info', url: `/api/prescriptions/${prescription?.ID}/drugs` },
+            { display: prescription?.Description }
+          ])
+        }
+        break;
+      case 'Pharmacy':
+        table = {
+          header: ['ID', 'Status', 'Patient', 'Drugs', 'Description'],
+          body: prescriptions.map(prescription => [
+            { display: prescription?.ID, url: `/api/prescriptions/${prescription?.ID}` },
+            { display: prescription?.Status, chipStatus: true },
+            { display: prescription?.PatientID, favicon: true, url: `/api/users/${prescription?.PatientID}` },
+            { display: 'More Info', url: `/api/prescriptions/${prescription?.ID}/drugs` },
+            { display: prescription?.Description }
+          ])
+        }
+        break;
+      case 'Manufacturer':
+        table = {}
+        break;
+      default:
+        table = dataTable;
+    }
+
+    setDataTable(table);
+  }
+
   React.useEffect( () => {
     const fetchData = async () => {
       const userProfile = await fetchUserProfile();
@@ -176,56 +265,12 @@ export default function Home() {
           processedPrescriptions: prescriptions?.filter( p => p.Status !== 'pending' ).length
         });
 
-        let table;
-        switch(role){
-          case 'Patient':
-            table = {
-              header: ['ID', 'Status' ,'Doctor', 'Pharmacy', 'Description'],
-              body: prescriptions.map(prescription => [
-                { display: prescription?.ID, url: `/prescriptions/${prescription?.ID}` },
-                { display: prescription?.Status, chipStatus: true },
-                { display: prescription?.DoctorID, favicon: true, url: `/api/users/${prescription?.DoctorID}` },
-                { display: prescription?.PharmacyID, favicon: true, url: `/api/users/${prescription?.PharmacyID}` },
-                { display: prescription?.Description },
-              ])
-            }
-            break;
-          case 'Doctor':
-            table = {
-              header: ['ID', 'Status', 'Patient', 'Drugs', 'Description'],
-              body: prescriptions.map(prescription => [
-                { display: prescription?.ID, url: `/prescriptions/${prescription?.ID}` },
-                { display: prescription?.Status, chipStatus: true },
-                { display: prescription?.PatientID, favicon: true, url: `/api/users/${prescription?.PatientID}` },
-                { display: 'More Info', url: `/api/prescriptions/${prescription?.ID}/drugs` },
-                { display: prescription?.Description }
-              ])
-            }
-            break;
-          case 'Pharmacy':
-            table = {
-              header: ['ID', 'Status', 'Patient', 'Drugs', 'Description'],
-              body: prescriptions.map(prescription => [
-                { display: prescription?.ID, url: `/api/prescriptions/${prescription?.ID}` },
-                { display: prescription?.Status, chipStatus: true },
-                { display: prescription?.PatientID, favicon: true, url: `/api/users/${prescription?.PatientID}` },
-                { display: 'More Info', url: `/api/prescriptions/${prescription?.ID}/drugs` },
-                { display: prescription?.Description }
-              ])
-            }
-            break;
-          case 'Manufacturer':
-            table = {}
-            break;
-          default:
-            table = dataTable;
-        }
-        console.log(table)
+        updateDataTable(role, prescriptions, setDataTable);
 
         /* farei visualizzare il nome del dottore piuttosto che l'ID, quindi da fare altra chiamata per recuperare
         *  nome del dottore e nome della farmacia
         */
-        setDataTable(table);
+        
       });
   }, []);
 
@@ -243,25 +288,54 @@ export default function Home() {
                 Current prescriptions.
               </Typography>
             </Box>
-            <Box sx={{ minWidth: '50%', display: 'flex', justifyContent: 'right', marginBottom:'8px' }}>
+            <Box sx={{ minWidth: '50%', display: 'flex', justifyContent: 'right', marginBottom: '8px' }}>
               <ButtonGroup variant="solid" color="primary">
                 {role === "Doctor" && (
                   <Button onClick={() => setAddPrescrModalOpen(true)}>Add prescription</Button>
                 )}
                 {role === "Pharmacy" && (
                   <>
-                  <Button onClick={() => setProcPrescrModalOpen(true)}>Process prescription</Button>
-                  <Button>Add order</Button>
-                  <Button>Process Order</Button>
+                    <Button onClick={() => setProcPrescrModalOpen(true)}>Process prescription</Button>
+                    <Button>Add order</Button>
+                    <Button>Process Order</Button>
                   </>
                 )}
               </ButtonGroup>
             </Box>
           </Box>
           <Box sx={{ width: '100%', height: 250, }} >
-            <Table dataTable={ dataTable } />
+            <Table dataTable={dataTable} />
           </Box>
         </div>
+
+        <Box sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          position: 'fixed',
+          top: '90%', 
+          left: '50%', 
+          transform: 'translate(-50%, -50%)',
+          zIndex: 9999,
+        }}>
+          {showSuccessAlert && (
+            <Alert
+              variant="soft"
+              color="success"
+              startDecorator={<PlaylistAddCheckCircleRoundedIcon />}
+            >
+              {alertMessage}
+            </Alert>)}
+          {showErrorAlert && (
+            <Alert
+            variant="soft"
+            color="danger"
+            startDecorator={<WarningIcon />}
+          >
+              {alertMessage}
+            </Alert>)}
+        </Box>
+
       </Box>
 
       {/* TODO: finire -> Add prescription Modal */}
@@ -316,8 +390,9 @@ export default function Home() {
             onSubmit={async (event) => {
               event.preventDefault();
               await handleSubmitProcPrescr(event);
-              // TODO: far apparire un messaggio di successo + aggiornare la tabella delle prescrizioni
               setProcPrescrModalOpen(false);
+              updateDataTable();
+
             }}
           >
             <Stack spacing={2}>
