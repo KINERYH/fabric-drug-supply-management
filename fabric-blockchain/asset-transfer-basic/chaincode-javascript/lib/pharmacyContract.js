@@ -152,6 +152,24 @@ class PharmacyContract extends Contract {
 			return pharmacyPrescriptions;
 		}
 
+
+			  /**
+   * Retrieves all orders that have been made by the pharmacy.
+   * @param {Context} ctx The transaction context
+   * @param {string} pharmacyID The ID of the pharmacy to retrieve orders for
+   * @returns {Promise<Array>} An array of orders for the given pharmacy
+   * @throws Will throw an error if there are no prescriptions in the ledger
+   */
+				async GetAllOrders(ctx, pharmacyID) {
+					const serializedOrders = await ctx.stub.getState('orders');
+					if (!serializedOrders || serializedOrders.length === 0) {
+						throw new Error(`There are no orders in the ledger`);
+					}
+					const orders = JSON.parse(serializedOrders.toString());
+					const pharmacyOrders = orders.filter(prescription => prescription.PharmacyID === pharmacyID);
+					return pharmacyOrders;
+				}
+
 	/**
 	 *
 	 * @param {*} ctx
