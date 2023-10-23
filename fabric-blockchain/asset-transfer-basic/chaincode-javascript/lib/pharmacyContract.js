@@ -246,6 +246,8 @@ class PharmacyContract extends Contract {
 
 			prescriptions[prescriptionIndex].PharmacyID = pharmacyID;
 
+			prescriptions[prescriptionIndex].ProcessingDate = new Date().toISOString();
+
 			await ctx.stub.putState("prescriptions", Buffer.from(stringify(sortKeysRecursive(prescriptions))));
 
 			return prescriptions[prescriptionIndex];

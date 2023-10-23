@@ -225,7 +225,8 @@ class DoctorContract extends Contract {
       Drugs: JSON.parse(drugs),
       Description: description,
       Status: "pending",
-      PharmacyID: ""
+      PharmacyID: null,
+      ProcessingDate: null
     };
     console.log(drugs)
     prescriptionsList.push(prescription)

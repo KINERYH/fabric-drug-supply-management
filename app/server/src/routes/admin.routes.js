@@ -80,7 +80,7 @@ router.post("/", (async (req, res) => {
 
     const roles = {
       "Doctor": {
-        fields: ["CodiceFiscale", "Name", "Surname", "Specialization", "Hospital"],
+        fields: ["Name", "Surname", "Specialization", "Hospital"],
         transaction: "CreateDoctor",
       },
       "Manufacturer": {
