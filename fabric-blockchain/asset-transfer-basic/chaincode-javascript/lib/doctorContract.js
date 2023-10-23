@@ -29,14 +29,37 @@ class DoctorContract extends Contract {
     return user;
   }
 
-  async GetAllInfo(ctx, docID) {
+  /**
+   * Retrieves all information about a patient from the ledger.
+   * @async
+   * @param {Context} ctx - The transaction context object
+   * @param {string} userID - The ID of the patient to retrieve information for
+   * @returns {Promise<Object>} - The user object containing all information
+   * @throws Will throw an error if there are no patients in the ledger
+   */
+  async GetAllInfo(ctx, userID) {
+    const serializedPatients = await ctx.stub.getState('patients');
     const serializedDoctors = await ctx.stub.getState('doctors');
-    if (!serializedDoctors || serializedDoctors.length === 0) {
-      throw new Error(`There are no doctors in the ledger`);
+    const serializedPharmacies = await ctx.stub.getState('pharmacies');
+    if ( 
+      (!serializedPatients || serializedPatients.length === 0) && 
+      (!serializedDoctors || serializedDoctors.length === 0)   &&
+      (!serializedPharmacies || serializedPharmacies.length === 0)
+    ) {
+      throw new Error(`There are no users in the ledger`);
     }
+
+    const patients = JSON.parse(serializedPatients.toString());
     const doctors = JSON.parse(serializedDoctors.toString());
-    const doctor = doctors.find(doctor => doctor.ID === docID);
-    return doctor;
+    const pharmacies = JSON.parse(serializedPharmacies.toString());
+    const users = patients.concat(doctors, pharmacies);
+
+    const user = users.find(user => user.ID === userID);
+    if (!user){
+      throw new Error(`No user with id ${userID} in the ledger`);
+    }
+
+    return user;
   }
 
   /**
@@ -252,6 +275,42 @@ class DoctorContract extends Contract {
     }
     const patients = JSON.parse(serializedPatients.toString());
     return patients;
+  }
+
+
+  /**
+   * Retrieves all prescriptions for a given patient from the ledger.
+   * @param {Context} ctx The transaction context
+   * @returns {Promise<Array>} An array of prescriptions for the given patient
+   * @throws Will throw an error if there are no prescriptions in the ledger
+   */
+  async GetAllBoxes(ctx) {
+    const serializedBoxes = await ctx.stub.getState('boxes');
+    if (!serializedBoxes || serializedBoxes.length === 0) {
+      throw new Error(`There are no boxes in the ledger`);
+    }
+    const boxes = JSON.parse(serializedBoxes.toString());
+    return boxes;
+  }
+
+  /**
+   * Retrieves info for a given drugID.
+   * @param {Context} ctx - The transaction context object.
+   * @param {string} drugID - The ID of the drug.
+   * @returns {Promise<Object>} - An object of drug.
+   * @throws Will throw an error if there are no drug with the specified drugID.
+   */
+  async GetDrug(ctx, drugID) {
+    const serializedDrugs = await ctx.stub.getState('drugs');
+    if (!serializedDrugs || serializedDrugs.length === 0) {
+      throw new Error(`There are no drugs in the ledger`);
+    }
+    const drugs = JSON.parse(serializedDrugs.toString());
+    const drug = drugs.find(drug => drug.DrugID === drugID);
+    if (!drug){
+      throw new Error(`No drug with id ${drugID} in the ledger`);
+    }
+    return drug;
   }
 
 

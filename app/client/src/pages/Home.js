@@ -23,67 +23,10 @@ import { useAuth } from '../provider/authProvider';
 export default function Home() {
   const {token, user, role} = useAuth();
 
-  const defaultState = {
-    navigation: [
-      { name: 'Dashboard', href: '/' },
-      { name: 'TV Shows', href: '#' },
-      { name: 'Characters', href: '#' },
-      { name: 'Dr. Zoidberg' },
-    ],
-    userProfile: {
-      firstName: 'Alex',
-      lastName: 'Morrison',
-      src: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=286',
-      role: '{Patient}',
-      totPrescriptions: 34,
-      pendingPrescriptions: 4,
-      processedPrescriptions: 30
-    },
-    dataTable: {
-      header: ['ID', 'Status' ,'Doctor', 'Pharmacy', 'Description'],
-      body: [
-        [
-          { display: '6918bcdb-bf53-4a88-9f11-986b52a72fc4', url: '/api/prescriptions/6918bcdb-bf53-4a88-9f11-986b52a72fc4' },
-          { display: 'pending', chipStatus: true },
-          { display: 'Pietro Ventr', favicon: true, url: '/api/users/6918bcdb-bf53-4a88-9f11-986b52a72fc4' },
-          { display: 'La tua farmacia', favicon: true, url: '/api/users/6918bcdb-bf53-4a88-9f11-986b52a72fc4' },
-          { display: 'Tachipirina 500g, 2 volte al giorno'},
-        ],
-        [
-          { display: '6918bcdb-bf53-4a88-9f11-986b52a72fc5', url: '/api/prescriptions/6918bcdb-bf53-4a88-9f11-986b52a72fc4' },
-          { display: 'processed', chipStatus: true },
-          { display: 'Pietro Ventr', favicon: true, url: '/api/users/6918bcdb-bf53-4a88-9f11-986b52a72fc4' },
-          { display: 'La tua farmacia', favicon: true, url: '/api/users/6918bcdb-bf53-4a88-9f11-986b52a72fc4' },
-          { display: 'Tachipirina 500g, 2 volte al giorno'},
-        ]
-      ]
-    },
-    orderTable: {
-      header: ['ID', 'Status' ,'Manufacturer', 'Doctor', 'Description'],
-      body: [
-        [
-          { display: '6918bcdb-bf53-4a88-9f11-986b52a72fc4', url: '/api/prescriptions/6918bcdb-bf53-4a88-9f11-986b52a72fc4' },
-          { display: 'pending', chipStatus: true },
-          { display: 'Pietro Ventr', favicon: true, url: '/api/users/6918bcdb-bf53-4a88-9f11-986b52a72fc4' },
-          { display: 'La tua farmacia', favicon: true, url: '/api/users/6918bcdb-bf53-4a88-9f11-986b52a72fc4' },
-          { display: 'Tachipirina 500g, 2 volte al giorno'},
-        ],
-        [
-          { display: '6918bcdb-bf53-4a88-9f11-986b52a72fc5', url: '/api/prescriptions/6918bcdb-bf53-4a88-9f11-986b52a72fc4' },
-          { display: 'processed', chipStatus: true },
-          { display: 'Pietro Ventr', favicon: true, url: '/api/users/6918bcdb-bf53-4a88-9f11-986b52a72fc4' },
-          { display: 'La tua farmacia', favicon: true, url: '/api/users/6918bcdb-bf53-4a88-9f11-986b52a72fc4' },
-          { display: 'Tachipirina 500g, 2 volte al giorno'},
-        ]
-      ]
-    }
-
-  }
-
-  const [navigation, setNavigation] = React.useState(defaultState.navigation);
-  const [userProfileCard, setUserProfileCard] = React.useState(defaultState.userProfile);
-  const [dataTable, setDataTable] = React.useState(defaultState.dataTable);
-  const [orderTable, setOrderTable] = React.useState(defaultState.orderTable);
+  // const [navigation, setNavigation] = React.useState(defaultState.navigation);
+  const [userProfileCard, setUserProfileCard] = React.useState(null);
+  const [dataTable, setDataTable] = React.useState(null);
+  const [orderTable, setOrderTable] = React.useState(null);
   const [isAddPrescrModalOpen, setAddPrescrModalOpen] = React.useState(false);
   const [isProcPrescrModalOpen, setProcPrescrModalOpen] = React.useState(false);
   const [isAddOrderModalOpen, setAddOrderModalOpen] = React.useState(false);
@@ -155,6 +98,26 @@ export default function Home() {
       console.error(e);
     }
   }
+  const fetchUserInfo = async (userId) => {
+    try{
+      const res = await fetch(`http://localhost:3001/api/users/${userId}`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        }
+      });
+      if (res.status == 200) {
+        const result = await res.json();
+        console.log("response fetch user");
+        console.log(result.data);
+        return result.data;
+      } else {
+        console.error("userProfileFetch status code: " + res.status);
+      }
+    } catch(e) {
+      console.error(e);
+    }
+  }
   const fetchPrescriptions = async () => {
     try{
       const res = await fetch("http://localhost:3001/api/prescriptions/", {
@@ -204,12 +167,37 @@ export default function Home() {
       const prescriptions = await fetchPrescriptions() || [];
       const orders = await fetchOrders() || [];
 
-      return { userProfile, prescriptions, orders };
+      const doctors = await Promise.all(
+        prescriptions?.map(async (prescription) => {
+          const doctorInfo = await fetchUserInfo(prescription?.DoctorID);
+          console.log(doctorInfo);
+          return { ...doctorInfo, prescriptionId: prescription.ID };
+        })
+      )
+      const patients = await Promise.all(
+        prescriptions?.map(async (prescription) => {
+          const patientInfo = await fetchUserInfo(prescription?.PatientID);
+          console.log(patientInfo);
+          return { ...patientInfo, prescriptionId: prescription.ID };
+        })
+      )
+
+      const pharmacies = await Promise.all(
+        prescriptions?.map(async (prescription) => {
+          if (prescription?.Status === 'processed') {
+            const pharmacyInfo = await fetchUserInfo(prescription?.PharmacyID);
+            console.log(pharmacyInfo);
+            return { ...pharmacyInfo, prescriptionId: prescription.ID };
+          }
+        })
+      )
+      
+      return { userProfile, prescriptions, orders, doctors, patients, pharmacies };
     }
 
 
     fetchData()
-      .then( ({ userProfile, prescriptions, orders }) => {
+      .then( ({ userProfile, prescriptions, orders, doctors, patients, pharmacies }) => {
         console.log("setting profile card")
         setUserProfileCard({
           firstName: userProfile?.Name,
@@ -224,26 +212,26 @@ export default function Home() {
         let table;
         let tableOrders;
         switch(role){
-          case 'Patient':
+          case 'Patient': 
             table = {
               header: ['ID', 'Status' ,'Doctor', 'Pharmacy', 'Description'],
               body: prescriptions.map(prescription => [
                 { display: prescription?.ID, url: `/prescriptions/${prescription?.ID}` },
                 { display: prescription?.Status, chipStatus: true },
-                { display: prescription?.DoctorID, favicon: true, url: `/api/users/${prescription?.DoctorID}` },
-                { display: prescription?.PharmacyID, favicon: true, url: `/api/users/${prescription?.PharmacyID}` },
+                { display: doctors.find(d => d?.prescriptionId === prescription?.ID)?.Surname, favicon: true },
+                { display: pharmacies.find(p => p?.prescriptionId === prescription?.ID)?.Name, favicon: true },
                 { display: prescription?.Description },
               ])
             }
             break;
           case 'Doctor':
             table = {
-              header: ['ID', 'Status', 'Patient', 'Drugs', 'Description'],
+              header: ['ID', 'Status', 'Patient', 'Pharmacy', 'Description'],
               body: prescriptions.map(prescription => [
                 { display: prescription?.ID, url: `/prescriptions/${prescription?.ID}` },
                 { display: prescription?.Status, chipStatus: true },
-                { display: prescription?.PatientID, favicon: true, url: `/api/users/${prescription?.PatientID}` },
-                { display: 'More Info', url: `/api/prescriptions/${prescription?.ID}/drugs` },
+                { display: patients.find(p => p?.prescriptionId === prescription?.ID)?.Surname, favicon: true },
+                { display: pharmacies.find(p => p?.prescriptionId === prescription?.ID)?.Name, favicon: true },
                 { display: prescription?.Description }
               ])
             }
@@ -252,10 +240,10 @@ export default function Home() {
             table = {
               header: ['ID', 'Status', 'Patient', 'Doctor', 'Description'],
               body: prescriptions.map(prescription => [
-                { display: prescription?.ID, url: `/api/prescriptions/${prescription?.ID}` },
+                { display: prescription?.ID, url: `/prescriptions/${prescription?.ID}` },
                 { display: prescription?.Status, chipStatus: true },
-                { display: prescription?.PatientID, favicon: true, url: `/api/users/${prescription?.PatientID}` },
-                { display: prescription?.DoctorID, favicon: true, url: `/api/users/${prescription?.DoctorID}` },
+                { display: patients.find(p => p?.prescriptionId === prescription?.ID)?.Surname, favicon: true },
+                { display: doctors.find(d => d?.prescriptionId === prescription?.ID)?.Surname, favicon: true },
                 { display: prescription?.Description }
               ])
             }
@@ -263,7 +251,7 @@ export default function Home() {
             tableOrders = {
               header: ['ID', 'Status', 'Manufacturer', 'Drugs', 'Description'],
               body: orders.map(order => [
-                { display: order?.ID, url: `/api/prescriptions/${order?.ID}` },
+                { display: order?.ID, url: `/orders/${order?.ID}` },
                 { display: order?.Status, chipStatus: true },
                 { display: order?.ManufacturerID, favicon: true, url: `/api/users/${order?.PatientID}` },
                 { display: 'More Info', url: `/api/prescriptions/${order?.ID}/drugs` },
@@ -321,9 +309,12 @@ export default function Home() {
           <Box sx={{ width: '100%', height: 250}} >
             <Stack spacing={5}>
             <Table dataTable={ dataTable } />
-              <Typography level="h4" textAlign="left" sx={{ mb: 2, marginBottom: 0 }}>
+            
+            { orderTable &&
+              <Typography level="h4" textAlign="left" mb={1}>
                 Current orders.
               </Typography>
+            }
             <Table dataTable={ orderTable } />
             </Stack>
           </Box>
