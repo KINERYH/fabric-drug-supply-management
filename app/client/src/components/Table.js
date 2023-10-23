@@ -27,20 +27,20 @@ export default function ExtendedTable(props) {
         sx={{ '& thead th:nth-of-type(1)': { width: '30%' } }}>
         <thead>
           <tr>
-            { props.dataTable.header.map( (title) => (
+            { props.dataTable?.header.map( (title) => (
               <th>&nbsp;&nbsp;&nbsp;{title}</th>
             )) }
           </tr> 
         </thead>
         <tbody>
-          { props.dataTable.body.map((row) => (
+          { props.dataTable?.body.map((row) => (
             <tr key={ row[0].display }>
               { row.map((column) => (
                 <td>
-                  { column?.favicon && column?.url
+                  { column?.favicon
                     ? <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
                         <Avatar size="sm">{column?.display?.charAt(0)}</Avatar>
-                        <Link href={ column.url }>{ column.display }</Link>
+                        {column?.display}
                       </Box>
                     : column?.url
                       ? <Link href={ column.url }>{ column.display }</Link> 
@@ -63,7 +63,7 @@ export default function ExtendedTable(props) {
                           >
                             { column.display }
                           </Chip>
-                        : column.display
+                        : column?.display
                   }
                 </td>
               )) }
