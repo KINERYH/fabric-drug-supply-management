@@ -50,7 +50,7 @@
   "prescriptions": [
     {
       "ID": "6918bcdb-bf53-4a88-9f11-986b52a72fc4",
-      "DoctorID": "045edc66-ae1c-4706-9351-8126950ab314",
+      "DoctorID": "874d1f5e-549e-4598-afbd-e90e826d3dad",
       "PatientID": "44c87b23-7359-4cdf-afef-6fc8794d1b1d",
       "PharmacyID": "9a558c14-3b07-484d-8165-4ba5ebe05efc",
       "Status": "pending",
@@ -71,9 +71,9 @@
     },
     {
       "ID": "6918bcdb-bf53-4a88-9f11-986b53a72fc1",
-      "DoctorID": "045edc66-ae1c-4706-9351-8126950ab314",
+      "DoctorID": "874d1f5e-549e-4598-afbd-e90e826d3dad",
       "PatientID": "44c87b23-7359-4cdf-afef-6fc8794d1b1d",
-      "PharmacyID": "9a558c14-3b07-484d-8165-4ba5ebe05efc",
+      "PharmacyID": "4da86e26-abd9-4162-a5dd-889e90b4d77e",
       "Status": "processed",
       "Description": "Tachipirina 100 e oki",
       "ProcessingDate": "2018-12-31T23:59:59.000Z",
@@ -95,7 +95,7 @@
     },
     {
       "ID": "6918bcdb-bf53-4a88-9f11-986b52a7dec4",
-      "DoctorID": "045edc66-ae1c-4706-9351-8126950ab314",
+      "DoctorID": "874d1f5e-549e-4598-afbd-e90e826d3dad",
       "PatientID": "44c87b23-7359-4cdf-afef-6fc8794d1b1d",
       "PharmacyID": "9a558c14-3b07-484d-8165-4ba5ebe05efc",
       "Status": "pending",
@@ -111,7 +111,7 @@
     },
     {
       "ID": "6918bcdb-bf53-4a88-9f11-986b52n7dec4",
-      "DoctorID": "045edc66-ae1c-4706-9351-8126950ab314",
+      "DoctorID": "874d1f5e-549e-4598-afbd-e90e826d3dad",
       "PatientID": "4702b1fb-6783-4690-8e5e-9b8e89a0f1ab",
       "PharmacyID": "9a558c14-3b07-484d-8165-4ba5ebe05efc",
       "Status": "pending",
@@ -127,7 +127,7 @@
     },
     {
       "ID": "6918bcdb-bf53-4a88-9f11-986b52a7dec5",
-      "DoctorID": "94ae7246-40c6-40fa-8d5a-fcc3420edbca",
+      "DoctorID": "874d1f5e-549e-4598-afbd-e90e826d3dad",
       "PatientID": "00106b10-abe4-475b-9500-13f77421011b",
       "PharmacyID": "9a558c14-3b07-484d-8165-4ba5ebe05efc",
       "Status": "pending",
@@ -142,7 +142,7 @@
     },
     {
       "ID": "6918bcdb-bf53-4a88-9f11-986b52a7deh4",
-      "DoctorID": "94ae7246-40c6-40fa-8d5a-fcc3420edbca",
+      "DoctorID": "874d1f5e-549e-4598-afbd-e90e826d3dad",
       "PatientID": "4702b1fb-6783-4690-8e5e-9b8e89a0f1ab",
       "PharmacyID": "9a558c14-3b07-484d-8165-4ba5ebe05efc",
       "Status": "pending",
@@ -233,6 +233,13 @@
       "Surname": "Diana",
       "Specialization": "Cardiologia",
       "Hospital": "Ospedale San Paolo"
+    },
+    {
+      "ID": "874d1f5e-549e-4598-afbd-e90e826d3dad",
+      "Name": "Mario",
+      "Surname": "Franco",
+      "Specialization": "Neurologia",
+      "Hospital": "Ospedale San Mario"
     }
   ],
   "patients": [

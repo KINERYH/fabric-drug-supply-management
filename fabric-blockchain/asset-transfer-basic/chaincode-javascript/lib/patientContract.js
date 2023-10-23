@@ -58,21 +58,20 @@ class PatientContract extends Contract {
     return patientPrescriptions;
   }
 
-    /**
-   * Retrieves all prescriptions for a given patient from the ledger.
-   * @param {Context} ctx The transaction context
-   * @param {string} patientID The ID of the patient to retrieve prescriptions for
-   * @returns {Promise<Array>} An array of prescriptions for the given patient
-   * @throws Will throw an error if there are no prescriptions in the ledger
-   */
-    async GetAllBoxes(ctx) {
-      const serializedBoxes = await ctx.stub.getState('boxes');
-      if (!serializedBoxes || serializedBoxes.length === 0) {
-        throw new Error(`There are no boxes in the ledger`);
-      }
-      const boxes = JSON.parse(serializedBoxes.toString());
-      return boxes;
+  /**
+ * Retrieves all prescriptions for a given patient from the ledger.
+ * @param {Context} ctx The transaction context
+ * @returns {Promise<Array>} An array of prescriptions for the given patient
+ * @throws Will throw an error if there are no prescriptions in the ledger
+ */
+  async GetAllBoxes(ctx) {
+    const serializedBoxes = await ctx.stub.getState('boxes');
+    if (!serializedBoxes || serializedBoxes.length === 0) {
+      throw new Error(`There are no boxes in the ledger`);
     }
+    const boxes = JSON.parse(serializedBoxes.toString());
+    return boxes;
+  }
 
 
   /**
