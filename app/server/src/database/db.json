@@ -223,6 +223,20 @@
       "role": "Pharmacy",
       "uuid": "086d9448-e87a-4386-b46c-0c1aa5efda6a",
       "smartContract": "PharmacyContract"
+    },
+    {
+      "email": "fabrif@rmacy.com",
+      "password": "$2b$10$A65Pv/tDKqzy2.KAg2t0Huu5v7eYVMJq4V2vssepYL0eVZfJmyhZu",
+      "role": "Pharmacy",
+      "uuid": "c32ba557-d5e9-495f-985e-c9686b20cabf",
+      "smartContract": "PharmacyContract"
+    },
+    {
+      "email": "botta@farmacy.com",
+      "password": "$2b$10$nMgDXHpI7xyRJ0rlZBbpRudHQR.mrdQ1YQyTC9cL6JYWd89X3TvvC",
+      "role": "Pharmacy",
+      "uuid": "f5617d40-326a-405c-9229-d86edd0e679b",
+      "smartContract": "PharmacyContract"
     }
   ]
 }

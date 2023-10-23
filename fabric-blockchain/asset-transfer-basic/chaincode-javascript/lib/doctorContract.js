@@ -79,7 +79,6 @@ class DoctorContract extends Contract {
     return docPrescriptions;
   }
 
-
   /**
    * Get the name of a doctor with the given ID.
    * @async

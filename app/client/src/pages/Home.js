@@ -249,12 +249,11 @@ export default function Home() {
             }
 
             tableOrders = {
-              header: ['ID', 'Status', 'Manufacturer', 'Drugs', 'Description'],
+              header: ['ID', 'Status', 'Manufacturer', 'Description'],
               body: orders.map(order => [
                 { display: order?.ID, url: `/orders/${order?.ID}` },
                 { display: order?.Status, chipStatus: true },
-                { display: order?.ManufacturerID, favicon: true, url: `/api/users/${order?.PatientID}` },
-                { display: 'More Info', url: `/api/prescriptions/${order?.ID}/drugs` },
+                { display: order?.ManufacturerID, favicon: true },
                 { display: order?.Description }
               ])
             }
