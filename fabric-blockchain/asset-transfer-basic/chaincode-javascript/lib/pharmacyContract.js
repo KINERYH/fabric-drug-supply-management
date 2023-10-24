@@ -219,7 +219,7 @@ class PharmacyContract extends Contract {
 	 * @param {*} drugsList = list of drugs in the prescription
 	 * returns the updated prescription
 	 */
-	async ProcessPrescription(ctx, prescriptionID, pharmacyID) {
+	async ProcessPrescription(ctx, prescriptionID, pharmacyID, processingDate) {
 		// Get the pharmacy
 		const serializedPharmacies = await ctx.stub.getState("pharmacies");
 		if (!serializedPharmacies || serializedPharmacies.length === 0) {
@@ -286,7 +286,7 @@ class PharmacyContract extends Contract {
 
 			prescriptions[prescriptionIndex].PharmacyID = pharmacyID;
 
-			prescriptions[prescriptionIndex].ProcessingDate = new Date().toISOString();
+			prescriptions[prescriptionIndex].ProcessingDate = processingDate;
 
 			await ctx.stub.putState("prescriptions", Buffer.from(stringify(sortKeysRecursive(prescriptions))));
 

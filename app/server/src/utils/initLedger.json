@@ -101,11 +101,11 @@
       "PharmacyID": null,
       "Status": "pending",
       "Description": "Non dovrebbe prenderla",
-      "ProcessingDate": "2018-12-31T23:59:59.000Z",
+      "ProcessingDate": null,
       "Drugs": [
         {
           "DrugID": "ec110aef-28ce-4d1b-a008-840e40390329",
-          "Quantity": 1,
+          "Quantity": 100,
           "BoxIDs": []
         }
       ]
@@ -288,7 +288,9 @@
   ],
   "pharmacies": [
     {
-      "ID": "9a558c14-3b07-484d-8165-4ba5ebe05efc",
+
+      "ID": "44b6dae1-f1b6-4e78-ae3c-66345cea2711",
+
       "Name": "pharmacy1",
       "Address": "address1",
       "DrugStorage": [

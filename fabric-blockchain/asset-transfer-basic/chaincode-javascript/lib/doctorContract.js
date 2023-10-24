@@ -4,7 +4,6 @@ const stringify  = require('json-stringify-deterministic');
 const sortKeysRecursive  = require('sort-keys-recursive');
 const { Contract } = require('fabric-contract-api');
 
-
 class DoctorContract extends Contract {
 
   //TODO: questa va tolta e va creata una admin route per aggiungere gli utenti che non siano patients, utilizzando l'admin contract
@@ -215,10 +214,10 @@ class DoctorContract extends Contract {
    * @param {string} patientID - The ID of the patient for whom the prescription is being created
    * @param {string} drugs - The drugs prescribed, in JSON format
    * @param {string} description - The description of the prescription
-   * @returns {Promise<Object[]>} - An array of all prescriptions
+   * @returns {Promise<Object[]>} - the new prescription
    * @throws {Error} - If the doctor or patient does not exist or if the patient is allergic to any of the drugs
    */
-  async CreatePrescription(ctx, docID, patientID, prescriptionID, drugs, description) {
+  async CreatePrescription(ctx, docID, patientCF, prescriptionID, drugs, description) {
 
     const serializedPrescriptionsList = await ctx.stub.getState('prescriptions');
     const prescriptionsList = JSON.parse(serializedPrescriptionsList.toString());
@@ -226,13 +225,22 @@ class DoctorContract extends Contract {
     // Get allergies of the patient
     const serializedPatients = await ctx.stub.getState('patients');
     const patients = JSON.parse(serializedPatients.toString());
-    const patient = patients.find(patient => patient.ID === patientID);
+    const patient = patients.find(patient => patient.CodiceFiscale === patientCF);
+    if(!patient){
+      throw new Error(`Patient with CF = ${patientCF} does not exist`);
+    }
+    const patientID = patient.ID;
     const allergies = patient.Allergies;
 
     const serializedDrugs = await ctx.stub.getState('drugs');
     const ledgerDrugs = JSON.parse(serializedDrugs.toString());
-    for(let drug of drugs){
-      const composition = ledgerDrugs.find(d => d.DrugID === drug.DrugID).Composition;
+    for(let drug of JSON.parse(drugs)){
+      console.log("***CONTRACT - DRUG_ID = " + drug.DrugID + " - DRUG_QUANTITY = " + drug.Quantity);
+      const ledgerDrug = ledgerDrugs.find(d => d.DrugID === drug.DrugID);
+      if(!ledgerDrug){
+        throw new Error(`Drug ${drug.DrugID} does not exist`);
+      }
+      const composition = ledgerDrug.Composition;
       for(let component of composition){
         if(allergies.includes(component)){
           throw new Error(`Patient ${patient.Name} ${patient.Surname} is allergic to the component ${component} of the drug ${drug.Name}`);
@@ -256,7 +264,7 @@ class DoctorContract extends Contract {
     console.log(prescription)
     await ctx.stub.putState('prescriptions', Buffer.from(stringify(sortKeysRecursive(prescriptionsList))));
 
-    return  prescriptionsList;
+    return prescription;
   }
 
   /**
@@ -362,6 +370,16 @@ class DoctorContract extends Contract {
     return patient.MedicalHistory;
   }
 
+  async GetAllDrugs(ctx) {
+    const serializedDrugs = await ctx.stub.getState('drugs');
+    if (!serializedDrugs || serializedDrugs.length === 0) {
+      throw new Error(`There are no drugs in the ledger`);
+    }
+    const drugs = JSON.parse(serializedDrugs.toString());
+    return drugs;  
+  }
+
 }
+
 
 module.exports = DoctorContract;
