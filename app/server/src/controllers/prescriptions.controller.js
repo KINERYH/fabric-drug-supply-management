@@ -35,7 +35,7 @@ const getPrescription = async (req, res) => {
 
 const createPrescription = async (req, res) => {
   try{
-    const createdPrescription = await prescriptionsService.createPrescription(req.body);
+    const createdPrescription = await prescriptionsService.createPrescription(req.body, req.currentUser);
     res.status(201).json({
       message: "New prescription created.",
       data: createdPrescription

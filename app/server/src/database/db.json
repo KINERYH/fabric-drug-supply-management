@@ -183,17 +183,32 @@
       "smartContract": "DoctorContract"
     },
     {
-      "email": "f@rmacia.it",
-      "password": "$2b$10$Ms1vXI7irpx.8dFQcl3RR.6NYXONTq0ulKZEmqYStzDauvsbU9mMK",
-      "role": "Pharmacy",
-      "uuid": "4da86e26-abd9-4162-a5dd-889e90b4d77e",
-      "smartContract": "PharmacyContract"
-    },{
       "email": "fabri@prova.com",
       "password": "$2b$10$U3/9f6bynIJq.TzTyseCxuvriXvITkV3dVhdAwAgm5uI/ISCGcslS",
       "role": "Patient",
       "uuid": "44c87b23-7359-4cdf-afef-6fc8794d1b1d",
       "smartContract": "PatientContract"
+    },
+    {
+      "email": "d@ttore.it",
+      "password": "$2b$10$E3psh7rMe3AuT9o4Fyh70u61.LcjFHECQUldwal4WOyRSp/H97Fem",
+      "role": "Doctor",
+      "uuid": "8fef18ef-01ca-495e-a556-7ea0d808f1f0",
+      "smartContract": "DoctorContract"
+    },
+    {
+      "email": "1d@ttore.it",
+      "password": "$2b$10$ZB7buw0Zr4jZafrdyQgA2OR9sE.kc0THqJdArQl2nWjrL5s/p77pq",
+      "role": "Doctor",
+      "uuid": "7fcd5940-21fd-4761-8a27-046dbcf34124",
+      "smartContract": "DoctorContract"
+    },
+    {
+      "email": "f@rmacia.it",
+      "password": "$2b$10$2TLZ29ToqWZ563N8MMRLgewip/eDKFvyGtQcGAOg7rH8WihQkHLr6",
+      "role": "Pharmacy",
+      "uuid": "44b6dae1-f1b6-4e78-ae3c-66345cea2711",
+      "smartContract": "PharmacyContract"
     }
   ]
 }

@@ -36,9 +36,19 @@ const getPrescription = async (prescriptionId, currentUser) => {
   }
 };
 
-// TODO: implementare
-const createPrescription = () => {
-  return;
+// TODO: finire
+const createPrescription = async (body, currentUser) => {
+  const prescriptionID = uuidv4();
+  try{
+    const { ccp, wallet } = require("../index");
+    const { gateway, contract } = await ledger.connect(ccp, wallet, currentUser.uuid, channelName, chaincodeName, currentUser.smartContract);
+    const prescription = await contract.submitTransaction('CreatePrescription', currentUser.uuid, body.PatientCF, prescriptionID, body.DrugsList, body.Description);
+    ledger.disconnect(gateway);
+    return prescription;
+  } catch (error) {
+    console.error('Failed to create prescription: ' + '\n' + error?.message);
+    throw error;
+  }
 };
 
 const updatePrescription = () => {
@@ -63,7 +73,7 @@ const processPrescription = async (prescriptionID, currentUser) => {
   try{
     const { ccp, wallet } = require("../index");
     const { gateway, contract } = await ledger.connect(ccp, wallet, currentUser.uuid, channelName, chaincodeName, currentUser.smartContract);
-    const updatedPrescription = await contract.submitTransaction('ProcessPrescription', prescriptionID, currentUser.uuid);
+    const updatedPrescription = await contract.submitTransaction('ProcessPrescription', prescriptionID, currentUser.uuid, new Date().toISOString());
     ledger.disconnect(gateway);
     return updatedPrescription;
   } catch (error) {

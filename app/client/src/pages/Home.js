@@ -18,6 +18,9 @@ import UserCard from '../components/UserCard';
 import Breadcrumbs from '../components/Breadcrumbs';
 import Table from '../components/Table';
 import Autocomplete from '@mui/joy/Autocomplete';
+import AutocompleteOption from '@mui/joy/AutocompleteOption';
+import ListItemDecorator from '@mui/joy/ListItemDecorator';
+import ListItemContent from '@mui/joy/ListItemContent';
 import PlaylistAddCheckCircleRoundedIcon from '@mui/icons-material/PlaylistAddCheckCircleRounded';
 import Alert from '@mui/joy/Alert';
 import { useAuth } from '../provider/authProvider';
@@ -74,6 +77,9 @@ export default function Home() {
   const [showSuccessAlert, setShowSuccessAlert] = React.useState(false);
   const [showErrorAlert, setShowErrorAlert] = React.useState(false);
   const [alertMessage, setAlertMessage] = React.useState("");
+  const [autocompleteOptions, setAutocompleteOptions] = React.useState([]);
+  const [selectedDrugs, setSelectedDrugs] = React.useState([]);
+
 
   //TODO: mettere una duration di default appropriata
   const showAlertMessage = (message, type, duration = 10000) => {
@@ -92,14 +98,20 @@ export default function Home() {
   }
   
 
-  
-  //TODO: da finire
   const handleSubmitAddPrescr = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     console.log(data.get('patientCF'));
     console.log(data.get('description'));
-    console.log(data.get('drugsList'));
+    // console.log(data.get('drugsList'));
+
+    const drugs = [];
+    for(const drug of selectedDrugs){
+      drugs.push({
+        DrugID: drug.DrugID,
+        Quantity: drug.Quantity
+      });
+    }
 
     try{
       const response = await fetch('http://localhost:3001/api/prescriptions/', {
@@ -111,10 +123,21 @@ export default function Home() {
         body: JSON.stringify({
           PatientCF: data.get('patientCF'),
           Description: data.get('description'),
-          DrugsList: data.get('drugsList'),
+          DrugsList: JSON.stringify(drugs),
         })
       });
 
+      if(response.status == 201) {
+        showAlertMessage("Prescription created successfully", 'success');
+      } else {
+        const errorResponse = await response.json();
+        if(errorResponse && errorResponse.message){
+          showAlertMessage(errorResponse.message, 'error');
+        } else {
+          // In case of generic/unknown error
+          showAlertMessage("Error creating prescription", 'error');
+        }
+      }
     } catch(e) {
       console.error(e);
     }
@@ -192,6 +215,27 @@ export default function Home() {
     }
   }
 
+  const fetchAllDrugs = async () => {
+    try{
+      const res = await fetch("http://localhost:3001/api/drugs/", {
+        method: 'GET',
+        headers: {
+          'Authorization': 'Bearer '+ token,
+        }
+      });
+      if (res.status == 200) {
+        const data = await res.json();
+        console.log("response fetch drugs");
+        console.log(data);
+        return data.data;
+      } else {
+        console.error("fetchAllDrugs status code: " + res.status);
+      }
+    } catch(e) {
+      console.error(e);
+    }
+  }
+
   // Update the data table
   const updateDataTable = async () => {
     const prescriptions = await fetchPrescriptions() || [];
@@ -248,6 +292,11 @@ export default function Home() {
     const fetchData = async () => {
       const userProfile = await fetchUserProfile();
       const prescriptions = await fetchPrescriptions() || [];
+      let options = [];
+      if(role === "Doctor") {
+        options = await fetchAllDrugs() || [];
+      }
+      setAutocompleteOptions(options);
 
       return { userProfile, prescriptions };
     }
@@ -339,7 +388,10 @@ export default function Home() {
       </Box>
 
       {/* TODO: finire -> Add prescription Modal */}
-      <Modal open={isAddPrescrModalOpen} onClose={() => setAddPrescrModalOpen(false)}>
+      <Modal open={isAddPrescrModalOpen} onClose={() => {
+        setAddPrescrModalOpen(false);
+        setSelectedDrugs([]);
+        }}>
         <ModalDialog style={{ width: "60%" }}>
           <DialogTitle>Create new prescription</DialogTitle>
           <DialogContent>Fill in the prescription information.</DialogContent>
@@ -348,6 +400,8 @@ export default function Home() {
               event.preventDefault();
               await handleSubmitAddPrescr(event);
               setAddPrescrModalOpen(false);
+              updateDataTable();
+              setSelectedDrugs([]);
             }}
           >
             <Stack spacing={2}>
@@ -360,20 +414,84 @@ export default function Home() {
                 <textarea
                   name="description"
                   rows="4"
+                  style={{ maxWidth: "100%", minWidth: "100%" }}
                   placeholder="Enter a description of the prescription"
                   required
                 />
               </FormControl>
               <FormControl>
-                <FormLabel>Drug List</FormLabel>
-                <textarea
-                  // TODO: Boundare la massima estensione della textarea a quella massima del modal
-                  name="drugsList"
-                  rows="4"
-                  placeholder="Enter a list of drugs"
-                  required
-                />
+                <FormLabel>Drugs List</FormLabel>
+                <Autocomplete
+                  placeholder="Select a drug"
+                  slotProps={{
+                    input: {
+                      autoComplete: 'new-password', // disable autocomplete and autofill
+                    },
+                  }}
+                  options={autocompleteOptions}
+                  autoHighlight
+                  getOptionLabel={(option) => option.Name}
+                  renderOption={(props, option) => (
+                    <AutocompleteOption {...props}>
+                      <ListItemContent sx={{ fontSize: 'sm' }}>
+                        {option.Name}
+                        <Typography level="body-xs">
+                          {option.DrugID}
+                        </Typography>
+                      </ListItemContent>
+                    </AutocompleteOption>
+                  )}
+                  onChange={(event, selectedOption) => {
+                    if (selectedOption) {
+                      setSelectedDrugs([...selectedDrugs, selectedOption]);
+                      event.target.value = ''; // Clear the input
+                    }
+                  }}
+                    />
               </FormControl>
+              {selectedDrugs.length > 0 && (<FormControl>
+                <FormLabel sx={{ fontSize: '0.9rem', fontWeight: 'bold' }}>Selected Drugs</FormLabel>
+                <table style={{ borderCollapse: 'collapse', width: '50%' }}>
+                  <tbody>
+                    {selectedDrugs.map((selectedDrug, index) => (
+                      <tr key={index}>
+                        <td style={{ width: 'auto' }}>{selectedDrug.Name}</td>
+                        <td style={{ width: '100px', padding: '0' }}>
+                          <Input
+                            sx={{ width: '100px' }}
+                            type="number"
+                            min="1"
+                            value={selectedDrug.quantity}
+                            onChange={(e) => {
+                              const newQuantity = parseInt(e.target.value, 10);
+                              if (!isNaN(newQuantity)) {
+                                const updatedDrugs = [...selectedDrugs];
+                                updatedDrugs[index].Quantity = newQuantity;
+                                setSelectedDrugs(updatedDrugs);
+                              }
+                            }}
+                          />
+                        </td>
+                        <td style={{ width: '70px' }}>
+                          <Button
+                            variant="solid"
+                            color="primary"
+                            onClick={() => {
+                              const updatedDrugs = [...selectedDrugs];
+                              updatedDrugs.splice(index, 1);
+                              setSelectedDrugs(updatedDrugs);
+                            }}
+                          >
+                            Remove
+                          </Button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </FormControl>
+              )}
+
               <Button type="submit">Submit</Button>
               {/* <Button type="submit" onClick={handleSubmitAddPrescr}>Submit</Button> */}
             </Stack>
@@ -382,7 +500,8 @@ export default function Home() {
       </Modal>
 
       {/* Process prescription Modal */}
-      <Modal open={isProcPrescrModalOpen} onClose={() => setProcPrescrModalOpen(false)}>
+      <Modal open={isProcPrescrModalOpen} 
+      onClose={() => setProcPrescrModalOpen(false)}>
         <ModalDialog style={{ width: "60%" }}>
           <DialogTitle>Process a prescription</DialogTitle>
           <DialogContent>Insert the prescription ID.</DialogContent>

@@ -100,11 +100,11 @@
       "PharmacyID": null,
       "Status": "pending",
       "Description": "Non dovrebbe prenderla",
-      "ProcessingDate": "2018-12-31T23:59:59.000Z",
+      "ProcessingDate": null,
       "Drugs": [
         {
           "DrugID": "ec110aef-28ce-4d1b-a008-840e40390329",
-          "Quantity": 1,
+          "Quantity": 100,
           "BoxIDs": []
         }
       ]
@@ -129,7 +129,7 @@
       "ID": "6918bcdb-bf53-4a88-9f11-986b52a7dec5",
       "DoctorID": "94ae7246-40c6-40fa-8d5a-fcc3420edbca",
       "PatientID": "00106b10-abe4-475b-9500-13f77421011b",
-      "PharmacyID": "4da86e26-abd9-4162-a5dd-889e90b4d77e",
+      "PharmacyID": "44b6dae1-f1b6-4e78-ae3c-66345cea2711",
       "Status": "pending",
       "Description": "Prendi la medicina o vieni bannato",
       "ProcessingDate": "2018-12-31T23:59:59.000Z",
@@ -144,7 +144,7 @@
       "ID": "6918bcdb-bf53-4a88-9f11-986b52a7deh4",
       "DoctorID": "94ae7246-40c6-40fa-8d5a-fcc3420edbca",
       "PatientID": "4702b1fb-6783-4690-8e5e-9b8e89a0f1ab",
-      "PharmacyID": "4da86e26-abd9-4162-a5dd-889e90b4d77e",
+      "PharmacyID": "44b6dae1-f1b6-4e78-ae3c-66345cea2711",
       "Status": "pending",
       "Description": "Trenbolone acetato",
       "ProcessingDate": "2018-12-31T23:59:59.000Z",
@@ -296,7 +296,7 @@
   ],
   "pharmacies": [
     {
-      "ID": "4da86e26-abd9-4162-a5dd-889e90b4d77e",
+      "ID": "44b6dae1-f1b6-4e78-ae3c-66345cea2711",
       "Name": "pharmacy1",
       "Address": "address1",
       "DrugStorage": [
