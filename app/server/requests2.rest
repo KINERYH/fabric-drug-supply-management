@@ -38,3 +38,7 @@ prova
 #CREDENZIALI FARMACIA
 botta@farmacy.com
 prova
+
+#CREDENZIALI MANUFACTUER
+fabri@manufacturer.com
+prova

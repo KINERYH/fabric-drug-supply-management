@@ -55,19 +55,19 @@ export default function UserCard(props) {
           >
             <div>
               <Typography level="body-xs" fontWeight="lg">
-                Total prescriptions
+                { props.role != 'Manufacturer' ? 'Total prescriptions' : 'Total orders'}
               </Typography>
               <Typography fontWeight="lg">{ props.userProfile?.totPrescriptions }</Typography>
             </div>
             <div>
               <Typography level="body-xs" fontWeight="lg">
-                Pending prescriptions
+                { props.role != 'Manufacturer' ? 'Pending prescriptions' : 'Pending orders'}
               </Typography>
               <Typography fontWeight="lg">{ props.userProfile?.pendingPrescriptions }</Typography>
             </div>
             <div>
               <Typography level="body-xs" fontWeight="lg">
-                Processed prescriptions
+                { props.role != 'Manufacturer' ? 'Processed prescriptions' : 'Processed orders'}
               </Typography>
               <Typography fontWeight="lg">{ props.userProfile?.processedPrescriptions }</Typography>
             </div>
