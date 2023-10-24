@@ -138,6 +138,36 @@ export default function Home() {
     }
   }
 
+  const handleSubmitProcOrder = async (event) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    const orderID = data.get('orderID');
+    try{
+      const response = await fetch(`http://localhost:3001/api/orders/${orderID}`, {
+        method: 'PATCH',
+        headers: {
+          'Authorization': 'Bearer '+ token,
+          'Content-Type': 'application/json'
+        },
+      });
+
+      if (response.status == 201) {
+        showAlertMessage("Order processed successfully", 'success');
+      } else {
+        const errorResponse = await response.json();
+        if (errorResponse && errorResponse.message) {
+          showAlertMessage(errorResponse.message, 'error');
+        } else {
+          // In case of generic/unknown error
+          showAlertMessage("Error processing order", 'error');
+        }
+      }
+      console.log("Response: " + response.status)
+    } catch(e) {
+      console.error(e);
+    }
+  }
+
   const fetchUserProfile = async () => {
     try {
       const res = await fetch(`http://localhost:3001/api/users/${user}`, {
@@ -587,6 +617,31 @@ export default function Home() {
               <FormControl>
                 <FormLabel>Prescription ID</FormLabel>
                 <Input autoFocus required name="prescriptionID" />
+              </FormControl>
+              <Button type="submit">Submit</Button>
+            </Stack>
+          </form>
+        </ModalDialog>
+      </Modal>
+
+      {/* Process order Modal */}
+      <Modal open={isProcOrderModalOpen} onClose={() => setProcOrderModalOpen(false)}>
+        <ModalDialog style={{ width: "60%" }}>
+          <DialogTitle>Process an order</DialogTitle>
+          <DialogContent>Insert the order ID.</DialogContent>
+          <form
+            onSubmit={async (event) => {
+              event.preventDefault();
+              await handleSubmitProcOrder(event);
+              // TODO: far apparire un messaggio di successo + aggiornare la tabella delle prescrizioni
+              setProcOrderModalOpen(false);
+              updateDataTable();
+            }}
+          >
+            <Stack spacing={2}>
+              <FormControl>
+                <FormLabel>Order ID</FormLabel>
+                <Input autoFocus required name="orderID"/>
               </FormControl>
               <Button type="submit">Submit</Button>
             </Stack>

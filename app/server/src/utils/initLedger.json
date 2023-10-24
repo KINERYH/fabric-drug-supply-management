@@ -35,6 +35,12 @@
     },
     {
       "DrugID": "ec110aef-28ce-4d1b-a008-840e40390329",
+      "BoxID": "ec110aef-28ce-4d1b-a008-840e40389328",
+      "ExpirationDate": "2018-12-31T23:59:59.000Z",
+      "ProductionDate": "2018-12-31T23:59:59.000Z"
+    },
+    {
+      "DrugID": "ec110aef-28ce-4d1b-a008-840e40390329",
       "BoxID": "ec110aef-28ce-4d1b-a008-840e40390327",
       "ExpirationDate": "2018-12-31T23:59:59.000Z",
       "ProductionDate": "2018-12-31T23:59:59.000Z"
@@ -162,7 +168,7 @@
   "orders": [
     {
       "ID": "94ae7246-40c6-40fa-8d5a-fcc34d0edbca",
-      "PharmacyID": null,
+      "PharmacyID": "5f4325c4-85fe-4ae7-bd49-8aaa92ad4766",
       "ManufacturerID": "94ae7246-40c6-40fa-8d5a-fcc34d0edcca",
       "Status": "pending",
       "Description": "si richiedono 10 scatole di tachipirina",
@@ -175,8 +181,22 @@
       ]
     },
     {
+      "ID": "94ae7246-40c6-40fa-8d5a-fcc39d0edbca",
+      "PharmacyID": "5f4325c4-85fe-4ae7-bd49-8aaa92ad4766",
+      "ManufacturerID": "94ae7246-40c6-40fa-8d5a-fcc34d0edcca",
+      "Status": "shipped",
+      "Description": "si richiedono 10 scatole di cortisone",
+      "Drugs": [
+        {
+          "DrugID": "ec110aef-28ce-4d1b-a008-840e40390329",
+          "Quantity": 1,
+          "BoxIDs": ["ec110aef-28ce-4d1b-a008-840e40389328"]
+        }
+      ]
+    },
+    {
       "ID": "93ae7246-40c6-40fa-8d5a-fcc34d0edbca",
-      "PharmacyID": "f5617d40-326a-405c-9229-d86edd0e679b",
+      "PharmacyID": "5f4325c4-85fe-4ae7-bd49-8aaa92ad4766",
       "ManufacturerID": "94ae7246-40c6-40fa-8d5a-fcc34d0edcca",
       "Status": "processed",
       "Description": "si richiedono 2 scatole di tachipirina e 1 di trembolone",
@@ -289,7 +309,7 @@
   "pharmacies": [
     {
 
-      "ID": "44b6dae1-f1b6-4e78-ae3c-66345cea2711",
+      "ID": "5f4325c4-85fe-4ae7-bd49-8aaa92ad4766",
       "Name": "pharmacy1",
       "Address": "address1",
       "DrugStorage": [

@@ -7,15 +7,16 @@ import Avatar from '@mui/joy/Avatar';
 import Box from '@mui/joy/Box';
 import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
 import AutorenewRoundedIcon from '@mui/icons-material/AutorenewRounded';
+import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 
 export default function ExtendedTable(props) {
   return (
-    <Sheet variant="outlined" 
+    <Sheet variant="outlined"
       sx={{
         width: '100%',
         overflow: 'auto',
         borderRadius: 'sm',
-        '& Table thead th': { 
+        '& Table thead th': {
           verticalAlign: 'middle',
           backgroundColor: "#eeeeee"
         },
@@ -23,14 +24,14 @@ export default function ExtendedTable(props) {
           borderTopRightRadius: 0
         }
       }}>
-      <Table size="sm" borderAxis="bothBetween" variant="plain" stickyHeader 
+      <Table size="sm" borderAxis="bothBetween" variant="plain" stickyHeader
         sx={{ '& thead th:nth-of-type(1)': { width: '30%' } }}>
         <thead>
           <tr>
             { props.dataTable?.header.map( (title) => (
               <th>&nbsp;&nbsp;&nbsp;{title}</th>
             )) }
-          </tr> 
+          </tr>
         </thead>
         <tbody>
           { props.dataTable?.body.map((row) => (
@@ -43,7 +44,7 @@ export default function ExtendedTable(props) {
                         {column?.display}
                       </Box>
                     : column?.url
-                      ? <Link href={ column.url }>{ column.display }</Link> 
+                      ? <Link href={ column.url }>{ column.display }</Link>
                       : column?.chipStatus
                         ? <Chip
                             variant="soft"
@@ -51,13 +52,15 @@ export default function ExtendedTable(props) {
                             startDecorator={
                               {
                                 pending: <AutorenewRoundedIcon />,
-                                processed: <CheckRoundedIcon  />
+                                processed: <CheckRoundedIcon  />,
+                                shipped: <LocalShippingIcon />
                               }[column.display]
                             }
                             color={
                               {
                                 pending: 'neutral',
                                 processed: 'success',
+                                shipped: 'warning'
                               }[column.display]
                             }
                           >
