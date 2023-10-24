@@ -42,6 +42,35 @@ class ManufacturerContract extends Contract{
     return manufacturerOrders;
   }
 
+  /**
+ * Retrieves all information about a patient from the ledger.
+ * @async
+ * @param {Context} ctx - The transaction context object
+ * @param {string} userID - The ID of the patient to retrieve information for
+ * @returns {Promise<Object>} - The user object containing all information
+ * @throws Will throw an error if there are no patients in the ledger
+ */
+  async GetAllInfo(ctx, userID) {
+    const serializedPharmacies = await ctx.stub.getState('pharmacies');
+    const serializedManufacturers = await ctx.stub.getState('manufacturers');
+    if (
+      (!serializedManufacturers || serializedManufacturers.length === 0) &&
+      (!serializedPharmacies || serializedPharmacies.length === 0)
+    ) {
+      throw new Error(`There are no users in the ledger`);
+    }
+
+    const manufacturers = JSON.parse(serializedManufacturers.toString());
+    const pharmacies = JSON.parse(serializedPharmacies.toString());
+    const users = manufacturers.concat(pharmacies);
+
+    const user = users.find(user => user.ID === userID);
+    if (!user){
+      throw new Error(`No user with id ${userID} in the ledger`);
+    }
+
+    return user;
+  }
 
 
   /**

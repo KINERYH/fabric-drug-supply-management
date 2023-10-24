@@ -24,6 +24,9 @@ import ListItemContent from '@mui/joy/ListItemContent';
 import PlaylistAddCheckCircleRoundedIcon from '@mui/icons-material/PlaylistAddCheckCircleRounded';
 import Alert from '@mui/joy/Alert';
 import { useAuth } from '../provider/authProvider';
+import LocalShippingIcon from '@mui/icons-material/LocalShipping';
+import IconButton from '@mui/joy/IconButton';
+import Tooltip from '@mui/joy/Tooltip';
 
 
 
@@ -32,6 +35,11 @@ export default function Home() {
 
   // const [navigation, setNavigation] = React.useState(defaultState.navigation);
   const [userProfileCard, setUserProfileCard] = React.useState(null);
+  const [prescriptions, setPrescriptions] = React.useState([]);
+  const [orders, setOrders] = React.useState([]);
+  const [doctors, setDoctors] = React.useState([]);
+  const [patients, setPatients] = React.useState([]);
+  const [pharmacies, setPharmacies] = React.useState([]);
   const [dataTable, setDataTable] = React.useState(null);
   const [orderTable, setOrderTable] = React.useState(null);
   const [isAddPrescrModalOpen, setAddPrescrModalOpen] = React.useState(false);
@@ -275,52 +283,145 @@ export default function Home() {
   }
 
   // Update the data table
-  const updateDataTable = async () => {
+  const updateDataTables = async () => {
     const prescriptions = await fetchPrescriptions() || [];
     const orders = await fetchOrders() || [];
 
+    setOrders(orders);
+    setPrescriptions(prescriptions);
+  }
+
+  React.useEffect(() => {
+    const fetchData = async () => {
+      const userProfile = await fetchUserProfile();
+      let prescriptions = [];
+      if (role != "Manufacturer") {
+        prescriptions = await fetchPrescriptions() || [];
+      }
+      let options = [];
+      let orders = [];
+      if (role === "Doctor") {
+        options = await fetchAllDrugs() || [];
+      }
+      setAutocompleteOptions(options);
+      if (role === "Pharmacy" || role === "Manufacturer") {
+        orders = await fetchOrders() || [];
+      }
+
+      let doctors = []
+      let patients = []
+      if (role != "Manufacturer") {
+        doctors = await Promise.all(
+          prescriptions?.map(async (prescription) => {
+            const doctorInfo = await fetchUserInfo(prescription?.DoctorID);
+            console.log(doctorInfo);
+            return { ...doctorInfo, prescriptionId: prescription.ID };
+          })
+        )
+        patients = await Promise.all(
+          prescriptions?.map(async (prescription) => {
+            const patientInfo = await fetchUserInfo(prescription?.PatientID);
+            console.log(patientInfo);
+            return { ...patientInfo, prescriptionId: prescription.ID };
+          })
+        )
+      }
+
+      let pharmacies = []
+      if (role != "Manufacturer") {
+        pharmacies = await Promise.all(
+          prescriptions?.map(async (prescription) => {
+            if (prescription?.Status === 'processed') {
+              const pharmacyInfo = await fetchUserInfo(prescription?.PharmacyID);
+              console.log(pharmacyInfo);
+              return { ...pharmacyInfo, prescriptionId: prescription.ID };
+            }
+          })
+        )
+      } else {
+        pharmacies = await Promise.all(
+          orders?.map(async (order) => {
+            const pharmacyInfo = await fetchUserInfo(order?.PharmacyID);
+            console.log(pharmacyInfo);
+            return { ...pharmacyInfo, orderId: order.ID };
+          })
+        )
+      }
+
+      return { userProfile, prescriptions, orders, doctors, patients, pharmacies };
+    }
+
+
+    fetchData()
+      .then(({ userProfile, prescriptions, orders, doctors, patients, pharmacies }) => {
+        console.log("setting profile card");
+        console.log(orders);
+        console.log(orders?.filter(o => o.Status === 'pending').length);
+        console.log(orders?.filter(o => o.Status !== 'pending').length);
+        setUserProfileCard({
+          firstName: userProfile?.Name,
+          lastName: userProfile?.Surname,
+          src: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=286',
+          role: "Ruolo: " + role,
+          totPrescriptions: role != 'Manufacturer' ? prescriptions?.length : orders?.length,
+          pendingPrescriptions: role != 'Manufacturer' ? 
+            prescriptions?.filter(p => p.Status === 'pending').length :
+            orders?.filter(o => o.Status === 'pending').length ,
+          processedPrescriptions: role != 'Manufacturer' ? 
+            prescriptions?.filter(p => p.Status !== 'pending').length :
+            orders?.filter(o => o.Status !== 'pending').length
+        });
+
+        setOrders(orders);
+        setDoctors(doctors);
+        setPatients(patients); 
+        setPharmacies(pharmacies);
+      });
+  }, []);
+
+  React.useEffect(() => {
     let table;
     let tableOrders;
     switch (role) {
-      case 'Patient':
+      case 'Patient': 
         table = {
           header: ['ID', 'Status', 'Doctor', 'Pharmacy', 'Description'],
-          body: prescriptions.map(prescription => [
+          body: prescriptions?.map(prescription => [
             { display: prescription?.ID, url: `/prescriptions/${prescription?.ID}` },
             { display: prescription?.Status, chipStatus: true },
-            { display: prescription?.DoctorID, favicon: true, url: `/api/users/${prescription?.DoctorID}` },
-            { display: prescription?.PharmacyID, favicon: true, url: `/api/users/${prescription?.PharmacyID}` },
+            { display: doctors.find(d => d?.prescriptionId === prescription?.ID)?.Surname, favicon: true },
+            { display: pharmacies.find(p => p?.prescriptionId === prescription?.ID)?.Name, favicon: true },
             { display: prescription?.Description },
           ])
         }
         break;
       case 'Doctor':
         table = {
-          header: ['ID', 'Status', 'Patient', 'Drugs', 'Description'],
-          body: prescriptions.map(prescription => [
+          header: ['ID', 'Status', 'Patient', 'Pharmacy', 'Description'],
+          body: prescriptions?.map(prescription => [
             { display: prescription?.ID, url: `/prescriptions/${prescription?.ID}` },
             { display: prescription?.Status, chipStatus: true },
-            { display: prescription?.PatientID, favicon: true, url: `/api/users/${prescription?.PatientID}` },
-            { display: 'More Info', url: `/api/prescriptions/${prescription?.ID}/drugs` },
+            { display: patients.find(p => p?.prescriptionId === prescription?.ID)?.Surname, favicon: true },
+            { display: pharmacies.find(p => p?.prescriptionId === prescription?.ID)?.Name, favicon: true },
             { display: prescription?.Description }
           ])
         }
         break;
       case 'Pharmacy':
         table = {
-          header: ['ID', 'Status', 'Patient', 'Drugs', 'Description'],
-          body: prescriptions.map(prescription => [
-            { display: prescription?.ID, url: `/api/prescriptions/${prescription?.ID}` },
+          header: ['ID', 'Status', 'Patient', 'Doctor', 'Description'],
+          body: prescriptions?.map(prescription => [
+            { display: prescription?.ID, url: `/prescriptions/${prescription?.ID}` },
             { display: prescription?.Status, chipStatus: true },
-            { display: prescription?.PatientID, favicon: true, url: `/api/users/${prescription?.PatientID}` },
-            { display: 'More Info', url: `/api/prescriptions/${prescription?.ID}/drugs` },
+            { display: patients.find(p => p?.prescriptionId === prescription?.ID)?.Surname, favicon: true },
+            { display: doctors.find(d => d?.prescriptionId === prescription?.ID)?.Surname, favicon: true },
             { display: prescription?.Description }
           ])
         }
 
         tableOrders = {
           header: ['ID', 'Status', 'Manufacturer', 'Description'],
-          body: orders.map(order => [
+          body: orders?.map(order => [
             { display: order?.ID, url: `/orders/${order?.ID}` },
             { display: order?.Status, chipStatus: true },
             { display: order?.ManufacturerID, favicon: true },
@@ -329,100 +430,50 @@ export default function Home() {
         }
         break;
       case 'Manufacturer':
-        table = {}
+        tableOrders = {
+          header: ['ID', 'Status', 'Pharmacy', 'Description', 'Action'],
+          body: orders?.map(order => [
+            { display: order?.ID, url: `/orders/${order?.ID}` },
+            { display: order?.Status, chipStatus: true },
+            { display: pharmacies?.find(p => p?.orderId === order?.ID)?.Name, favicon: true },
+            { display: order?.Description },
+            { display: 
+              <Tooltip disabled={ order?.Status != 'pending' } arrow color="success" placement="top" title="ship"> 
+                <IconButton variant="solid" color="primary">
+                  <LocalShippingIcon size="sm" />
+                </IconButton>
+              </Tooltip>
+            }
+          ])
+        }
         break;
       default:
         table = dataTable;
         tableOrders = orderTable;
     }
+    console.log(table);
 
     setDataTable(table);
     setOrderTable(tableOrders);
-
-  }
-
-  React.useEffect(() => {
-    const fetchData = async () => {
-      const userProfile = await fetchUserProfile();
-      const prescriptions = await fetchPrescriptions() || [];
-      let options = [];
-      let orders = [];
-      if (role === "Doctor") {
-        options = await fetchAllDrugs() || [];
-      }
-      setAutocompleteOptions(options);
-      if (role === "Pharmacy") {
-        orders = await fetchOrders() || [];
-      }
-
-
-      const doctors = await Promise.all(
-        prescriptions?.map(async (prescription) => {
-          const doctorInfo = await fetchUserInfo(prescription?.DoctorID);
-          console.log(doctorInfo);
-          return { ...doctorInfo, prescriptionId: prescription.ID };
-        })
-      )
-      const patients = await Promise.all(
-        prescriptions?.map(async (prescription) => {
-          const patientInfo = await fetchUserInfo(prescription?.PatientID);
-          console.log(patientInfo);
-          return { ...patientInfo, prescriptionId: prescription.ID };
-        })
-      )
-
-      const pharmacies = await Promise.all(
-        prescriptions?.map(async (prescription) => {
-          if (prescription?.Status === 'processed') {
-            const pharmacyInfo = await fetchUserInfo(prescription?.PharmacyID);
-            console.log(pharmacyInfo);
-            return { ...pharmacyInfo, prescriptionId: prescription.ID };
-          }
-        })
-      )
-
-      return { userProfile, prescriptions, orders, doctors, patients, pharmacies };
-    }
-
-
-    fetchData()
-      .then(({ userProfile, prescriptions, orders, doctors, patients, pharmacies }) => {
-        console.log("setting profile card")
-        setUserProfileCard({
-          firstName: userProfile?.Name,
-          lastName: userProfile?.Surname,
-          src: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=286',
-          role: "Ruolo: " + role,
-          totPrescriptions: prescriptions?.length,
-          pendingPrescriptions: prescriptions?.filter(p => p.Status === 'pending').length,
-          processedPrescriptions: prescriptions?.filter(p => p.Status !== 'pending').length
-        });
-
-
-        //TODO: mettere setOrderTable
-        updateDataTable(role, prescriptions, setDataTable);
-
-
-        /* farei visualizzare il nome del dottore piuttosto che l'ID, quindi da fare altra chiamata per recuperare
-        *  nome del dottore e nome della farmacia
-        */
-      });
-  }, []);
+  }, [prescriptions, orders, doctors, patients, pharmacies ]); 
+  // ^^^^ indicando gli state come dipendenza ogni volta che cambiano parte l'hook
 
   return (
     <Box className="Home">
       <Box sx={{ maxWidth: '80%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: 5 }}>
         {/* <Breadcrumbs navigation={ navigation } /> */}
         <Box sx={{ maxWidth: '60%' }}>
-          <UserCard userProfile={userProfileCard} />
+          <UserCard role={role} userProfile={userProfileCard} />
         </Box>
         {/* <Stack> */}
           <div>
             <Box sx={{ maxWidth: '100%', display: 'flex', flexDirection: 'row' }}>
               <Box sx={{ minWidth: '50%' }}>
-                <Typography level="h4" textAlign="left" sx={{ mb: 2, marginBottom: 0 }}>
-                  Current prescriptions.
-                </Typography>
+                { dataTable && (
+                  <Typography level="h4" textAlign="left" sx={{ mb: 2, marginBottom: 0 }}>
+                    Current prescriptions.
+                  </Typography>
+                )}
               </Box>
               <Box sx={{ minWidth: '50%', display: 'flex', justifyContent: 'right', marginBottom: '8px' }}>
                 <ButtonGroup variant="solid" color="primary">
@@ -431,7 +482,6 @@ export default function Home() {
                   )}
                   {role === "Pharmacy" && (
                     <>
-
                       <Button onClick={() => setProcPrescrModalOpen(true)}>Process prescription</Button>
                       <Button onClick={setAddOrderModalOpen}>Add order</Button>
                       <Button onClick={setProcOrderModalOpen}>Process Order</Button>
@@ -499,7 +549,7 @@ export default function Home() {
               event.preventDefault();
               await handleSubmitAddPrescr(event);
               setAddPrescrModalOpen(false);
-              updateDataTable();
+              updateDataTables();
               setSelectedDrugs([]);
             }}
           >
@@ -609,7 +659,7 @@ export default function Home() {
               event.preventDefault();
               await handleSubmitProcPrescr(event);
               setProcPrescrModalOpen(false);
-              updateDataTable();
+              updateDataTables();
 
             }}
           >
@@ -635,7 +685,7 @@ export default function Home() {
               await handleSubmitProcOrder(event);
               // TODO: far apparire un messaggio di successo + aggiornare la tabella delle prescrizioni
               setProcOrderModalOpen(false);
-              updateDataTable();
+              updateDataTables();
             }}
           >
             <Stack spacing={2}>

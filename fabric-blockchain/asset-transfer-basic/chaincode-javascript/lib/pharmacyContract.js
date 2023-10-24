@@ -188,7 +188,7 @@ class PharmacyContract extends Contract {
 			throw new Error(`There are no orders in the ledger`);
 		}
 		const orders = JSON.parse(serializedOrders.toString());
-		const pharmacyOrders = orders.filter(prescription => prescription.PharmacyID === pharmacyID);
+		const pharmacyOrders = orders.filter(o => o.PharmacyID === pharmacyID);
 		return pharmacyOrders;
 	}
 

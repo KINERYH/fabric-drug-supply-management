@@ -342,6 +342,20 @@
       "role": "Doctor",
       "uuid": "479e42b4-ed9e-4e77-83a5-36267fe8e81e",
       "smartContract": "DoctorContract"
+    },
+    {
+      "email": "botta@manufacturer.com",
+      "password": "$2b$10$r1.Osxm9I2rB06gjBDnmkeySUz9yt1beeDZNOEpnvqb5dYmbjPWpq",
+      "role": "Manufacturer",
+      "uuid": "fbceefb9-9ea1-4744-8a54-ea0d2ad44696",
+      "smartContract": "ManufacturerContract"
+    },
+    {
+      "email": "fabri@manufacturer.com",
+      "password": "$2b$10$b07OPInCxk4QhZkDrA5b5ebt4UxQXp.9CS6oLlwbZ7kAzLPMX7Vci",
+      "role": "Manufacturer",
+      "uuid": "fa15c893-bb7d-4cc9-a0ca-4e303a85f8e9",
+      "smartContract": "ManufacturerContract"
     }
   ]
 }
