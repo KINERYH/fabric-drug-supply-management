@@ -244,6 +244,104 @@
       "role": "Pharmacy",
       "uuid": "5f4325c4-85fe-4ae7-bd49-8aaa92ad4766",
       "smartContract": "PharmacyContract"
+    },
+    {
+      "email": "2d@ttore.it",
+      "password": "$2b$10$ttQaCRyk.12dUDR2EQUoMewjYS7d3rZvvAJnoGZMmzmFVCPdiMcs.",
+      "role": "Doctor",
+      "uuid": "f012c60f-dda4-4dc3-b492-aeeda71ea247",
+      "smartContract": "DoctorContract"
+    },
+    {
+      "email": "3d@ttore.it",
+      "password": "$2b$10$swf5ZuigFkvoMNiQnIL/g.4XZj.CXG3hvR.aZvac7BXrPG4rUn1re",
+      "role": "Doctor",
+      "uuid": "27f9270c-35d3-45f5-87ed-ebef47a37f83",
+      "smartContract": "DoctorContract"
+    },
+    {
+      "email": "4d@ttore.it",
+      "password": "$2b$10$LwT6ABKM/iF.jf2sna.ree5uoyryIefFVu3EdCJiga86PM5pqrjAG",
+      "role": "Doctor",
+      "uuid": "d325b4e2-ecc3-4682-822e-0919bb9d5ee4",
+      "smartContract": "DoctorContract"
+    },
+    {
+      "email": "5d@ttore.it",
+      "password": "$2b$10$KwB2NLL/OXvmdo.2oieis.Sh/L7JU46wc/noeIhbdhGHFah47KUH2",
+      "role": "Doctor",
+      "uuid": "725bd254-7d87-461d-9022-3ea9fa6bc18b",
+      "smartContract": "DoctorContract"
+    },
+    {
+      "email": "6d@ttore.it",
+      "password": "$2b$10$SVTuoGq/Dbbcv9enpOtiMuiR0XS5BUp3FqCPsz3vyRi//g733Koje",
+      "role": "Doctor",
+      "uuid": "2359e635-89b0-4223-9268-cf8d7642d940",
+      "smartContract": "DoctorContract"
+    },
+    {
+      "email": "7d@ttore.it",
+      "password": "$2b$10$WGbKnkYGPeUIwSf1fUEAVenAr7El5Yoh8e3ErVTKo1yA1y17fvypq",
+      "role": "Doctor",
+      "uuid": "bb5b6061-418b-4156-91a9-81fe260c42d1",
+      "smartContract": "DoctorContract"
+    },
+    {
+      "email": "8d@ttore.it",
+      "password": "$2b$10$gHftBjQfo7n7WtL.XItUr.SouvFNAKwbhhxZ.LwKIimwSmsD8l1W2",
+      "role": "Doctor",
+      "uuid": "761cd3ac-8198-482e-844b-cf802b57d3fa",
+      "smartContract": "DoctorContract"
+    },
+    {
+      "email": "9d@ttore.it",
+      "password": "$2b$10$ef3ZtfUFEfY./BX0A8tg.uRMTeS7KDNAqY4vkcUWQQdH67fdLYxqq",
+      "role": "Doctor",
+      "uuid": "c893cc1a-2d93-4844-bafa-f271e8540a3b",
+      "smartContract": "DoctorContract"
+    },
+    {
+      "email": "10d@ttore.it",
+      "password": "$2b$10$M4ZQwX3u5tBEsVoVyewxcuN8FLlen3YIhDOleVznQIgG/Dq9bJpcS",
+      "role": "Doctor",
+      "uuid": "a64b4655-e810-479a-8eb5-0d23527996ae",
+      "smartContract": "DoctorContract"
+    },
+    {
+      "email": "11d@ttore.it",
+      "password": "$2b$10$a35T3TB06G/mVucr6xgp2udof7Yv8vv2OVXuQDt8Jc08kx2mIY232",
+      "role": "Doctor",
+      "uuid": "6b0c942f-4e7c-4d58-b00a-b8c7f8a61e00",
+      "smartContract": "DoctorContract"
+    },
+    {
+      "email": "12d@ttore.it",
+      "password": "$2b$10$cdkGMv5eiE4XaqStfzEWPuGcA1jkdDjU6RacANhno07NjbF.wKvgK",
+      "role": "Doctor",
+      "uuid": "a9b7236c-9d73-4dae-beb1-c0f47d6b02de",
+      "smartContract": "DoctorContract"
+    },
+    {
+      "email": "13d@ttore.it",
+      "password": "$2b$10$RJ2iNiBNpZ34UH2ho1J11OcTT.9/KJMbnR53/8pefpXVKlK1HWkTa",
+      "role": "Doctor",
+      "uuid": "f733f418-3b40-41cf-9963-62fef6298631",
+      "smartContract": "DoctorContract"
+    },
+    {
+      "email": "14d@ttore.it",
+      "password": "$2b$10$FMmeIDQCz8s9F4lwiP.MYOVPQJxgMfUQrRCd3c6Dv768Z7UsEUtNe",
+      "role": "Doctor",
+      "uuid": "a926bce6-fe86-49d3-9a0a-5fdaa6c4a81d",
+      "smartContract": "DoctorContract"
+    },
+    {
+      "email": "15d@ttore.it",
+      "password": "$2b$10$Jn7x1dias39PH4KiEQ23h.xODF0ksxgoGIzckdXCcfMhxpb7Rjd02",
+      "role": "Doctor",
+      "uuid": "479e42b4-ed9e-4e77-83a5-36267fe8e81e",
+      "smartContract": "DoctorContract"
     }
   ]
 }
