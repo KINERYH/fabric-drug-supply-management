@@ -28,7 +28,7 @@ import { useAuth } from '../provider/authProvider';
 
 
 export default function Home() {
-  const {token, user, role} = useAuth();
+  const { token, user, role } = useAuth();
 
   // const [navigation, setNavigation] = React.useState(defaultState.navigation);
   const [userProfileCard, setUserProfileCard] = React.useState(null);
@@ -49,18 +49,18 @@ export default function Home() {
   const showAlertMessage = (message, type, duration = 10000) => {
     // Determine which state variables to set based on the type
     const showStateVariable = type === 'success' ? setShowSuccessAlert : type === 'error' ? setShowErrorAlert : null;
-  
+
     if (showStateVariable) {
       setAlertMessage(message);
       showStateVariable(true);
-  
+
       setTimeout(() => {
         showStateVariable(false);
         setAlertMessage('');
       }, duration);
     }
   }
-  
+
 
   const handleSubmitAddPrescr = async (event) => {
     event.preventDefault();
@@ -70,18 +70,18 @@ export default function Home() {
     // console.log(data.get('drugsList'));
 
     const drugs = [];
-    for(const drug of selectedDrugs){
+    for (const drug of selectedDrugs) {
       drugs.push({
         DrugID: drug.DrugID,
         Quantity: drug.Quantity
       });
     }
 
-    try{
+    try {
       const response = await fetch('http://localhost:3001/api/prescriptions/', {
         method: 'POST',
         headers: {
-          'Authorization': 'Bearer '+ token,
+          'Authorization': 'Bearer ' + token,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
@@ -91,18 +91,18 @@ export default function Home() {
         })
       });
 
-      if(response.status == 201) {
+      if (response.status == 201) {
         showAlertMessage("Prescription created successfully", 'success');
       } else {
         const errorResponse = await response.json();
-        if(errorResponse && errorResponse.message){
+        if (errorResponse && errorResponse.message) {
           showAlertMessage(errorResponse.message, 'error');
         } else {
           // In case of generic/unknown error
           showAlertMessage("Error creating prescription", 'error');
         }
       }
-    } catch(e) {
+    } catch (e) {
       console.error(e);
     }
   }
@@ -111,35 +111,35 @@ export default function Home() {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const prescriptionID = data.get('prescriptionID');
-    try{
+    try {
       const response = await fetch(`http://localhost:3001/api/prescriptions/${prescriptionID}`, {
         method: 'PATCH',
         headers: {
-          'Authorization': 'Bearer '+ token,
+          'Authorization': 'Bearer ' + token,
           'Content-Type': 'application/json'
         },
       });
 
-      if(response.status == 200) {
+      if (response.status == 200) {
         showAlertMessage("Prescription processed successfully", 'success');
       } else {
         // TODO: gestire la propagazione degli errori
         const errorResponse = await response.json();
-        if(errorResponse && errorResponse.message){
+        if (errorResponse && errorResponse.message) {
           showAlertMessage(errorResponse.message, 'error');
         } else {
           // In case of generic/unknown error
           showAlertMessage("Error processing prescription", 'error');
         }
       }
-    } catch(e) {
+    } catch (e) {
       console.error(e);
       showAlertMessage("An error occurred while processing the prescription.", 'error');
     }
   }
 
   const fetchUserProfile = async () => {
-    try{
+    try {
       const res = await fetch(`http://localhost:3001/api/users/${user}`, {
         method: 'GET',
         headers: {
@@ -154,12 +154,12 @@ export default function Home() {
       } else {
         console.error("userProfileFetch status code: " + res.status);
       }
-    } catch(e) {
+    } catch (e) {
       console.error(e);
     }
   }
   const fetchUserInfo = async (userId) => {
-    try{
+    try {
       const res = await fetch(`http://localhost:3001/api/users/${userId}`, {
         method: 'GET',
         headers: {
@@ -174,16 +174,16 @@ export default function Home() {
       } else {
         console.error("userProfileFetch status code: " + res.status);
       }
-    } catch(e) {
+    } catch (e) {
       console.error(e);
     }
   }
   const fetchPrescriptions = async () => {
-    try{
+    try {
       const res = await fetch("http://localhost:3001/api/prescriptions/", {
         method: 'GET',
         headers: {
-          'Authorization': 'Bearer '+ token,
+          'Authorization': 'Bearer ' + token,
         }
       });
       if (res.status == 200) {
@@ -194,17 +194,17 @@ export default function Home() {
       } else {
         console.error("fetchPrescriptions status code: " + res.status);
       }
-    } catch(e) {
+    } catch (e) {
       console.error(e);
     }
   }
-  
+
   const fetchOrders = async () => {
-    try{
+    try {
       const res = await fetch("http://localhost:3001/api/orders/", {
         method: 'GET',
         headers: {
-          'Authorization': 'Bearer '+ token,
+          'Authorization': 'Bearer ' + token,
         }
       });
       if (res.status == 200) {
@@ -215,7 +215,7 @@ export default function Home() {
       } else {
         console.error("fetchOrders status code: " + res.status);
       }
-    } catch(e) {
+    } catch (e) {
       console.error(e);
     }
 
@@ -223,11 +223,11 @@ export default function Home() {
 
 
   const fetchAllDrugs = async () => {
-    try{
+    try {
       const res = await fetch("http://localhost:3001/api/drugs/", {
         method: 'GET',
         headers: {
-          'Authorization': 'Bearer '+ token,
+          'Authorization': 'Bearer ' + token,
         }
       });
       if (res.status == 200) {
@@ -238,7 +238,7 @@ export default function Home() {
       } else {
         console.error("fetchAllDrugs status code: " + res.status);
       }
-    } catch(e) {
+    } catch (e) {
       console.error(e);
     }
 
@@ -247,12 +247,14 @@ export default function Home() {
   // Update the data table
   const updateDataTable = async () => {
     const prescriptions = await fetchPrescriptions() || [];
-    
+    const orders = await fetchOrders() || [];
+
     let table;
-    switch(role){
+    let tableOrders;
+    switch (role) {
       case 'Patient':
         table = {
-          header: ['ID', 'Status' ,'Doctor', 'Pharmacy', 'Description'],
+          header: ['ID', 'Status', 'Doctor', 'Pharmacy', 'Description'],
           body: prescriptions.map(prescription => [
             { display: prescription?.ID, url: `/prescriptions/${prescription?.ID}` },
             { display: prescription?.Status, chipStatus: true },
@@ -285,7 +287,7 @@ export default function Home() {
             { display: prescription?.Description }
           ])
         }
-        
+
         tableOrders = {
           header: ['ID', 'Status', 'Manufacturer', 'Description'],
           body: orders.map(order => [
@@ -309,17 +311,17 @@ export default function Home() {
 
   }
 
-  React.useEffect( () => {
+  React.useEffect(() => {
     const fetchData = async () => {
       const userProfile = await fetchUserProfile();
       const prescriptions = await fetchPrescriptions() || [];
       let options = [];
       let orders = [];
-      if(role === "Doctor") {
+      if (role === "Doctor") {
         options = await fetchAllDrugs() || [];
       }
       setAutocompleteOptions(options);
-      if(role ==="Pharmacy") {
+      if (role === "Pharmacy") {
         orders = await fetchOrders() || [];
       }
 
@@ -348,13 +350,13 @@ export default function Home() {
           }
         })
       )
-      
+
       return { userProfile, prescriptions, orders, doctors, patients, pharmacies };
     }
 
 
     fetchData()
-      .then( ({ userProfile, prescriptions, orders, doctors, patients, pharmacies }) => {
+      .then(({ userProfile, prescriptions, orders, doctors, patients, pharmacies }) => {
         console.log("setting profile card")
         setUserProfileCard({
           firstName: userProfile?.Name,
@@ -362,8 +364,8 @@ export default function Home() {
           src: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=286',
           role: "Ruolo: " + role,
           totPrescriptions: prescriptions?.length,
-          pendingPrescriptions: prescriptions?.filter( p => p.Status === 'pending' ).length,
-          processedPrescriptions: prescriptions?.filter( p => p.Status !== 'pending' ).length
+          pendingPrescriptions: prescriptions?.filter(p => p.Status === 'pending').length,
+          processedPrescriptions: prescriptions?.filter(p => p.Status !== 'pending').length
         });
 
 
@@ -382,72 +384,72 @@ export default function Home() {
       <Box sx={{ maxWidth: '80%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: 5 }}>
         {/* <Breadcrumbs navigation={ navigation } /> */}
         <Box sx={{ maxWidth: '60%' }}>
-          <UserCard userProfile={ userProfileCard } />
+          <UserCard userProfile={userProfileCard} />
         </Box>
-        <Stack>
-        <div>
-          <Box sx={{ maxWidth: '100%', display: 'flex', flexDirection: 'row' }}>
-            <Box sx={{ minWidth: '50%' }}>
-              <Typography level="h4" textAlign="left" sx={{ mb: 2, marginBottom: 0 }}>
-                Current prescriptions.
-              </Typography>
-            </Box>
-            <Box sx={{ minWidth: '50%', display: 'flex', justifyContent: 'right', marginBottom: '8px' }}>
-              <ButtonGroup variant="solid" color="primary">
-                {role === "Doctor" && (
-                  <Button onClick={() => setAddPrescrModalOpen(true)}>Add prescription</Button>
-                )}
-                {role === "Pharmacy" && (
-                  <>
+        {/* <Stack> */}
+          <div>
+            <Box sx={{ maxWidth: '100%', display: 'flex', flexDirection: 'row' }}>
+              <Box sx={{ minWidth: '50%' }}>
+                <Typography level="h4" textAlign="left" sx={{ mb: 2, marginBottom: 0 }}>
+                  Current prescriptions.
+                </Typography>
+              </Box>
+              <Box sx={{ minWidth: '50%', display: 'flex', justifyContent: 'right', marginBottom: '8px' }}>
+                <ButtonGroup variant="solid" color="primary">
+                  {role === "Doctor" && (
+                    <Button onClick={() => setAddPrescrModalOpen(true)}>Add prescription</Button>
+                  )}
+                  {role === "Pharmacy" && (
+                    <>
 
-                  <Button onClick={() => setProcPrescrModalOpen(true)}>Process prescription</Button>
-                  <Button onClick={setAddOrderModalOpen}>Add order</Button>
-                  <Button onClick={setProcOrderModalOpen}>Process Order</Button>
-                  </>
-                )}
-              </ButtonGroup>
+                      <Button onClick={() => setProcPrescrModalOpen(true)}>Process prescription</Button>
+                      <Button onClick={setAddOrderModalOpen}>Add order</Button>
+                      <Button onClick={setProcOrderModalOpen}>Process Order</Button>
+                    </>
+                  )}
+                </ButtonGroup>
+              </Box>
             </Box>
-          </Box>
-          <Box sx={{ width: '100%', height: 250, }} >
-            <Stack spacing={5}>
-            <Table dataTable={dataTable} />
-              { orderTable &&
-              <Typography level="h4" textAlign="left" mb={1}>
-                Current orders.
-              </Typography>
-            }
-            <Table dataTable={ orderTable } />
-            </Stack>
-          </Box>
-        </div>
+            <Box sx={{ width: '100%', height: 250, }} >
+              <Stack spacing={5}>
+                <Table dataTable={dataTable} />
+                {orderTable &&
+                  <Typography level="h4" textAlign="left" mb={1}>
+                    Current orders.
+                  </Typography>
+                }
+                <Table dataTable={orderTable} />
+              </Stack>
+            </Box>
+          </div>
 
-        <Box sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          position: 'fixed',
-          top: '90%', 
-          left: '50%', 
-          transform: 'translate(-50%, -50%)',
-          zIndex: 9999,
-        }}>
-          {showSuccessAlert && (
-            <Alert
-              variant="soft"
-              color="success"
-              startDecorator={<PlaylistAddCheckCircleRoundedIcon />}
-            >
-              {alertMessage}
-            </Alert>)}
-          {showErrorAlert && (
-            <Alert
-            variant="soft"
-            color="danger"
-            startDecorator={<WarningIcon />}
-          >
-              {alertMessage}
-            </Alert>)}
-        </Box>
+          <Box sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            position: 'fixed',
+            top: '90%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            zIndex: 9999,
+          }}>
+            {showSuccessAlert && (
+              <Alert
+                variant="soft"
+                color="success"
+                startDecorator={<PlaylistAddCheckCircleRoundedIcon />}
+              >
+                {alertMessage}
+              </Alert>)}
+            {showErrorAlert && (
+              <Alert
+                variant="soft"
+                color="danger"
+                startDecorator={<WarningIcon />}
+              >
+                {alertMessage}
+              </Alert>)}
+          </Box>
 
 
       </Box>
@@ -458,7 +460,7 @@ export default function Home() {
       <Modal open={isAddPrescrModalOpen} onClose={() => {
         setAddPrescrModalOpen(false);
         setSelectedDrugs([]);
-        }}>
+      }}>
         <ModalDialog style={{ width: "60%" }}>
           <DialogTitle>Create new prescription</DialogTitle>
           <DialogContent>Fill in the prescription information.</DialogContent>
@@ -514,7 +516,7 @@ export default function Home() {
                       event.target.value = ''; // Clear the input
                     }
                   }}
-                    />
+                />
               </FormControl>
               {selectedDrugs.length > 0 && (<FormControl>
                 <FormLabel sx={{ fontSize: '0.9rem', fontWeight: 'bold' }}>Selected Drugs</FormLabel>
@@ -567,8 +569,8 @@ export default function Home() {
       </Modal>
 
       {/* Process prescription Modal */}
-      <Modal open={isProcPrescrModalOpen} 
-      onClose={() => setProcPrescrModalOpen(false)}>
+      <Modal open={isProcPrescrModalOpen}
+        onClose={() => setProcPrescrModalOpen(false)}>
         <ModalDialog style={{ width: "60%" }}>
           <DialogTitle>Process a prescription</DialogTitle>
           <DialogContent>Insert the prescription ID.</DialogContent>
@@ -584,7 +586,7 @@ export default function Home() {
             <Stack spacing={2}>
               <FormControl>
                 <FormLabel>Prescription ID</FormLabel>
-                <Input autoFocus required name="prescriptionID"/>
+                <Input autoFocus required name="prescriptionID" />
               </FormControl>
               <Button type="submit">Submit</Button>
             </Stack>
