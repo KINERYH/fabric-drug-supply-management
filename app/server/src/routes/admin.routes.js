@@ -106,6 +106,8 @@ router.post("/", (async (req, res) => {
     for (const field of roleInfo.fields) {
       newUserLedger[field] = req.body[field] || '';
     }
+
+    console.log("***INPUT DEL CONTRATTO: " + JSON.stringify(newUserLedger));
     
     console.log(`\n--> Submit Transaction: ${roleInfo.transaction}`);
     await contract.submitTransaction(roleInfo.transaction, JSON.stringify(newUserLedger));
