@@ -42,7 +42,7 @@ const createOrder = async (req, res) => {
     });
   } catch(error){
     res.status(error?.status || 500).json({
-      message: "Prescription not created.",
+      message: "Order not created.",
       error: error?.message || error
     });
   }
@@ -50,7 +50,7 @@ const createOrder = async (req, res) => {
 
 const processOrder = async (req, res) => {
   try{
-    const order = await ordersService.processOrder(req.params.orderId, req.currentPharmacy);
+    const order = await ordersService.processOrder(req.params.orderId, req.currentUser);
     res.status(200).json({
       message: "Process order: ",
       data: order

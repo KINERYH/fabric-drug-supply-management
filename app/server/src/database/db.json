@@ -197,13 +197,6 @@
       "smartContract": "DoctorContract"
     },
     {
-      "email": "f@rmacia.it",
-      "password": "$2b$10$2TLZ29ToqWZ563N8MMRLgewip/eDKFvyGtQcGAOg7rH8WihQkHLr6",
-      "role": "Pharmacy",
-      "uuid": "44b6dae1-f1b6-4e78-ae3c-66345cea2711",
-      "smartContract": "PharmacyContract"
-    },
-    {
       "email": "fabri@doctor.com",
       "password": "$2b$10$RC9.bj2w1rySkrnXQYSlvOlQDLqYFYD9LJHEmSjRverL2tp2UBwTO",
       "role": "Doctor",
@@ -243,6 +236,13 @@
       "password": "$2b$10$nMgDXHpI7xyRJ0rlZBbpRudHQR.mrdQ1YQyTC9cL6JYWd89X3TvvC",
       "role": "Pharmacy",
       "uuid": "f5617d40-326a-405c-9229-d86edd0e679b",
+      "smartContract": "PharmacyContract"
+    },
+    {
+      "email": "f@rmacia.it",
+      "password": "$2b$10$lvXzVvL2RNbV7bXU.kh/SevvUkl/0KeRmER1JTwNrUdCF1xfpkSZy",
+      "role": "Pharmacy",
+      "uuid": "5f4325c4-85fe-4ae7-bd49-8aaa92ad4766",
       "smartContract": "PharmacyContract"
     },
     {

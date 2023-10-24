@@ -38,8 +38,8 @@ class PharmacyContract extends Contract {
 		const serializedPatients = await ctx.stub.getState('patients');
 		const serializedDoctors = await ctx.stub.getState('doctors');
 		const serializedPharmacies = await ctx.stub.getState('pharmacies');
-		if ( 
-			(!serializedPatients || serializedPatients.length === 0) && 
+		if (
+			(!serializedPatients || serializedPatients.length === 0) &&
 			(!serializedDoctors || serializedDoctors.length === 0)   &&
 			(!serializedPharmacies || serializedPharmacies.length === 0)
 		) {
@@ -308,7 +308,7 @@ class PharmacyContract extends Contract {
 		const boxes = JSON.parse(serializedBoxes.toString());
 		return boxes;
 	}
-	
+
 	/**
 	 * Retrieves info for a given drugID.
 	 * @param {Context} ctx - The transaction context object.
@@ -328,7 +328,7 @@ class PharmacyContract extends Contract {
 		}
 		return drug;
 	}
-	
+
 
 	/**
 	 *
@@ -371,12 +371,15 @@ class PharmacyContract extends Contract {
 	 * @param {*} pharmacyID = pharmacy id
 	 * @param {*} orderID = order id
 	 */
-	async ProcessOrder(ctx, pharmacyID, orderID) {
-		const serializedOrders = ctx.stub.getState("orders");
-		const serializedPharmacies = ctx.stub.getState("pharmacies");
+	async ProcessOrder(ctx, orderID, pharmacyID) {
+		const serializedOrders = await ctx.stub.getState("orders");
+		const serializedPharmacies = await ctx.stub.getState("pharmacies");
 
 		const orders = JSON.parse(serializedOrders.toString());
 		const pharmacies = JSON.parse(serializedPharmacies.toString());
+
+		console.log("***Orders: " + stringify(orders));
+
 
 		const orderIndex = orders.findIndex((o) => o.ID === orderID);
 		if(orderIndex === -1){

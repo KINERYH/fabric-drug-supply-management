@@ -50,6 +50,7 @@ const deleteOrder = () => {
 };
 
 const processOrder = async (orderId, currentUser) => {
+  console.log('*** Current user:', currentUser)
   // Check if the prescription exists
   // const prescription = await getPrescription(prescriptionID, currentUser);
   // if (!prescription) {
@@ -63,11 +64,11 @@ const processOrder = async (orderId, currentUser) => {
   try{
     const { ccp, wallet } = require("../index");
     const { gateway, contract } = await ledger.connect(ccp, wallet, currentUser.uuid, channelName, chaincodeName, currentUser.smartContract);
-    const updatedPrescription = await contract.submitTransaction('ProcessOrder', orderId, currentUser.uuid);
+    const updatedOrder = await contract.submitTransaction('ProcessOrder', orderId, currentUser.uuid);
     ledger.disconnect(gateway);
-    return updatedPrescription;
+    return updatedOrder;
   } catch (error) {
-    console.error('Failed to process prescription: ' + prescriptionID + '\n' + error?.message);
+    console.error('Failed to process order: ' + orderId + '\n' + error?.message);
     throw error;
   }
 };
