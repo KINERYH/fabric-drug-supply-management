@@ -7,6 +7,7 @@ const drugsRouter = require("./routes/drugs.routes");
 const boxesRouter = require("./routes/boxes.routes");
 const usersRouter = require("./routes/users.routes");
 const adminRouter = require("./routes/admin.routes");
+const orderRouter = require("./routes/orders.routes");
 const prescriptionsRouter = require("./routes/prescriptions.routes");
 const testRouter = require("./routes/test.routes");
 const auth = require("./utils/blockchain/authentication");
@@ -34,6 +35,7 @@ async function main() {
   app.use("/api/users", usersRouter);
   app.use("/api/prescriptions", prescriptionsRouter);
   app.use("/api/test", testRouter);
+  app.use("/api/orders", orderRouter);
 
 
   app.listen(PORT, () => {

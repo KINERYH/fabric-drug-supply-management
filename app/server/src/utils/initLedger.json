@@ -2,7 +2,7 @@
   "drugs": [
     {
       "DrugID": "ec110aef-28ce-4d1b-a008-840e40390329",
-      "ManufacturerID" : "94ae7246-40c6-40fa-8d5a-fcc34d0edcca",
+      "ManufacturerID": "94ae7246-40c6-40fa-8d5a-fcc34d0edcca",
       "Name": "drug1",
       "Description": "drug1",
       "Price": 100,
@@ -13,9 +13,8 @@
       "UOM": "mg"
     },
     {
-      
       "DrugID": "ec110aef-28ce-4d1b-a008-840e40390330",
-      "ManufacturerID" : "94ae7246-40c6-40fa-8d5a-fcc34d0edcca",
+      "ManufacturerID": "94ae7246-40c6-40fa-8d5a-fcc34d0edcca",
       "Name": "Trembolone",
       "Description": "ti fai i muscoli",
       "Price": 1000,
@@ -27,10 +26,10 @@
       "UOM": "ml"
     }
   ],
-  "boxes" : [
+  "boxes": [
     {
-      "DrugID" : "ec110aef-28ce-4d1b-a008-840e40390329",
-      "BoxID" : "ec110aef-28ce-4d1b-a008-840e40390328",
+      "DrugID": "ec110aef-28ce-4d1b-a008-840e40390329",
+      "BoxID": "ec110aef-28ce-4d1b-a008-840e40390328",
       "ExpirationDate": "2018-12-31T23:59:59.000Z",
       "ProductionDate": "2018-12-31T23:59:59.000Z"
     },
@@ -50,7 +49,7 @@
   "prescriptions": [
     {
       "ID": "6918bcdb-bf53-4a88-9f11-986b52a72fc4",
-      "DoctorID": "045edc66-ae1c-4706-9351-8126950ab314",
+      "DoctorID": "874d1f5e-549e-4598-afbd-e90e826d3dad",
       "PatientID": "44c87b23-7359-4cdf-afef-6fc8794d1b1d",
       "PharmacyID": null,
       "Status": "pending",
@@ -71,9 +70,9 @@
     },
     {
       "ID": "6918bcdb-bf53-4a88-9f11-986b53a72fc1",
-      "DoctorID": "045edc66-ae1c-4706-9351-8126950ab314",
+      "DoctorID": "874d1f5e-549e-4598-afbd-e90e826d3dad",
       "PatientID": "44c87b23-7359-4cdf-afef-6fc8794d1b1d",
-      "PharmacyID": "94ae7246-40c6-40fa-8d5a-fcc34d0edbgg",
+      "PharmacyID": "f5617d40-326a-405c-9229-d86edd0e679b",
       "Status": "processed",
       "Description": "Tachipirina 100 e oki",
       "ProcessingDate": "2018-12-31T23:59:59.000Z",
@@ -89,13 +88,15 @@
         {
           "DrugID": "ec110aef-28ce-4d1b-a008-840e40390330",
           "Quantity": 1,
-          "BoxIDs": ["ec110aef-28ce-4d1b-a008-840e40390323"]
+          "BoxIDs": [
+            "ec110aef-28ce-4d1b-a008-840e40390323"
+          ]
         }
       ]
     },
     {
       "ID": "6918bcdb-bf53-4a88-9f11-986b52a7dec4",
-      "DoctorID": "045edc66-ae1c-4706-9351-8126950ab314",
+      "DoctorID": "874d1f5e-549e-4598-afbd-e90e826d3dad",
       "PatientID": "44c87b23-7359-4cdf-afef-6fc8794d1b1d",
       "PharmacyID": null,
       "Status": "pending",
@@ -111,7 +112,7 @@
     },
     {
       "ID": "6918bcdb-bf53-4a88-9f11-986b52n7dec4",
-      "DoctorID": "045edc66-ae1c-4706-9351-8126950ab314",
+      "DoctorID": "874d1f5e-549e-4598-afbd-e90e826d3dad",
       "PatientID": "4702b1fb-6783-4690-8e5e-9b8e89a0f1ab",
       "PharmacyID": null,
       "Status": "pending",
@@ -127,31 +128,33 @@
     },
     {
       "ID": "6918bcdb-bf53-4a88-9f11-986b52a7dec5",
-      "DoctorID": "94ae7246-40c6-40fa-8d5a-fcc3420edbca",
+      "DoctorID": "874d1f5e-549e-4598-afbd-e90e826d3dad",
       "PatientID": "00106b10-abe4-475b-9500-13f77421011b",
-      "PharmacyID": "44b6dae1-f1b6-4e78-ae3c-66345cea2711",
+      "PharmacyID": null,
       "Status": "pending",
       "Description": "Prendi la medicina o vieni bannato",
       "ProcessingDate": "2018-12-31T23:59:59.000Z",
       "Drugs": [
         {
           "DrugID": "ec110aef-28ce-4d1b-a008-840e40390330",
-          "Quantity": 1
+          "Quantity": 1,
+          "BoxIDs": []
         }
       ]
     },
     {
       "ID": "6918bcdb-bf53-4a88-9f11-986b52a7deh4",
-      "DoctorID": "94ae7246-40c6-40fa-8d5a-fcc3420edbca",
+      "DoctorID": "874d1f5e-549e-4598-afbd-e90e826d3dad",
       "PatientID": "4702b1fb-6783-4690-8e5e-9b8e89a0f1ab",
-      "PharmacyID": "44b6dae1-f1b6-4e78-ae3c-66345cea2711",
+      "PharmacyID": null,
       "Status": "pending",
       "Description": "Trenbolone acetato",
       "ProcessingDate": "2018-12-31T23:59:59.000Z",
       "Drugs": [
         {
           "DrugID": "ec110aef-28ce-4d1b-a008-840e40390330",
-          "Quantity": 2
+          "Quantity": 2,
+          "BoxIDs": []
         }
       ]
     }
@@ -159,7 +162,7 @@
   "orders": [
     {
       "ID": "94ae7246-40c6-40fa-8d5a-fcc34d0edbca",
-      "PharmacyID": "pharmacy1",
+      "PharmacyID": null,
       "ManufacturerID": "94ae7246-40c6-40fa-8d5a-fcc34d0edcca",
       "Status": "pending",
       "Description": "si richiedono 10 scatole di tachipirina",
@@ -173,41 +176,23 @@
     },
     {
       "ID": "93ae7246-40c6-40fa-8d5a-fcc34d0edbca",
-      "PharmacyID": "pharmacy2",
+      "PharmacyID": "f5617d40-326a-405c-9229-d86edd0e679b",
       "ManufacturerID": "94ae7246-40c6-40fa-8d5a-fcc34d0edcca",
-      "Status": "pending",
-      "Description": "si richiedono 5 scatole di tachipirina e 2 di trembolone",
+      "Status": "processed",
+      "Description": "si richiedono 2 scatole di tachipirina e 1 di trembolone",
       "Drugs": [
         {
           "DrugID": "ec110aef-28ce-4d1b-a008-840e40390329",
-          "Quantity": 5,
-          "BoxIDs": []
-        },
-        {
-          "DrugID": "ec110aef-28ce-4d1b-a008-840e40390328",
           "Quantity": 2,
-          "BoxIDs": []
-        }
-      ]
-    },
-    {
-      "ID": "93ae7246-40c6-40fa-8d5a-fcc34d0edbca",
-      "PharmacyID": "pharmacy2",
-      "ManufacturerID": "94ae7246-40c6-40fa-8d5a-fcc34d0edcca",
-      "BoxIDs": [
-        null,
-        null
-      ],
-      "Status": "pending",
-      "Description": "si richiedono 5 scatole di tachipirina e 2 di trembolone",
-      "Drugs": [
-        {
-          "DrugID": "ec110aef-28ce-4d1b-a008-840e40390329",
-          "Quantity": 5
+          "BoxIDs": [
+            "ec110aef-28ce-4d1b-a008-840e40390327",
+            "ec110aef-28ce-4d1b-a008-840e40390328"
+          ]
         },
         {
           "DrugID": "ec110aef-28ce-4d1b-a008-840e40390328",
-          "Quantity": 2
+          "Quantity": 1,
+          "BoxIDs": ["ec110aef-28ce-4d1b-a008-840e40390323"]
         }
       ]
     }
@@ -233,6 +218,13 @@
       "Surname": "Diana",
       "Specialization": "Cardiologia",
       "Hospital": "Ospedale San Paolo"
+    },
+    {
+      "ID": "874d1f5e-549e-4598-afbd-e90e826d3dad",
+      "Name": "Mario",
+      "Surname": "Franco",
+      "Specialization": "Neurologia",
+      "Hospital": "Ospedale San Mario"
     }
   ],
   "patients": [
@@ -272,7 +264,7 @@
       "BirthDate": "",
       "CodiceFiscale": "",
       "Height": "",
-      "ID": "895efd96-c1cb-424a-854b-eda0538e0f7d",
+      "ID": "4702b1fb-6783-4690-8e5e-9b8e89a0f1ab",
       "MedicalHistory": [],
       "Name": "Fabry3",
       "cf": "123",
@@ -296,9 +288,33 @@
   ],
   "pharmacies": [
     {
+
       "ID": "44b6dae1-f1b6-4e78-ae3c-66345cea2711",
+
       "Name": "pharmacy1",
       "Address": "address1",
+      "DrugStorage": [
+        {
+          "DrugID": "ec110aef-28ce-4d1b-a008-840e40390329",
+          "Quantity": 2,
+          "BoxIDs": [
+            "ec110aef-28ce-4d1b-a008-840e40390328",
+            "ec110aef-28ce-4d1b-a008-840e40390327"
+          ]
+        },
+        {
+          "DrugID": "ec110aef-28ce-4d1b-a008-840e40390330",
+          "Quantity": 1,
+          "BoxIDs": [
+            "ec110aef-28ce-4d1b-a008-840e40390323"
+          ]
+        }
+      ]
+    },
+    {
+      "ID": "f5617d40-326a-405c-9229-d86edd0e679b",
+      "Address": "Address12",
+      "Name": "Farmacia12",
       "DrugStorage": [
         {
           "DrugID": "ec110aef-28ce-4d1b-a008-840e40390329",

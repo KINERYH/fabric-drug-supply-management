@@ -30,6 +30,7 @@ export default function Prescription(props) {
   
   const [prescription, setPrescription] = React.useState(null);
   const [doctor, setDoctor] = React.useState(null);
+  const [patient, setPatient] = React.useState(null);
   const [pharmacy, setPharmacy] = React.useState(null);
   const [drugs, setDrugs] = React.useState([]);
   const [boxes, setBoxes] = React.useState([]);
@@ -129,6 +130,8 @@ export default function Prescription(props) {
 
       if (prescription?.Status === 'processed') {
         console.log("======== PROCESSED ===========")
+        const patientInfo = await fetchUserInfo(prescription?.PatientID);
+        setPatient(patientInfo);
         const boxes = await Promise.all(
           prescription.Drugs?.map( async (drugPrescription) => {
             const boxes = await Promise.all(
@@ -142,8 +145,6 @@ export default function Prescription(props) {
           })
         );
         setBoxes(boxes.flat());
-        console.log("=====================");
-        console.log(boxes.flat());
       }
     }
 
@@ -220,7 +221,7 @@ export default function Prescription(props) {
                         <CardContent orientation="horizontal">
                           <Box sx={{ display: 'flex', flexDirection:'column', gap: 1, alignItems: 'center', justifyContent:'center' }}>
                             <Avatar color="primary" variant="outlined" size="sm"></Avatar>  
-                            <Typography level="body-xs">you</Typography>
+                            <Typography level="body-xs">{patient?.Name}</Typography>
                             <Typography level="body-xs" color="danger">{box?.ExpirationDate}</Typography>
                           </Box>
                           <Box sx={{ display: 'flex', flexDirection:'column', alignItems: 'center', justifyContent:'center' }}>
@@ -228,7 +229,7 @@ export default function Prescription(props) {
                           </Box>
                           <Box sx={{ display: 'flex', flexDirection:'column', gap: 1, alignItems: 'center', justifyContent:'center' }}>
                             <Avatar color="primary" variant="outlined" size="sm"><LocalPharmacyIcon variant="soft" color="primary"/></Avatar>  
-                            <Typography level="body-xs">{pharmacy.Name}</Typography>
+                            <Typography level="body-xs">{pharmacy?.Name}</Typography>
                             <Typography level="body-xs" color="neutral">{prescription?.ProcessingDate}</Typography>
                           </Box>
                           <Box sx={{ display: 'flex', flexDirection:'column', alignItems: 'center', justifyContent:'center' }}>

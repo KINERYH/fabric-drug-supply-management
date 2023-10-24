@@ -30,46 +30,10 @@ import { useAuth } from '../provider/authProvider';
 export default function Home() {
   const {token, user, role} = useAuth();
 
-  const defaultState = {
-    navigation: [
-      { name: 'Dashboard', href: '/' },
-      { name: 'TV Shows', href: '#' },
-      { name: 'Characters', href: '#' },
-      { name: 'Dr. Zoidberg' },
-    ],
-    userProfile: {
-      firstName: 'Alex',
-      lastName: 'Morrison',
-      src: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=286',
-      role: '{Patient}',
-      totPrescriptions: 34,
-      pendingPrescriptions: 4,
-      processedPrescriptions: 30
-    },
-    dataTable: {
-      header: ['ID', 'Status' ,'Doctor', 'Pharmacy', 'Description'],
-      body: [
-        [
-          { display: '6918bcdb-bf53-4a88-9f11-986b52a72fc4', url: '/api/prescriptions/6918bcdb-bf53-4a88-9f11-986b52a72fc4' },
-          { display: 'pending', chipStatus: true },
-          { display: 'Pietro Ventr', favicon: true, url: '/api/users/6918bcdb-bf53-4a88-9f11-986b52a72fc4' },
-          { display: 'La tua farmacia', favicon: true, url: '/api/users/6918bcdb-bf53-4a88-9f11-986b52a72fc4' },
-          { display: 'Tachipirina 500g, 2 volte al giorno'},
-        ],
-        [
-          { display: '6918bcdb-bf53-4a88-9f11-986b52a72fc5', url: '/api/prescriptions/6918bcdb-bf53-4a88-9f11-986b52a72fc4' },
-          { display: 'processed', chipStatus: true },
-          { display: 'Pietro Ventr', favicon: true, url: '/api/users/6918bcdb-bf53-4a88-9f11-986b52a72fc4' },
-          { display: 'La tua farmacia', favicon: true, url: '/api/users/6918bcdb-bf53-4a88-9f11-986b52a72fc4' },
-          { display: 'Tachipirina 500g, 2 volte al giorno'},
-        ]
-      ]
-    }
-  }
-
-  const [navigation, setNavigation] = React.useState(defaultState.navigation);
-  const [userProfileCard, setUserProfileCard] = React.useState(defaultState.userProfile);
-  const [dataTable, setDataTable] = React.useState(defaultState.dataTable);
+  // const [navigation, setNavigation] = React.useState(defaultState.navigation);
+  const [userProfileCard, setUserProfileCard] = React.useState(null);
+  const [dataTable, setDataTable] = React.useState(null);
+  const [orderTable, setOrderTable] = React.useState(null);
   const [isAddPrescrModalOpen, setAddPrescrModalOpen] = React.useState(false);
   const [isProcPrescrModalOpen, setProcPrescrModalOpen] = React.useState(false);
   const [isAddOrderModalOpen, setAddOrderModalOpen] = React.useState(false);
@@ -173,10 +137,30 @@ export default function Home() {
       showAlertMessage("An error occurred while processing the prescription.", 'error');
     }
   }
-  
+
   const fetchUserProfile = async () => {
     try{
       const res = await fetch(`http://localhost:3001/api/users/${user}`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        }
+      });
+      if (res.status == 200) {
+        const result = await res.json();
+        console.log("response fetch user");
+        console.log(result.data);
+        return result.data;
+      } else {
+        console.error("userProfileFetch status code: " + res.status);
+      }
+    } catch(e) {
+      console.error(e);
+    }
+  }
+  const fetchUserInfo = async (userId) => {
+    try{
+      const res = await fetch(`http://localhost:3001/api/users/${userId}`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -214,6 +198,29 @@ export default function Home() {
       console.error(e);
     }
   }
+  
+  const fetchOrders = async () => {
+    try{
+      const res = await fetch("http://localhost:3001/api/orders/", {
+        method: 'GET',
+        headers: {
+          'Authorization': 'Bearer '+ token,
+        }
+      });
+      if (res.status == 200) {
+        const data = await res.json();
+        console.log("response fetch orders");
+        console.log(data);
+        return data.data;
+      } else {
+        console.error("fetchOrders status code: " + res.status);
+      }
+    } catch(e) {
+      console.error(e);
+    }
+
+  }
+
 
   const fetchAllDrugs = async () => {
     try{
@@ -234,6 +241,7 @@ export default function Home() {
     } catch(e) {
       console.error(e);
     }
+
   }
 
   // Update the data table
@@ -277,15 +285,28 @@ export default function Home() {
             { display: prescription?.Description }
           ])
         }
+        
+        tableOrders = {
+          header: ['ID', 'Status', 'Manufacturer', 'Description'],
+          body: orders.map(order => [
+            { display: order?.ID, url: `/orders/${order?.ID}` },
+            { display: order?.Status, chipStatus: true },
+            { display: order?.ManufacturerID, favicon: true },
+            { display: order?.Description }
+          ])
+        }
         break;
       case 'Manufacturer':
         table = {}
         break;
       default:
         table = dataTable;
+        tableOrders = orderTable;
     }
 
     setDataTable(table);
+    setOrderTable(tableOrders);
+
   }
 
   React.useEffect( () => {
@@ -293,16 +314,47 @@ export default function Home() {
       const userProfile = await fetchUserProfile();
       const prescriptions = await fetchPrescriptions() || [];
       let options = [];
+      let orders = [];
       if(role === "Doctor") {
         options = await fetchAllDrugs() || [];
       }
       setAutocompleteOptions(options);
+      if(role ==="Pharmacy") {
+        orders = await fetchOrders() || [];
+      }
 
-      return { userProfile, prescriptions };
+
+      const doctors = await Promise.all(
+        prescriptions?.map(async (prescription) => {
+          const doctorInfo = await fetchUserInfo(prescription?.DoctorID);
+          console.log(doctorInfo);
+          return { ...doctorInfo, prescriptionId: prescription.ID };
+        })
+      )
+      const patients = await Promise.all(
+        prescriptions?.map(async (prescription) => {
+          const patientInfo = await fetchUserInfo(prescription?.PatientID);
+          console.log(patientInfo);
+          return { ...patientInfo, prescriptionId: prescription.ID };
+        })
+      )
+
+      const pharmacies = await Promise.all(
+        prescriptions?.map(async (prescription) => {
+          if (prescription?.Status === 'processed') {
+            const pharmacyInfo = await fetchUserInfo(prescription?.PharmacyID);
+            console.log(pharmacyInfo);
+            return { ...pharmacyInfo, prescriptionId: prescription.ID };
+          }
+        })
+      )
+      
+      return { userProfile, prescriptions, orders, doctors, patients, pharmacies };
     }
 
+
     fetchData()
-      .then( ({ userProfile, prescriptions }) => {
+      .then( ({ userProfile, prescriptions, orders, doctors, patients, pharmacies }) => {
         console.log("setting profile card")
         setUserProfileCard({
           firstName: userProfile?.Name,
@@ -314,12 +366,14 @@ export default function Home() {
           processedPrescriptions: prescriptions?.filter( p => p.Status !== 'pending' ).length
         });
 
+
+        //TODO: mettere setOrderTable
         updateDataTable(role, prescriptions, setDataTable);
+
 
         /* farei visualizzare il nome del dottore piuttosto che l'ID, quindi da fare altra chiamata per recuperare
         *  nome del dottore e nome della farmacia
         */
-        
       });
   }, []);
 
@@ -330,6 +384,7 @@ export default function Home() {
         <Box sx={{ maxWidth: '60%' }}>
           <UserCard userProfile={ userProfileCard } />
         </Box>
+        <Stack>
         <div>
           <Box sx={{ maxWidth: '100%', display: 'flex', flexDirection: 'row' }}>
             <Box sx={{ minWidth: '50%' }}>
@@ -344,16 +399,25 @@ export default function Home() {
                 )}
                 {role === "Pharmacy" && (
                   <>
-                    <Button onClick={() => setProcPrescrModalOpen(true)}>Process prescription</Button>
-                    <Button>Add order</Button>
-                    <Button>Process Order</Button>
+
+                  <Button onClick={() => setProcPrescrModalOpen(true)}>Process prescription</Button>
+                  <Button onClick={setAddOrderModalOpen}>Add order</Button>
+                  <Button onClick={setProcOrderModalOpen}>Process Order</Button>
                   </>
                 )}
               </ButtonGroup>
             </Box>
           </Box>
           <Box sx={{ width: '100%', height: 250, }} >
+            <Stack spacing={5}>
             <Table dataTable={dataTable} />
+              { orderTable &&
+              <Typography level="h4" textAlign="left" mb={1}>
+                Current orders.
+              </Typography>
+            }
+            <Table dataTable={ orderTable } />
+            </Stack>
           </Box>
         </div>
 
@@ -385,7 +449,10 @@ export default function Home() {
             </Alert>)}
         </Box>
 
+
       </Box>
+
+
 
       {/* TODO: finire -> Add prescription Modal */}
       <Modal open={isAddPrescrModalOpen} onClose={() => {
