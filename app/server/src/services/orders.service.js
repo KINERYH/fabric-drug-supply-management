@@ -51,21 +51,14 @@ const deleteOrder = () => {
 
 const processOrder = async (orderId, currentUser) => {
   console.log('*** Current user:', currentUser)
-  // Check if the prescription exists
-  // const prescription = await getPrescription(prescriptionID, currentUser);
-  // if (!prescription) {
-  //   throw { status: 404, message: "Prescription with id " + prescriptionId + " does not exist."};
-  // }
-
-  //TODO: far mostrare un messaggio di errore se:
-  // - la prescrizione non esiste
-  // - la prescrizione è già stata processata
-  // - mancano dei farmaci nella farmacia per poter soddisfare la prescrizione
   try{
     const { ccp, wallet } = require("../index");
     const { gateway, contract } = await ledger.connect(ccp, wallet, currentUser.uuid, channelName, chaincodeName, currentUser.smartContract);
-    const updatedOrder = await contract.submitTransaction('ProcessOrder', orderId, currentUser.uuid);
+    console.log(`\n--> Evaluate Transaction: processOrder for orderID ${orderId}.`);
+    const result = await contract.submitTransaction('ProcessOrder', orderId, currentUser.uuid);
+    const updatedOrder = JSON.parse(result.toString());
     ledger.disconnect(gateway);
+    console.log("*** Updated order:", JSON.stringify(updatedOrder, null, 2));
     return updatedOrder;
   } catch (error) {
     console.error('Failed to process order: ' + orderId + '\n' + error?.message);

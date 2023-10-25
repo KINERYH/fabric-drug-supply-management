@@ -438,7 +438,7 @@ export default function Home() {
             { display: pharmacies?.find(p => p?.orderId === order?.ID)?.Name, favicon: true },
             { display: order?.Description },
             { display: 
-              <Tooltip disabled={ order?.Status != 'pending' } arrow color="success" placement="top" title="ship"> 
+              <Tooltip disabled={ order?.Status != 'pending' } arrow color="success" placement="right" title="ship"> 
                 <IconButton variant="solid" color="primary">
                   <LocalShippingIcon size="sm" />
                 </IconButton>
