@@ -27,6 +27,9 @@ import { useAuth } from '../provider/authProvider';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import IconButton from '@mui/joy/IconButton';
 import Tooltip from '@mui/joy/Tooltip';
+import ControlPointIcon from '@mui/icons-material/ControlPoint';
+import Fab from '@mui/material/Fab';
+
 
 
 
@@ -51,6 +54,7 @@ export default function Home() {
   const [alertMessage, setAlertMessage] = React.useState("");
   const [autocompleteOptions, setAutocompleteOptions] = React.useState([]);
   const [selectedDrugs, setSelectedDrugs] = React.useState([]);
+  const [selectedOrderID, setSelectedOrderID] = React.useState(null);
 
 
   //TODO: mettere una duration di default appropriata
@@ -68,6 +72,12 @@ export default function Home() {
       }, duration);
     }
   }
+
+  // open process order modal and autofill the orderID field
+  const openModalWithOrderID = (orderID, state) => {
+    setSelectedOrderID(orderID);
+    setProcOrderModalOpen(state);
+  };
 
 
   const handleSubmitAddPrescr = async (event) => {
@@ -364,17 +374,17 @@ export default function Home() {
           src: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=286',
           role: "Ruolo: " + role,
           totPrescriptions: role != 'Manufacturer' ? prescriptions?.length : orders?.length,
-          pendingPrescriptions: role != 'Manufacturer' ? 
+          pendingPrescriptions: role != 'Manufacturer' ?
             prescriptions?.filter(p => p.Status === 'pending').length :
             orders?.filter(o => o.Status === 'pending').length ,
-          processedPrescriptions: role != 'Manufacturer' ? 
+          processedPrescriptions: role != 'Manufacturer' ?
             prescriptions?.filter(p => p.Status !== 'pending').length :
             orders?.filter(o => o.Status !== 'pending').length
         });
 
         setOrders(orders);
         setDoctors(doctors);
-        setPatients(patients); 
+        setPatients(patients);
         setPharmacies(pharmacies);
       });
   }, []);
@@ -383,7 +393,7 @@ export default function Home() {
     let table;
     let tableOrders;
     switch (role) {
-      case 'Patient': 
+      case 'Patient':
         table = {
           header: ['ID', 'Status', 'Doctor', 'Pharmacy', 'Description'],
           body: prescriptions?.map(prescription => [
@@ -420,12 +430,19 @@ export default function Home() {
         }
 
         tableOrders = {
-          header: ['ID', 'Status', 'Manufacturer', 'Description'],
+          header: ['ID', 'Status', 'Manufacturer', 'Description', 'Actions '],
           body: orders?.map(order => [
             { display: order?.ID, url: `/orders/${order?.ID}` },
             { display: order?.Status, chipStatus: true },
             { display: order?.ManufacturerID, favicon: true },
-            { display: order?.Description }
+            { display: order?.Description },
+            { display: order?.Status === 'pending' &&
+            <Tooltip arrow color="neutral" placement="top" title="Process">
+              <Fab color="primary"  size="small" onClick={openModalWithOrderID(order.ID, true)}>
+                <ControlPointIcon size="sm" />
+              </Fab>
+            </Tooltip>
+            }
           ])
         }
         break;
@@ -437,8 +454,8 @@ export default function Home() {
             { display: order?.Status, chipStatus: true },
             { display: pharmacies?.find(p => p?.orderId === order?.ID)?.Name, favicon: true },
             { display: order?.Description },
-            { display: 
-              <Tooltip disabled={ order?.Status != 'pending' } arrow color="success" placement="top" title="ship"> 
+            { display:
+              <Tooltip disabled={ order?.Status != 'pending' } arrow color="success" placement="top" title="ship">
                 <IconButton variant="solid" color="primary">
                   <LocalShippingIcon size="sm" />
                 </IconButton>
@@ -455,7 +472,7 @@ export default function Home() {
 
     setDataTable(table);
     setOrderTable(tableOrders);
-  }, [prescriptions, orders, doctors, patients, pharmacies ]); 
+  }, [prescriptions, orders, doctors, patients, pharmacies ]);
   // ^^^^ indicando gli state come dipendenza ogni volta che cambiano parte l'hook
 
   return (
@@ -495,7 +512,7 @@ export default function Home() {
                 <Table dataTable={dataTable} />
                 {orderTable &&
                   <Typography level="h4" textAlign="left" mb={1}>
-                    Current orders.
+                    Current Orders
                   </Typography>
                 }
                 <Table dataTable={orderTable} />
@@ -691,7 +708,8 @@ export default function Home() {
             <Stack spacing={2}>
               <FormControl>
                 <FormLabel>Order ID</FormLabel>
-                <Input autoFocus required name="orderID"/>
+                <Input autoFocus required name="orderID" value={selectedOrderID || ''} onChange={(e) => setSelectedOrderID(e.target.value)}
+/>
               </FormControl>
               <Button type="submit">Submit</Button>
             </Stack>
