@@ -356,6 +356,13 @@
       "role": "Manufacturer",
       "uuid": "fa15c893-bb7d-4cc9-a0ca-4e303a85f8e9",
       "smartContract": "ManufacturerContract"
+    },
+    {
+      "email": "ph@rmacy.it",
+      "password": "$2b$10$bUGfqfDrugAvp/C9wLWkreI9xBtdtkOjUinMy.PoVn./kMQ1P3qvu",
+      "role": "Pharmacy",
+      "uuid": "25ba64c6-f712-47bf-9b02-2f85e6ce3bf9",
+      "smartContract": "PharmacyContract"
     }
   ]
 }

@@ -249,7 +249,7 @@ class PharmacyContract extends Contract {
 		if(prescription.PharmacyID !== null){
 			throw new Error(`Prescription with ID ${prescriptionID} has already been processed`);
 		} else {
-			const listIDs = [];
+			const boxesMap = new Map();
 			const drugsList = prescription.Drugs;
 			for(let requestedDrug of drugsList){
 				const actualQuantity = this.GetDrugQuantity(requestedDrug.DrugID, pharmacy.DrugStorage);
@@ -264,7 +264,13 @@ class PharmacyContract extends Contract {
 					// Take the boxIDs from the pharmacy storage
 					for(let i = 0; i < requestedQuantity; i++){
 						let boxID = this.GetBoxID(requestedDrug.DrugID, pharmacy.DrugStorage);
-						listIDs.push(boxID);
+						if(boxesMap.has(requestedDrug.DrugID)){
+							let prevBoxIDs = boxesMap.get(requestedDrug.DrugID);
+							prevBoxIDs.push(boxID);
+							boxesMap.set(requestedDrug.DrugID, prevBoxIDs);
+						} else {
+							boxesMap.set(requestedDrug.DrugID, [boxID]);
+						}
 						// Remove the boxID from the pharmacy storage and update the quantity
 						let drugIndex = pharmacy.DrugStorage.findIndex((d) => d.DrugID === requestedDrug.DrugID);
 						pharmacy.DrugStorage[drugIndex].Quantity--;
@@ -282,11 +288,14 @@ class PharmacyContract extends Contract {
 			// Add the drug IDs in the prescription and update the prescription state:
 			prescriptions[prescriptionIndex].Status = "processed";
 
-			prescriptions[prescriptionIndex].DrugIDs = listIDs;
-
 			prescriptions[prescriptionIndex].PharmacyID = pharmacyID;
 
 			prescriptions[prescriptionIndex].ProcessingDate = processingDate;
+
+			prescriptions[prescriptionIndex].Drugs = drugsList.map((drug) => {
+				drug.BoxIDs = boxesMap.get(drug.DrugID);
+				return drug;
+			});
 
 			await ctx.stub.putState("prescriptions", Buffer.from(stringify(sortKeysRecursive(prescriptions))));
 
