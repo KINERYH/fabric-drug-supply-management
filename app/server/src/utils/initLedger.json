@@ -41,6 +41,12 @@
     },
     {
       "DrugID": "ec110aef-28ce-4d1b-a008-840e40390329",
+      "BoxID": "ec110aef-28ce-4d1b-a008-840e40389327",
+      "ExpirationDate": "2018-12-31T23:59:59.000Z",
+      "ProductionDate": "2018-12-31T23:59:59.000Z"
+    },
+    {
+      "DrugID": "ec110aef-28ce-4d1b-a008-840e40390329",
       "BoxID": "ec110aef-28ce-4d1b-a008-840e40390327",
       "ExpirationDate": "2018-12-31T23:59:59.000Z",
       "ProductionDate": "2018-12-31T23:59:59.000Z"
@@ -168,7 +174,7 @@
   "orders": [
     {
       "ID": "94ae7246-40c6-40fa-8d5a-fcc34d0edbca",
-      "PharmacyID": "773bc320-e28a-455b-abb6-99439f4abb0b",
+      "PharmacyID": "13c05df7-4fc5-4b6b-a680-99683cf36ff9",
       "ManufacturerID": "fa15c893-bb7d-4cc9-a0ca-4e303a85f8e9",
       "Status": "pending",
       "Description": "si richiedono 10 scatole di tachipirina",
@@ -182,7 +188,7 @@
     },
     {
       "ID": "94ae7246-40c6-40fa-8d5a-fcc39d0edbca",
-      "PharmacyID": "773bc320-e28a-455b-abb6-99439f4abb0b",
+      "PharmacyID": "13c05df7-4fc5-4b6b-a680-99683cf36ff9",
       "ManufacturerID": "fa15c893-bb7d-4cc9-a0ca-4e303a85f8e9",
       "Status": "shipped",
       "Description": "si richiedono 10 scatole di cortisone",
@@ -190,13 +196,13 @@
         {
           "DrugID": "ec110aef-28ce-4d1b-a008-840e40390329",
           "Quantity": 1,
-          "BoxIDs": ["ec110aef-28ce-4d1b-a008-840e40389328"]
+          "BoxIDs": ["ec110aef-28ce-4d1b-a008-840e40389327"]
         }
       ]
     },
     {
       "ID": "93ae7246-40c6-40fa-8d5a-fcc34d0edbca",
-      "PharmacyID": "773bc320-e28a-455b-abb6-99439f4abb0b",
+      "PharmacyID": "13c05df7-4fc5-4b6b-a680-99683cf36ff9",
       "ManufacturerID": "fa15c893-bb7d-4cc9-a0ca-4e303a85f8e9",
       "Status": "processed",
       "Description": "si richiedono 2 scatole di tachipirina e 1 di trembolone",
@@ -309,7 +315,7 @@
   "pharmacies": [
     {
 
-      "ID": "773bc320-e28a-455b-abb6-99439f4abb0b",
+      "ID": "13c05df7-4fc5-4b6b-a680-99683cf36ff9",
       "Name": "pharmacy1",
       "Address": "address1",
       "DrugStorage": [

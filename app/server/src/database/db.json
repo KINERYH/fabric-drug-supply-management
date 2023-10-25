@@ -366,9 +366,9 @@
     },
     {
       "email": "ph@rmacy.it",
-      "password": "$2b$10$w/0vaMgbQcM16cY4PJG2NuZg5jGADK47eb33nccF6Kp8MVK4TqoSC",
+      "password": "$2b$10$jUcNGH0QLIRibFW7G.ZPHu1RQrhSqn9IhYb56vEU/2VbOfIOronxu",
       "role": "Pharmacy",
-      "uuid": "773bc320-e28a-455b-abb6-99439f4abb0b",
+      "uuid": "13c05df7-4fc5-4b6b-a680-99683cf36ff9",
       "smartContract": "PharmacyContract"
     }
   ]

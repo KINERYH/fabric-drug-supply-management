@@ -169,7 +169,7 @@ export default function Home() {
         },
       });
 
-      if (response.status == 201) {
+      if (response.status == 200) {
         showAlertMessage("Order processed successfully", 'success');
       } else {
         const errorResponse = await response.json();
@@ -436,7 +436,7 @@ export default function Home() {
             { display: order?.Status, chipStatus: true },
             { display: order?.ManufacturerID, favicon: true },
             { display: order?.Description },
-            { display: order?.Status === 'pending' &&
+            { display: order?.Status === 'shipped' &&
             <Tooltip arrow color="neutral" placement="top" title="Process">
               <Fab color="primary" size="small" onClick={() => openModalWithOrderID(order.ID, true)}>
                 <ControlPointIcon size="sm" />
