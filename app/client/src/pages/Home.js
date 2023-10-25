@@ -438,7 +438,7 @@ export default function Home() {
             { display: order?.Description },
             { display: order?.Status === 'pending' &&
             <Tooltip arrow color="neutral" placement="top" title="Process">
-              <Fab color="primary"  size="small" onClick={openModalWithOrderID(order.ID, true)}>
+              <Fab color="primary" size="small" onClick={() => openModalWithOrderID(order.ID, true)}>
                 <ControlPointIcon size="sm" />
               </Fab>
             </Tooltip>
