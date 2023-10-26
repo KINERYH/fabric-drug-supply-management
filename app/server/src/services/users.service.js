@@ -11,8 +11,23 @@ const { chaincodeName, channelName } = require("../config/blockchain");
 
 //TODO: registrazione dell'utente con cofice fiscale e non con username
 
-const getAllUsers = async () => {
-  return;
+const getAllUsers = async (currentUser) => {
+  const { ccp, wallet } = require("../index")
+  try{
+    const { gateway, contract } = await ledger.connect(ccp, wallet, currentUser.uuid, channelName, chaincodeName, currentUser.smartContract);
+    console.log('\n--> Evaluate Transaction: GetAllUsers');
+    const result = await contract.evaluateTransaction('GetAllUsers');
+    console.log('*** Result: committed');
+    ledger.disconnect(gateway);
+    const usersInfo = JSON.parse(result.toString());
+    //  TODO: verifica perché da errore
+    console.log(usersInfo);
+    console.log(`\n--> Users info correctly retrieved`);
+    return usersInfo;
+  } catch (error) {
+    console.error('Failed to get users: \n' + error?.message);
+    throw error;
+  }
 };
 
 const getUser = async (userId, currentUser) => {
@@ -127,10 +142,7 @@ const createUser = async (user) => {
       "CodiceFiscale": user.cf ,
       "MedicalHistory": user?.medicalHistory || [],
       "Height": user?.height || '',
-      "Weight": user?.weight || '',
-      //TODO: da rimuovere
-      "Hospital": user?.hospital || '',
-      "Specialization": user?.specialization || '',
+      "Weight": user?.weight || ''
     };
     console.log('\n--> Submit Transaction: PutUser');
     newUserLedger = await contract.submitTransaction('PutUser', JSON.stringify(newUserLedger));
