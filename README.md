@@ -2,14 +2,14 @@
 
 This application represents a comprehensive solution for tracking the entire pharmaceutical supply chain using blockchain technology. It leverages the HyperLedger Fabric framework to ensure the secure recording of drug supply chain data. Its primary objective is to address pharmaceutical supply chain safety concerns by facilitating drug record transactions on a blockchain, thereby establishing a smart healthcare ecosystem.
 
-### Prerequisites
+## Prerequisites
 - Docker
 - Node.js
 - HyperLedger Fabric
 
 Refer to https://hyperledger-fabric.readthedocs.io/en/latest/prereqs.html
 
-### Setting up the Network and the Application
+## Setting up the Network and the Application
 
 Follow these steps to set up the network:
 
@@ -57,3 +57,10 @@ Follow these steps to set up the network:
     npm install
     npm start 
     ```
+
+Please note that the command `npm run start-init` overwrites the current WorldState, with the one contained in the file `initLedger.json`.<br />
+<br />
+To start the application without initializing the ledger again, you can use the simple `npm start`<br />
+<br />
+**In case of network reboot** it is necessary to delete the `wallet` folder (`app/server/src/config/wallet`) before running the application.
+
