@@ -27,6 +27,9 @@ import { useAuth } from '../provider/authProvider';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import IconButton from '@mui/joy/IconButton';
 import Tooltip from '@mui/joy/Tooltip';
+import ControlPointIcon from '@mui/icons-material/ControlPoint';
+import Fab from '@mui/material/Fab';
+
 
 
 
@@ -40,17 +43,23 @@ export default function Home() {
   const [doctors, setDoctors] = React.useState([]);
   const [patients, setPatients] = React.useState([]);
   const [pharmacies, setPharmacies] = React.useState([]);
+  const [drugs, setDrugs] = React.useState([]);
   const [dataTable, setDataTable] = React.useState(null);
   const [orderTable, setOrderTable] = React.useState(null);
+  const [storageTable, setStorageTable] = React.useState(null);
   const [isAddPrescrModalOpen, setAddPrescrModalOpen] = React.useState(false);
   const [isProcPrescrModalOpen, setProcPrescrModalOpen] = React.useState(false);
   const [isAddOrderModalOpen, setAddOrderModalOpen] = React.useState(false);
   const [isProcOrderModalOpen, setProcOrderModalOpen] = React.useState(false);
+  const [isBoxInfoModalOpen, setBoxInfoModalOpen] = React.useState(false);
   const [showSuccessAlert, setShowSuccessAlert] = React.useState(false);
   const [showErrorAlert, setShowErrorAlert] = React.useState(false);
   const [alertMessage, setAlertMessage] = React.useState("");
   const [autocompleteOptions, setAutocompleteOptions] = React.useState([]);
   const [selectedDrugs, setSelectedDrugs] = React.useState([]);
+  const [selectedOrderID, setSelectedOrderID] = React.useState(null);
+  const [selectedDrugName, setSelectedDrugName] = React.useState(null);
+  const [boxList, setBoxList] = React.useState(null);
 
 
   //TODO: mettere una duration di default appropriata
@@ -68,6 +77,12 @@ export default function Home() {
       }, duration);
     }
   }
+
+  // open process order modal and autofill the orderID field
+  const openModalWithOrderID = (orderID, state) => {
+    setSelectedOrderID(orderID);
+    setProcOrderModalOpen(state);
+  };
 
 
   const handleSubmitAddPrescr = async (event) => {
@@ -196,6 +211,36 @@ export default function Home() {
       console.error(e);
     }
   }
+  // get all the info about boxes in a list
+  const fetchBoxesInfo = async (boxIds) => {
+    try {
+      const res = await fetch(`http://localhost:3001/api/boxes`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        }
+      });
+      if (res.status == 200) {
+        const result = await res.json();
+        const info = result.data;
+        let allInfo = [];
+        for (let boxId of boxIds) {
+          let boxInfo = info.find(b => b.BoxID === boxId);
+          allInfo.push(boxInfo);
+        }
+        console.log("allInfo");
+        console.log(Array.isArray(allInfo));
+        console.log(JSON.stringify(allInfo));
+        return allInfo;
+      } else {
+        console.error("boxInfoFetch status code: " + res.status);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+
   const fetchUserInfo = async (userId) => {
     try {
       const res = await fetch(`http://localhost:3001/api/users/${userId}`, {
@@ -259,6 +304,71 @@ export default function Home() {
 
   }
 
+  // fetching drug info
+  const fetchDrugInfo = async (drugId) => {
+    try{
+      const res = await fetch(`http://localhost:3001/api/drugs/${drugId}`, {
+        method: 'GET',
+        headers: {
+          'Authorization': 'Bearer ' + token,
+        }
+      });
+      if (res.status == 200) {
+        const data = await res.json();
+        return data.data;
+      } else {
+        console.error("fetchDrugInfo status code: " + res.status);
+      }
+    } catch(e){
+      console.error(e);
+    }
+  }
+
+  const fetchManufacturer = async (manufacturerId) => {
+    try{
+      const res = await fetch(`http://localhost:3001/api/users/${manufacturerId}`, {
+        method: 'GET',
+        headers: {
+          'Authorization': 'Bearer ' + token,
+        }
+      });
+      if (res.status == 200) {
+        const data = await res.json();
+        return data.data;
+      } else {
+        console.error("fetchDrugInfo status code: " + res.status);
+      }
+    } catch(e){
+      console.error(e);
+    }
+  }
+
+
+  // fetching drugs in the pharmacy storage
+  const fetchStorage = async () => {
+    try{
+      const pharmacyInfo = await fetchUserInfo(user);
+
+      const storage = pharmacyInfo.DrugStorage
+      for (let drug of storage) {
+        let drugInfo = await fetchDrugInfo(drug.DrugID);
+        drug.Name = drugInfo.Name;
+        drug.ManufacturerID = drugInfo.ManufacturerID;
+        let manufacturer = await fetchManufacturer(drugInfo.ManufacturerID);
+      }
+
+
+      console.log("storage");
+      console.log(storage);
+
+      return storage;
+    }
+    catch(e){
+      console.error(e);
+    }
+
+  }
+
 
   const fetchAllDrugs = async () => {
     try {
@@ -300,12 +410,14 @@ export default function Home() {
       }
       let options = [];
       let orders = [];
+      let drugs = [];
       if (role === "Doctor") {
         options = await fetchAllDrugs() || [];
       }
       setAutocompleteOptions(options);
       if (role === "Pharmacy" || role === "Manufacturer") {
         orders = await fetchOrders() || [];
+        drugs = await fetchStorage() || [];
       }
 
       let doctors = []
@@ -348,12 +460,12 @@ export default function Home() {
         )
       }
 
-      return { userProfile, prescriptions, orders, doctors, patients, pharmacies };
+      return { userProfile, prescriptions, orders, drugs, doctors, patients, pharmacies };
     }
 
 
     fetchData()
-      .then(({ userProfile, prescriptions, orders, doctors, patients, pharmacies }) => {
+      .then(({ userProfile, prescriptions, orders, drugs, doctors, patients, pharmacies }) => {
         console.log("setting profile card");
         console.log(orders);
         console.log(orders?.filter(o => o.Status === 'pending').length);
@@ -362,28 +474,50 @@ export default function Home() {
           firstName: userProfile?.Name,
           lastName: userProfile?.Surname,
           src: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=286',
-          role: "Ruolo: " + role,
+          role: "Role: " + role,
           totPrescriptions: role != 'Manufacturer' ? prescriptions?.length : orders?.length,
-          pendingPrescriptions: role != 'Manufacturer' ? 
+          pendingPrescriptions: role != 'Manufacturer' ?
             prescriptions?.filter(p => p.Status === 'pending').length :
             orders?.filter(o => o.Status === 'pending').length ,
-          processedPrescriptions: role != 'Manufacturer' ? 
+          processedPrescriptions: role != 'Manufacturer' ?
             prescriptions?.filter(p => p.Status !== 'pending').length :
             orders?.filter(o => o.Status !== 'pending').length
         });
 
         setOrders(orders);
+        setDrugs(drugs);
         setDoctors(doctors);
-        setPatients(patients); 
+        setPatients(patients);
         setPharmacies(pharmacies);
       });
   }, []);
 
+  function BoxInfoModal(props) {
+    const boxes = props.boxes;
+    console.log("props", props);
+
+    return (
+      <div>
+        {
+          // TODO: aggiungere altre info, come il nome del manufacturer, e magari un numero per ogni Box
+        boxes.map((box, index) => (
+          <div>
+            <Typography level='h4'>Box {index}</Typography>
+            <Typography level='h5'>Box Id: {box.BoxID}</Typography>
+            <Typography>Expiration Date: {box.ExpirationDate}</Typography>
+            <Typography>Production Date: {box.ProductionDate}</Typography>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
   React.useEffect(() => {
     let table;
     let tableOrders;
+    let tableStorage;
     switch (role) {
-      case 'Patient': 
+      case 'Patient':
         table = {
           header: ['ID', 'Status', 'Doctor', 'Pharmacy', 'Description'],
           body: prescriptions?.map(prescription => [
@@ -420,14 +554,43 @@ export default function Home() {
         }
 
         tableOrders = {
-          header: ['ID', 'Status', 'Manufacturer', 'Description'],
+          header: ['ID', 'Status', 'Manufacturer', 'Description', 'Actions '],
           body: orders?.map(order => [
             { display: order?.ID, url: `/orders/${order?.ID}` },
             { display: order?.Status, chipStatus: true },
             { display: order?.ManufacturerID, favicon: true },
-            { display: order?.Description }
+            { display: order?.Description },
+            { display: order?.Status === 'shipped' &&
+            <Tooltip arrow color="neutral" placement="right" title="Process">
+              <Fab color="primary" size="small" onClick={() => openModalWithOrderID(order.ID, true)}>
+                <ControlPointIcon size="sm" />
+              </Fab>
+            </Tooltip>
+            }
           ])
         }
+
+        tableStorage = {
+          header: ['Drug ID', 'Name', 'Manufacturer', 'Quantity', 'Additional info'],
+          body: drugs?.map(drug => [
+            { display: drug?.DrugID},
+            { display: drug?.Name },
+            { display: drug?.ManufacturerID, favicon: true },
+            { display: drug?.Quantity},
+            {display:  <Tooltip arrow color="neutral" placement="right" title="box info">
+            <Fab color="primary" size="small" onClick={
+              async ()=>{
+                setSelectedDrugName(drug?.Name);
+                const boxInfos = await fetchBoxesInfo(drug?.BoxIDs);
+                setBoxList(boxInfos);
+                setBoxInfoModalOpen(true);
+               }}>
+              <ControlPointIcon size="sm" />
+            </Fab>
+          </Tooltip>}
+          ])
+        }
+
         break;
       case 'Manufacturer':
         tableOrders = {
@@ -450,12 +613,14 @@ export default function Home() {
       default:
         table = dataTable;
         tableOrders = orderTable;
+        tableStorage = storageTable;
     }
     console.log(table);
 
     setDataTable(table);
     setOrderTable(tableOrders);
-  }, [prescriptions, orders, doctors, patients, pharmacies ]); 
+    setStorageTable(tableStorage);
+  }, [prescriptions, orders, doctors, patients, pharmacies, drugs ]);
   // ^^^^ indicando gli state come dipendenza ogni volta che cambiano parte l'hook
 
   return (
@@ -471,23 +636,17 @@ export default function Home() {
               <Box sx={{ minWidth: '50%' }}>
                 { dataTable && (
                   <Typography level="h4" textAlign="left" sx={{ mb: 2, marginBottom: 0 }}>
-                    Current prescriptions.
+                  Prescriptions
                   </Typography>
                 )}
               </Box>
               <Box sx={{ minWidth: '50%', display: 'flex', justifyContent: 'right', marginBottom: '8px' }}>
-                <ButtonGroup variant="solid" color="primary">
                   {role === "Doctor" && (
                     <Button onClick={() => setAddPrescrModalOpen(true)}>Add prescription</Button>
                   )}
                   {role === "Pharmacy" && (
-                    <>
-                      <Button onClick={() => setProcPrescrModalOpen(true)}>Process prescription</Button>
-                      <Button onClick={setAddOrderModalOpen}>Add order</Button>
-                      <Button onClick={setProcOrderModalOpen}>Process Order</Button>
-                    </>
+                      <Button onClick={setAddOrderModalOpen}>New Order</Button>
                   )}
-                </ButtonGroup>
               </Box>
             </Box>
             <Box sx={{ width: '100%', height: 250, }} >
@@ -495,10 +654,16 @@ export default function Home() {
                 <Table dataTable={dataTable} />
                 {orderTable &&
                   <Typography level="h4" textAlign="left" mb={1}>
-                    Current orders.
+                  Orders
                   </Typography>
                 }
                 <Table dataTable={orderTable} />
+                {storageTable &&
+                  <Typography level="h4" textAlign="left" mb={1}>
+                  Storage
+                  </Typography>
+                }
+                <Table dataTable={storageTable} />
               </Stack>
             </Box>
           </div>
@@ -691,7 +856,8 @@ export default function Home() {
             <Stack spacing={2}>
               <FormControl>
                 <FormLabel>Order ID</FormLabel>
-                <Input autoFocus required name="orderID"/>
+                <Input autoFocus required name="orderID" value={selectedOrderID || ''} onChange={(e) => setSelectedOrderID(e.target.value)}
+/>
               </FormControl>
               <Button type="submit">Submit</Button>
             </Stack>
@@ -699,6 +865,14 @@ export default function Home() {
         </ModalDialog>
       </Modal>
 
+
+      {/* BoxInfo Modal */}
+      <Modal open={isBoxInfoModalOpen} onClose={() => setBoxInfoModalOpen(false)}>
+      <ModalDialog style={{ width: "60%" }}>
+          <DialogTitle level='h3'>{selectedDrugName} Storage</DialogTitle>
+          <BoxInfoModal boxes={boxList}/>
+        </ModalDialog>
+      </Modal>
 
     </Box>
 

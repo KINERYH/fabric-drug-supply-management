@@ -7,7 +7,10 @@ const { chaincodeName, channelName } = require("../config/blockchain");
 const getAllBoxes = async (currentUser) => {
   const { ccp, wallet } = require("../index");
   try {
+    console.log('Il problema è prima della connessione')
+    console.log('currentUser', currentUser)
     const { gateway, contract } = await ledger.connect(ccp, wallet, currentUser.uuid, channelName, chaincodeName, currentUser.smartContract);
+    console.log('Il problema è dopo la connessione')
     console.log('\n--> Evaluate Transaction: GetAllBoxes.');
     const result = await contract.evaluateTransaction('GetAllBoxes');
     ledger.disconnect(gateway);
@@ -24,7 +27,7 @@ const getAllBoxes = async (currentUser) => {
 const getBox = async (boxId, currentUser) => {
   try {
     const boxes = await getAllBoxes(currentUser);
-    
+
     // filter for the specified box
     const box = boxes.find(box => box.BoxID === boxId);
     return box;
