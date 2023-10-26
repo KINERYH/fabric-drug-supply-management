@@ -474,7 +474,7 @@ export default function Home() {
           firstName: userProfile?.Name,
           lastName: userProfile?.Surname,
           src: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=286',
-          role: "Ruolo: " + role,
+          role: "Role: " + role,
           totPrescriptions: role != 'Manufacturer' ? prescriptions?.length : orders?.length,
           pendingPrescriptions: role != 'Manufacturer' ?
             prescriptions?.filter(p => p.Status === 'pending').length :
