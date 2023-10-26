@@ -358,6 +358,7 @@
       "smartContract": "ManufacturerContract"
     },
     {
+
       "email": "m@nufacturer.it",
       "password": "$2b$10$BzTKNMKZyixOAWZqF7/k8eHQl9kaUFtMt/jZ0taR9CAXWEb18NsVK",
       "role": "Manufacturer",

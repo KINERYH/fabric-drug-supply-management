@@ -36,7 +36,7 @@ const getPrescription = async (prescriptionId, currentUser) => {
   }
 };
 
-// TODO: finire
+
 const createPrescription = async (body, currentUser) => {
   const prescriptionID = uuidv4();
   try{
@@ -60,16 +60,6 @@ const deletePrescription = () => {
 };
 
 const processPrescription = async (prescriptionID, currentUser) => {
-  // Check if the prescription exists
-  // const prescription = await getPrescription(prescriptionID, currentUser);
-  // if (!prescription) {
-  //   throw { status: 404, message: "Prescription with id " + prescriptionId + " does not exist."};
-  // }
-
-  //TODO: far mostrare un messaggio di errore se:
-  // - la prescrizione non esiste
-  // - la prescrizione è già stata processata
-  // - mancano dei farmaci nella farmacia per poter soddisfare la prescrizione
   try{
     const { ccp, wallet } = require("../index");
     const { gateway, contract } = await ledger.connect(ccp, wallet, currentUser.uuid, channelName, chaincodeName, currentUser.smartContract);

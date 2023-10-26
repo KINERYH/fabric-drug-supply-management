@@ -561,7 +561,7 @@ export default function Home() {
             { display: order?.ManufacturerID, favicon: true },
             { display: order?.Description },
             { display: order?.Status === 'shipped' &&
-            <Tooltip arrow color="neutral" placement="top" title="Process">
+            <Tooltip arrow color="neutral" placement="right" title="Process">
               <Fab color="primary" size="small" onClick={() => openModalWithOrderID(order.ID, true)}>
                 <ControlPointIcon size="sm" />
               </Fab>
@@ -577,7 +577,7 @@ export default function Home() {
             { display: drug?.Name },
             { display: drug?.ManufacturerID, favicon: true },
             { display: drug?.Quantity},
-            {display:  <Tooltip arrow color="neutral" placement="top" title="box info">
+            {display:  <Tooltip arrow color="neutral" placement="right" title="box info">
             <Fab color="primary" size="small" onClick={
               async ()=>{
                 setSelectedDrugName(drug?.Name);
@@ -600,8 +600,8 @@ export default function Home() {
             { display: order?.Status, chipStatus: true },
             { display: pharmacies?.find(p => p?.orderId === order?.ID)?.Name, favicon: true },
             { display: order?.Description },
-            { display:
-              <Tooltip disabled={ order?.Status != 'pending' } arrow color="success" placement="top" title="ship">
+            { display: 
+              <Tooltip disabled={ order?.Status != 'pending' } arrow color="success" placement="right" title="ship"> 
                 <IconButton variant="solid" color="primary">
                   <LocalShippingIcon size="sm" />
                 </IconButton>
