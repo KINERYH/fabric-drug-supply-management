@@ -164,16 +164,15 @@ class ManufacturerContract extends Contract{
     if(manufacturers.find(m => m.ID === manufacturerID).Drugs.includes(order.ID)){
       throw new Error('This manufacturer doesn\'t have this drugs in his production catalog.');
     }
-    
+
 
 		// Update the order state
     orders.find(o => o.ID === orderID).Status = "shipped";
     console.log(`***New order: ${stringify(order)}`);
 		await ctx.stub.putState("orders", Buffer.from(stringify(sortKeysRecursive(orders))));
-    
+
     return orders.find(o => o.ID === orderID);
 	}
-
 
 }
 module.exports = ManufacturerContract;

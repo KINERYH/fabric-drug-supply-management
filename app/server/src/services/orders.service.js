@@ -37,11 +37,26 @@ const getOrder = async (orderId, currentUser) => {
 };
 
 // TODO: implementare
-const createOrder = () => {
-  return;
+const createOrder = async (body, currentUser) => {
+  const orderId = uuidv4();
+  try{
+    const { ccp, wallet } = require("../index")
+    const { gateway, contract } = await ledger.connect(ccp, wallet, currentUser.uuid, channelName, chaincodeName, currentUser.smartContract);
+    console.log(`\n--> Evaluate Transaction: createOrder for a specific ${currentUser.role}.`);
+    const result = await contract.submitTransaction('RequestOrder', currentUser.uuid, orderId, body.ManufacturerID, body.Drugs, body.Description);
+    const createdOrder = JSON.parse(result.toString());
+    ledger.disconnect(gateway);
+    console.log("*** Created order:", JSON.stringify(createdOrder, null, 2));
+    return createdOrder;
+  }
+  catch(error){
+    console.error('Failed to create order: ' + '\n' + error?.message);
+    throw error;
+  }
 };
 
 const updateOrder = () => {
+
   return;
 };
 

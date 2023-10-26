@@ -35,7 +35,7 @@ const getOrder = async (req, res) => {
 
 const createOrder = async (req, res) => {
   try{
-    const createdOrder = await ordersService.createOrder(req.body);
+    const createdOrder = await ordersService.createOrder(req.body, req.currentUser);
     res.status(201).json({
       message: "New order created.",
       data: createdOrder
