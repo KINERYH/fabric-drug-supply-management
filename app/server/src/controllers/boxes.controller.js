@@ -2,7 +2,7 @@ const boxesService = require("../services/boxes.service")
 
 const getAllBoxes = async (req, res) => {
   try {
-    const allBoxes = await boxesService.getAllBoxes();
+    const allBoxes = await boxesService.getAllBoxes(req.currentUser);
     res.json({ status: "OK", data: allBoxes });
   } catch (error) {
     res.status(500).json({ status: "Error", message: error.message });

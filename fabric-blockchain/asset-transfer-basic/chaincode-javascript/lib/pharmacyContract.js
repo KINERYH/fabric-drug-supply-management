@@ -123,6 +123,8 @@ class PharmacyContract extends Contract {
 		return pharmacy.DrugStorage;
 	}
 
+	
+
 	/**
 	 *
 	 * @param {*} drugID = drug id
