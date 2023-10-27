@@ -12,11 +12,13 @@ import ModalDialog from '@mui/joy/ModalDialog';
 import DialogTitle from '@mui/joy/DialogTitle';
 import DialogContent from '@mui/joy/DialogContent';
 import Stack from '@mui/joy/Stack';
+import Textarea from '@mui/joy/Textarea';
 import WarningIcon from '@mui/icons-material/Warning';
 import Add from '@mui/icons-material/Add';
 import UserCard from '../components/UserCard';
 import Breadcrumbs from '../components/Breadcrumbs';
 import Table from '../components/Table';
+import Chip from '@mui/joy/Chip';
 import Autocomplete from '@mui/joy/Autocomplete';
 import AutocompleteOption from '@mui/joy/AutocompleteOption';
 import ListItemDecorator from '@mui/joy/ListItemDecorator';
@@ -60,6 +62,33 @@ export default function Home() {
   const [selectedOrderID, setSelectedOrderID] = React.useState(null);
   const [selectedDrugName, setSelectedDrugName] = React.useState(null);
   const [boxList, setBoxList] = React.useState(null);
+
+  // User card states
+  const [isEditInfoModalOpen, setEditInfoModalOpen] = React.useState(false);
+  const [userDetails, setUserDetails] = React.useState({});
+  // TODO: Nel momento in cui si apre il modal, salvare i dati originali in un altro stato cosicche se l'utente annulla le modifiche, si possano ripristinare i dati originali
+  const [originalUserDetails, setOriginalUserDetails] = React.useState({});
+  const [isModified, setIsModified] = React.useState(false);
+
+  // Funzione per gestire la modifica dei campi di input
+  const handleInputChange = (field, value) => {
+    setUserDetails({
+      ...userDetails,
+      [field]: value,
+    });
+    setIsModified(true);
+  };
+
+  const handleEditInfoModalSubmit = async (event) => {
+    // Invia i dati modificati al server
+    // Una volta completato con successo, reimposta isModified su false
+    // E chiudi il modal
+    event.preventDefault();
+    //TODO: terminare
+    setIsModified(false);
+    setEditInfoModalOpen(false);
+  };
+
 
 
   //TODO: mettere una duration di default appropriata
@@ -165,11 +194,11 @@ export default function Home() {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const orderID = data.get('orderID');
-    try{
+    try {
       const response = await fetch(`http://localhost:3001/api/orders/${orderID}`, {
         method: 'PATCH',
         headers: {
-          'Authorization': 'Bearer '+ token,
+          'Authorization': 'Bearer ' + token,
           'Content-Type': 'application/json'
         },
       });
@@ -186,31 +215,11 @@ export default function Home() {
         }
       }
       console.log("Response: " + response.status)
-    } catch(e) {
-      console.error(e);
-    }
-  }
-
-  const fetchUserProfile = async () => {
-    try {
-      const res = await fetch(`http://localhost:3001/api/users/${user}`, {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        }
-      });
-      if (res.status == 200) {
-        const result = await res.json();
-        console.log("response fetch user");
-        console.log(result.data);
-        return result.data;
-      } else {
-        console.error("userProfileFetch status code: " + res.status);
-      }
     } catch (e) {
       console.error(e);
     }
   }
+
   // get all the info about boxes in a list
   const fetchBoxesInfo = async (boxIds) => {
     try {
@@ -306,7 +315,7 @@ export default function Home() {
 
   // fetching drug info
   const fetchDrugInfo = async (drugId) => {
-    try{
+    try {
       const res = await fetch(`http://localhost:3001/api/drugs/${drugId}`, {
         method: 'GET',
         headers: {
@@ -319,13 +328,13 @@ export default function Home() {
       } else {
         console.error("fetchDrugInfo status code: " + res.status);
       }
-    } catch(e){
+    } catch (e) {
       console.error(e);
     }
   }
 
   const fetchManufacturer = async (manufacturerId) => {
-    try{
+    try {
       const res = await fetch(`http://localhost:3001/api/users/${manufacturerId}`, {
         method: 'GET',
         headers: {
@@ -338,7 +347,7 @@ export default function Home() {
       } else {
         console.error("fetchDrugInfo status code: " + res.status);
       }
-    } catch(e){
+    } catch (e) {
       console.error(e);
     }
   }
@@ -346,7 +355,7 @@ export default function Home() {
 
   // fetching drugs in the pharmacy storage
   const fetchStorage = async () => {
-    try{
+    try {
       const pharmacyInfo = await fetchUserInfo(user);
 
       const storage = pharmacyInfo.DrugStorage
@@ -363,7 +372,7 @@ export default function Home() {
 
       return storage;
     }
-    catch(e){
+    catch (e) {
       console.error(e);
     }
 
@@ -403,7 +412,8 @@ export default function Home() {
 
   React.useEffect(() => {
     const fetchData = async () => {
-      const userProfile = await fetchUserProfile();
+      const userProfile = await fetchUserInfo(user);
+      setUserDetails(userProfile);
       console.log("HOME - USER PROFILE: ", userProfile);
       let prescriptions = [];
       if (role != "Manufacturer") {
@@ -479,7 +489,7 @@ export default function Home() {
           totPrescriptions: role != 'Manufacturer' ? prescriptions?.length : orders?.length,
           pendingPrescriptions: role != 'Manufacturer' ?
             prescriptions?.filter(p => p.Status === 'pending').length :
-            orders?.filter(o => o.Status === 'pending').length ,
+            orders?.filter(o => o.Status === 'pending').length,
           processedPrescriptions: role != 'Manufacturer' ?
             prescriptions?.filter(p => p.Status !== 'pending').length :
             orders?.filter(o => o.Status !== 'pending').length
@@ -501,14 +511,14 @@ export default function Home() {
       <div>
         {
           // TODO: aggiungere altre info, come il nome del manufacturer, e magari un numero per ogni Box
-        boxes.map((box, index) => (
-          <div>
-            <Typography level='h4'>Box {index}</Typography>
-            <Typography level='h5'>Box Id: {box.BoxID}</Typography>
-            <Typography>Expiration Date: {box.ExpirationDate}</Typography>
-            <Typography>Production Date: {box.ProductionDate}</Typography>
-          </div>
-        ))}
+          boxes.map((box, index) => (
+            <div>
+              <Typography level='h4'>Box {index}</Typography>
+              <Typography level='h5'>Box Id: {box.BoxID}</Typography>
+              <Typography>Expiration Date: {box.ExpirationDate}</Typography>
+              <Typography>Production Date: {box.ProductionDate}</Typography>
+            </div>
+          ))}
       </div>
     );
   }
@@ -561,12 +571,13 @@ export default function Home() {
             { display: order?.Status, chipStatus: true },
             { display: order?.ManufacturerID, favicon: true },
             { display: order?.Description },
-            { display: order?.Status === 'shipped' &&
-            <Tooltip arrow color="neutral" placement="right" title="Process">
-              <Fab color="primary" size="small" onClick={() => openModalWithOrderID(order.ID, true)}>
-                <ControlPointIcon size="sm" />
-              </Fab>
-            </Tooltip>
+            {
+              display: order?.Status === 'shipped' &&
+                <Tooltip arrow color="neutral" placement="right" title="Process">
+                  <Fab color="primary" size="small" onClick={() => openModalWithOrderID(order.ID, true)}>
+                    <ControlPointIcon size="sm" />
+                  </Fab>
+                </Tooltip>
             }
           ])
         }
@@ -574,21 +585,23 @@ export default function Home() {
         tableStorage = {
           header: ['Drug ID', 'Name', 'Manufacturer', 'Quantity', 'Additional info'],
           body: drugs?.map(drug => [
-            { display: drug?.DrugID},
+            { display: drug?.DrugID },
             { display: drug?.Name },
             { display: drug?.ManufacturerID, favicon: true },
-            { display: drug?.Quantity},
-            {display:  <Tooltip arrow color="neutral" placement="right" title="box info">
-            <Fab color="primary" size="small" onClick={
-              async ()=>{
-                setSelectedDrugName(drug?.Name);
-                const boxInfos = await fetchBoxesInfo(drug?.BoxIDs);
-                setBoxList(boxInfos);
-                setBoxInfoModalOpen(true);
-               }}>
-              <ControlPointIcon size="sm" />
-            </Fab>
-          </Tooltip>}
+            { display: drug?.Quantity },
+            {
+              display: <Tooltip arrow color="neutral" placement="right" title="box info">
+                <Fab color="primary" size="small" onClick={
+                  async () => {
+                    setSelectedDrugName(drug?.Name);
+                    const boxInfos = await fetchBoxesInfo(drug?.BoxIDs);
+                    setBoxList(boxInfos);
+                    setBoxInfoModalOpen(true);
+                  }}>
+                  <ControlPointIcon size="sm" />
+                </Fab>
+              </Tooltip>
+            }
           ])
         }
 
@@ -601,12 +614,13 @@ export default function Home() {
             { display: order?.Status, chipStatus: true },
             { display: pharmacies?.find(p => p?.orderId === order?.ID)?.Name, favicon: true },
             { display: order?.Description },
-            { display: 
-              <Tooltip disabled={ order?.Status != 'pending' } arrow color="success" placement="right" title="ship"> 
-                <IconButton variant="solid" color="primary">
-                  <LocalShippingIcon size="sm" />
-                </IconButton>
-              </Tooltip>
+            {
+              display:
+                <Tooltip disabled={order?.Status != 'pending'} arrow color="success" placement="right" title="ship">
+                  <IconButton variant="solid" color="primary">
+                    <LocalShippingIcon size="sm" />
+                  </IconButton>
+                </Tooltip>
             }
           ])
         }
@@ -621,7 +635,7 @@ export default function Home() {
     setDataTable(table);
     setOrderTable(tableOrders);
     setStorageTable(tableStorage);
-  }, [prescriptions, orders, doctors, patients, pharmacies, drugs ]);
+  }, [prescriptions, orders, doctors, patients, pharmacies, drugs]);
   // ^^^^ indicando gli state come dipendenza ogni volta che cambiano parte l'hook
 
   return (
@@ -629,73 +643,76 @@ export default function Home() {
       <Box sx={{ maxWidth: '80%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: 5 }}>
         {/* <Breadcrumbs navigation={ navigation } /> */}
         <Box sx={{ maxWidth: '60%' }}>
-          <UserCard role={role} userProfile={userProfileCard} />
+          <UserCard role={role} userProfile={userProfileCard} action={() => {
+            setEditInfoModalOpen(true);
+            setOriginalUserDetails(userDetails);
+          }} />
         </Box>
         {/* <Stack> */}
-          <div>
-            <Box sx={{ maxWidth: '100%', display: 'flex', flexDirection: 'row' }}>
-              <Box sx={{ minWidth: '50%' }}>
-                { dataTable && (
-                  <Typography level="h4" textAlign="left" sx={{ mb: 2, marginBottom: 0 }}>
+        <div>
+          <Box sx={{ maxWidth: '100%', display: 'flex', flexDirection: 'row' }}>
+            <Box sx={{ minWidth: '50%' }}>
+              {dataTable && (
+                <Typography level="h4" textAlign="left" sx={{ mb: 2, marginBottom: 0 }}>
                   Prescriptions
-                  </Typography>
-                )}
-              </Box>
-              <Box sx={{ minWidth: '50%', display: 'flex', justifyContent: 'right', marginBottom: '8px' }}>
-                  {role === "Doctor" && (
-                    <Button onClick={() => setAddPrescrModalOpen(true)}>Add prescription</Button>
-                  )}
-                  {role === "Pharmacy"  && (
-                      <Button onClick={setAddOrderModalOpen}>New Order</Button>
-                  )}
-              </Box>
+                </Typography>
+              )}
             </Box>
-            <Box sx={{ width: '100%', height: 250, }} >
-              <Stack spacing={5}>
-                <Table dataTable={dataTable} />
-                {orderTable &&
-                  <Typography level="h4" textAlign="left" mb={1}>
-                  Orders
-                  </Typography>
-                }
-                <Table dataTable={orderTable} />
-                {storageTable &&
-                  <Typography level="h4" textAlign="left" mb={1}>
-                  Storage
-                  </Typography>
-                }
-                <Table dataTable={storageTable} />
-              </Stack>
+            <Box sx={{ minWidth: '50%', display: 'flex', justifyContent: 'right', marginBottom: '8px' }}>
+              {role === "Doctor" && (
+                <Button onClick={() => setAddPrescrModalOpen(true)}>Add prescription</Button>
+              )}
+              {role === "Pharmacy" && (
+                <Button onClick={setAddOrderModalOpen}>New Order</Button>
+              )}
             </Box>
-          </div>
-
-          <Box sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            position: 'fixed',
-            top: '90%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            zIndex: 9999,
-          }}>
-            {showSuccessAlert && (
-              <Alert
-                variant="soft"
-                color="success"
-                startDecorator={<PlaylistAddCheckCircleRoundedIcon />}
-              >
-                {alertMessage}
-              </Alert>)}
-            {showErrorAlert && (
-              <Alert
-                variant="soft"
-                color="danger"
-                startDecorator={<WarningIcon />}
-              >
-                {alertMessage}
-              </Alert>)}
           </Box>
+          <Box sx={{ width: '100%', height: 250, }} >
+            <Stack spacing={5}>
+              <Table dataTable={dataTable} />
+              {orderTable &&
+                <Typography level="h4" textAlign="left" mb={1}>
+                  Orders
+                </Typography>
+              }
+              <Table dataTable={orderTable} />
+              {storageTable &&
+                <Typography level="h4" textAlign="left" mb={1}>
+                  Storage
+                </Typography>
+              }
+              <Table dataTable={storageTable} />
+            </Stack>
+          </Box>
+        </div>
+
+        <Box sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          position: 'fixed',
+          top: '90%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          zIndex: 9999,
+        }}>
+          {showSuccessAlert && (
+            <Alert
+              variant="soft"
+              color="success"
+              startDecorator={<PlaylistAddCheckCircleRoundedIcon />}
+            >
+              {alertMessage}
+            </Alert>)}
+          {showErrorAlert && (
+            <Alert
+              variant="soft"
+              color="danger"
+              startDecorator={<WarningIcon />}
+            >
+              {alertMessage}
+            </Alert>)}
+        </Box>
 
 
       </Box>
@@ -858,7 +875,7 @@ export default function Home() {
               <FormControl>
                 <FormLabel>Order ID</FormLabel>
                 <Input autoFocus required name="orderID" value={selectedOrderID || ''} onChange={(e) => setSelectedOrderID(e.target.value)}
-/>
+                />
               </FormControl>
               <Button type="submit">Submit</Button>
             </Stack>
@@ -869,9 +886,145 @@ export default function Home() {
 
       {/* BoxInfo Modal */}
       <Modal open={isBoxInfoModalOpen} onClose={() => setBoxInfoModalOpen(false)}>
-      <ModalDialog style={{ width: "60%" }}>
+        <ModalDialog style={{ width: "60%" }}>
           <DialogTitle level='h3'>{selectedDrugName} Storage</DialogTitle>
-          <BoxInfoModal boxes={boxList}/>
+          <BoxInfoModal boxes={boxList} />
+        </ModalDialog>
+      </Modal>
+
+
+
+      {/* TODO: FABRIZIO PENSACI TU -> Not responsive - Edit info modal */}
+      <Modal
+        open={isEditInfoModalOpen}
+        onClose={() => {
+          setEditInfoModalOpen(false);
+          setUserDetails(originalUserDetails);
+        }}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <ModalDialog
+          sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: '60%',
+            p: 3, // Increase padding
+            m: 2, // Increase margin
+            display: 'flex',
+            bgcolor: 'background.level1',
+            borderRadius: 'sm',
+            flexDirection: 'column',
+          }}
+        >
+          {/* <div style={{ display: 'flex', justifyContent: 'space-between' }}> */}
+          {/* <Typography id="modal-modal-title" variant="h6" component="h2">
+            Edit info
+          </Typography> */}
+          {/* <IconButton variant="outlined" onClick={() => setEditInfoModalOpen(false)}>Close</IconButton> */}
+          {/* </div> */}
+          <DialogTitle> User Information</DialogTitle>
+          <DialogContent>Visualize and edit the user information.</DialogContent>
+          <form
+            onSubmit={async (event) => {
+              event.preventDefault();
+              await handleEditInfoModalSubmit(event);
+              setEditInfoModalOpen(false);
+            }}
+          >
+            <Stack direction='row' style={{ display: 'flex' }}>
+              <Stack style={{ flex: 1, margin: '0.5rem' }}>
+                <FormControl>
+                  <FormLabel>First Name</FormLabel>
+                  <Input
+                    type="text"
+                    value={userDetails.Name}
+                    readOnly
+                    style={{ marginBottom: '0.5rem' }}
+                  />
+                </FormControl>
+                <FormControl>
+                  <FormLabel>Last Name</FormLabel>
+                  <Input
+                    type="text"
+                    value={userDetails.Surname}
+                    readOnly
+                    style={{ marginBottom: '0.5rem' }}
+                  />
+                </FormControl>
+                <FormControl>
+                  <FormLabel>Birth Date</FormLabel>
+                  <Input
+                    type="date"
+                    value={userDetails.BirthDate}
+                    readOnly
+                    style={{ marginBottom: '0.5rem' }}
+                  />
+                </FormControl>
+                <FormControl>
+                  <FormLabel>CF</FormLabel>
+                  <Input
+                    type="text"
+                    value={userDetails.CodiceFiscale}
+                    readOnly
+                    style={{ marginBottom: '0.5rem' }}
+                  />
+                </FormControl>
+              </Stack>
+              <Stack style={{ flex: 1, margin: '0.5rem' }}>
+                <FormControl>
+                  <FormLabel>Address</FormLabel>
+                  <Input
+                    type="text"
+                    value={userDetails.Address}
+                    style={{ marginBottom: '0.5rem' }}
+                  />
+                </FormControl>
+                <Stack direction='row' style={{ display: 'flex', flex: 1 }}>
+                  <FormControl>
+                    <FormLabel>Height</FormLabel>
+                    <Input
+                      type="number"
+                      value={userDetails.Height}
+                      style={{ marginBottom: '0.5rem' }}
+                    />
+                  </FormControl>
+                  <FormControl>
+                    <FormLabel>Weight</FormLabel>
+                    <Input
+                      type="number"
+                      value={userDetails.Weight}
+                      style={{ marginBottom: '0.5rem' }}
+                    />
+                  </FormControl>
+                </Stack>
+                <FormControl>
+                  <FormLabel>Allergies</FormLabel>
+                  <Input
+                      type="text"
+                      value={userDetails.Allergies}
+                      onChange={(e) => handleInputChange('Allergies', e.target.value)}
+                      style={{ marginBottom: '0.5rem' }}
+                    />
+                </FormControl>
+                <FormControl>
+                  <FormLabel>Medical History</FormLabel>
+                  <Textarea
+                    type="text"
+                    value={userDetails.MedicalHistory}
+                    style={{ marginBottom: '0.5rem' }}
+                  />
+                </FormControl>
+              </Stack>
+            </Stack>
+          </form>
+          <Button
+            sx={{ mx: 'auto', width: '30%' }}
+            disabled={!isModified}
+          >
+            Submit</Button>
         </ModalDialog>
       </Modal>
 
