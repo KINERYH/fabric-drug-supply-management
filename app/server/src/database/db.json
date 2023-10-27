@@ -358,7 +358,6 @@
       "smartContract": "ManufacturerContract"
     },
     {
-
       "email": "m@nufacturer.it",
       "password": "$2b$10$BzTKNMKZyixOAWZqF7/k8eHQl9kaUFtMt/jZ0taR9CAXWEb18NsVK",
       "role": "Manufacturer",
@@ -371,6 +370,13 @@
       "role": "Pharmacy",
       "uuid": "773bc320-e28a-455b-abb6-99439f4abb0b",
       "smartContract": "PharmacyContract"
+    },
+    {
+      "email": "p@ziente.it",
+      "password": "$2b$10$Ct4OVN0pLuR5ba8yi8V11u3ExZXodSWUhqJjprNumnJ7ywkVykE.O",
+      "role": "Patient",
+      "uuid": "d4070a66-3f7e-4bdf-b0c9-afdc37688ca3",
+      "smartContract": "PatientContract"
     }
   ]
 }

@@ -404,6 +404,7 @@ export default function Home() {
   React.useEffect(() => {
     const fetchData = async () => {
       const userProfile = await fetchUserProfile();
+      console.log("HOME - USER PROFILE: ", userProfile);
       let prescriptions = [];
       if (role != "Manufacturer") {
         prescriptions = await fetchPrescriptions() || [];
@@ -644,7 +645,7 @@ export default function Home() {
                   {role === "Doctor" && (
                     <Button onClick={() => setAddPrescrModalOpen(true)}>Add prescription</Button>
                   )}
-                  {role === "Pharmacy" && (
+                  {role === "Pharmacy"  && (
                       <Button onClick={setAddOrderModalOpen}>New Order</Button>
                   )}
               </Box>
