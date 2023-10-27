@@ -184,13 +184,13 @@
       "ID": "94ae7246-40c6-40fa-8d5a-fcc39d0edbca",
       "PharmacyID": "acbc2869-f4f1-4b75-ba61-23964d28b018",
       "ManufacturerID": "fa15c893-bb7d-4cc9-a0ca-4e303a85f8e9",
-      "Status": "pending",
+      "Status": "shipped",
       "Description": "si richiedono 10 scatole di cortisone",
       "Drugs": [
         {
           "DrugID": "ec110aef-28ce-4d1b-a008-840e40390329",
           "Quantity": 1,
-          "BoxIDs": []
+          "BoxIDs": ["ec110aef-28ce-4d1b-a008-840e40389328"]
         }
       ]
     },
