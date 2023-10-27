@@ -57,7 +57,7 @@ const processOrder = async (req, res) => {
     });
   } catch(error){
     res.status(error?.status || 500).json({
-      message: "Failed to get order.",
+      message: "Failed to process order.",
       error: error?.message || error
     });
   }
