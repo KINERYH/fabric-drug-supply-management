@@ -86,6 +86,33 @@ export default function Home() {
     setProcOrderModalOpen(state);
   };
 
+  const handleShipOrder = async(orderId) => {
+    console.log("============== HANDLE SHIP ORDER ===============")
+    try {
+      const res = await fetch(`http://localhost:3001/api/orders/${orderId}`, {
+        method: 'PATCH',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        }
+      });
+      if (res.status == 200) {
+        showAlertMessage("Order shipped successfully", 'success');
+        updateDataTables();
+        return;
+      } else {
+        const errorResponse = await res.json();
+        if (errorResponse && errorResponse.error) {
+          showAlertMessage(errorResponse.error, 'error');
+        } else {
+          // In case of generic/unknown error
+          showAlertMessage("Error shipping order", 'error');
+        }
+        console.error("patchOrder status code: " + res.status);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }
 
   const handleSubmitAddPrescr = async (event) => {
     event.preventDefault();
@@ -440,8 +467,14 @@ export default function Home() {
 
   // Update the data table
   const updateDataTables = async () => {
-    const prescriptions = await fetchPrescriptions() || [];
-    const orders = await fetchOrders() || [];
+    let orders = [];
+    let prescriptions = [];
+    if (role != "Manufacturer") {
+      prescriptions = await fetchPrescriptions() || [];
+    }
+    if (role === "Pharmacy" || role === "Manufacturer") {
+      orders = await fetchOrders() || [];
+    }
 
     setOrders(orders);
     setPrescriptions(prescriptions);
@@ -655,9 +688,9 @@ export default function Home() {
             { display: order?.Status, chipStatus: true },
             { display: pharmacies?.find(p => p?.orderId === order?.ID)?.Name, favicon: true },
             { display: order?.Description },
-            { display:
-              <Tooltip disabled={ order?.Status != 'pending' } arrow color="success" placement="right" title="ship">
-                <IconButton variant="solid" color="primary">
+            { display: 
+              <Tooltip disabled={ order?.Status != 'pending' } arrow color="success" placement="right" title="ship"> 
+                <IconButton variant="solid" color="primary" onClick={() => {handleShipOrder(order?.ID)}}>
                   <LocalShippingIcon size="sm" />
                 </IconButton>
               </Tooltip>
