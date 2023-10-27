@@ -8,11 +8,19 @@ import Typography from '@mui/joy/Typography';
 import Sheet from '@mui/joy/Sheet';
 import { useAuth } from '../provider/authProvider';
 import { useNavigate } from 'react-router-dom';
+import ModalDialog from '@mui/joy/ModalDialog';
+import Modal from '@mui/joy/Modal';
+import DialogTitle from '@mui/joy/DialogTitle';
+import DialogContent from '@mui/joy/DialogContent';
+import FormControl from '@mui/joy/FormControl';
+import { FormLabel } from '@mui/material';
+import Input from '@mui/joy/Input';
 
 export default function UserCard(props) {
   // gestione del logout
-  const { setToken, setUser } = useAuth();
+  const {setToken, setUser } = useAuth();
   const navigate = useNavigate();
+
 
   const handleLogout = () => {
      setToken();
@@ -73,8 +81,8 @@ export default function UserCard(props) {
             </div>
           </Sheet>
           <Box sx={{ display: 'flex', gap: 1.5, '& > button': { flex: 1 } }}>
-            <Button variant="outlined" color="neutral">
-              Edit info
+            <Button variant="outlined" color="neutral" onClick={props.action}>
+              {(props.role != 'Doctor') ? 'Edit Info' : 'Get patient info'}
             </Button>
             <Button variant="solid" color="primary" onClick={handleLogout}>
               Logout

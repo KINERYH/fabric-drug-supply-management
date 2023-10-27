@@ -59,13 +59,16 @@ export default function Home() {
   const [autocompleteManOptions, setAutocompleteManOptions] = React.useState([]);
   const [selectedDrugs, setSelectedDrugs] = React.useState([]);
   const [selectedManufacturer, setSelectedManufacturer] = React.useState(null);
+  const [isEditInfoModalOpen, setEditInfoModalOpen] = React.useState(false);
+  const [isPatientInfoSet, setPatientInfoSet] = React.useState(false);
+  const [patientInfo, setPatientInfo] = React.useState(null);
   const [selectedOrderID, setSelectedOrderID] = React.useState(null);
   const [selectedDrugName, setSelectedDrugName] = React.useState(null);
   const [boxList, setBoxList] = React.useState(null);
 
 
   //TODO: mettere una duration di default appropriata
-  const showAlertMessage = (message, type, duration = 10000) => {
+  const showAlertMessage = (message, type, duration = 2000) => {
     // Determine which state variables to set based on the type
     const showStateVariable = type === 'success' ? setShowSuccessAlert : type === 'error' ? setShowErrorAlert : null;
 
@@ -112,6 +115,46 @@ export default function Home() {
     } catch (e) {
       console.error(e);
     }
+  }
+
+  // handle patient info
+  const getPatientInfo = async (event) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    console.log(data.get('CodiceFiscale'));
+    try{
+
+      const response = await fetch('http://localhost:3001/api/users', {
+        method: 'GET',
+        headers:{
+          'Authorization': 'Bearer ' + token,
+        }
+      });
+      if (response.status === 200) {
+        const res = await response.json();
+        const patients = res.data;
+        const patient = patients.find(p => p.CodiceFiscale === data.get('CodiceFiscale'));
+        if (!patient){
+          showAlertMessage("Patient not found", 'error');
+        }
+        else{
+          return patient}
+      }
+      else {
+        const errorResponse = await response.json();
+        if (errorResponse && errorResponse.message) {
+          showAlertMessage(errorResponse.message, 'error');
+        } else {
+          // In case of generic/unknown error
+          showAlertMessage("Error creating prescription", 'error');
+        }
+      }
+
+    }
+    catch(e){
+      console.error(e);
+    }
+
   }
 
   const handleSubmitAddPrescr = async (event) => {
@@ -598,6 +641,8 @@ export default function Home() {
     );
   }
 
+
+
   React.useEffect(() => {
     let table;
     let tableOrders;
@@ -688,8 +733,8 @@ export default function Home() {
             { display: order?.Status, chipStatus: true },
             { display: pharmacies?.find(p => p?.orderId === order?.ID)?.Name, favicon: true },
             { display: order?.Description },
-            { display: 
-              <Tooltip disabled={ order?.Status != 'pending' } arrow color="success" placement="right" title="ship"> 
+            { display:
+              <Tooltip disabled={ order?.Status != 'pending' } arrow color="success" placement="right" title="ship">
                 <IconButton variant="solid" color="primary" onClick={() => {handleShipOrder(order?.ID)}}>
                   <LocalShippingIcon size="sm" />
                 </IconButton>
@@ -717,7 +762,9 @@ export default function Home() {
       <Box sx={{ maxWidth: '80%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: 5 }}>
         {/* <Breadcrumbs navigation={ navigation } /> */}
         <Box sx={{ maxWidth: '60%' }}>
-          <UserCard role={role} userProfile={userProfileCard} />
+          <UserCard role={role} userProfile={userProfileCard} action={()=>{
+              setEditInfoModalOpen(true)
+            }}/>
         </Box>
         {/* <Stack> */}
           <div>
@@ -1112,7 +1159,68 @@ export default function Home() {
 
       </Modal>
 
+            {/* Modal doctor per vedere le informazioni del paziente */}
+            <Modal
+      open={isEditInfoModalOpen}
+      onClose={()=>{setEditInfoModalOpen(false);
+      setPatientInfoSet(false);}}
+      aria-labelledby="modal-modal-title"
+      aria-describedby="modal-modal-description">
+        <ModalDialog
+        sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: '60%',
+            p: 3, // Increase padding
+            m: 2, // Increase margin
+            display: 'flex',
+            bgcolor: 'background.level1',
+            borderRadius: 'sm',
+            flexDirection: 'column',
+        }}>
+          <DialogTitle>
+            Patient Info
+          </DialogTitle>
+          <DialogContent>Insert Patient CF</DialogContent>
+          <form onSubmit={async (event) =>{
+            const patient = await getPatientInfo(event)
+            if (patient){
+              setPatientInfo(patient)
+              setPatientInfoSet(true)
+            }
+            else{
+              setAlertMessage("Patient not found", 'error')
+            }
+            }}>
+
+            <FormControl>
+              <FormLabel required>Codice Fiscale</FormLabel>
+              <Input autoFocus required name="CodiceFiscale" />
+            </FormControl>
+            <Button variant="solid" color="primary" type='submit' sx={{my:2}}>Get patient info</Button>
+          </form>
+          {isPatientInfoSet && (
+            <div>
+              <Typography level='h5'>Name: {patientInfo.Name}</Typography>
+              <Typography level='h5'>Surname: {patientInfo.Surname}</Typography>
+              <Typography level='h5'>Birth Date: {patientInfo.BirthDate}</Typography>
+              <Typography level='h5'>Codice Fiscale: {patientInfo.CodiceFiscale}</Typography>
+              <Typography level='h5'>Address: {patientInfo.Address}</Typography>
+              <Typography level='h5'>Height: {patientInfo.Height} cm</Typography>
+              <Typography level='h5'>Weight: {patientInfo.Weight} Kg</Typography>
+              <Typography level='h5'>Allergies: {patientInfo.Allergies.join(', ')}</Typography>
+              <Typography level='h5'>Medical History: {patientInfo.MedicalHistory}</Typography>
+
+            </div>
+          )}
+
+        </ModalDialog>
+
+      </Modal>
     </Box>
+
 
   );
 
