@@ -66,7 +66,6 @@ export default function Home() {
   // User card states
   const [isEditInfoModalOpen, setEditInfoModalOpen] = React.useState(false);
   const [userDetails, setUserDetails] = React.useState({});
-  // TODO: Nel momento in cui si apre il modal, salvare i dati originali in un altro stato cosicche se l'utente annulla le modifiche, si possano ripristinare i dati originali
   const [originalUserDetails, setOriginalUserDetails] = React.useState({});
   const [isModified, setIsModified] = React.useState(false);
 
@@ -84,15 +83,48 @@ export default function Home() {
     // Una volta completato con successo, reimposta isModified su false
     // E chiudi il modal
     event.preventDefault();
-    //TODO: terminare
-    setIsModified(false);
-    setEditInfoModalOpen(false);
+    try {
+      const response = await fetch(`http://localhost:3001/api/users/${user}`, {
+        method: 'PATCH',
+        headers: {
+          'Authorization': 'Bearer ' + token,
+          'Content-Type': 'application/json'
+        },
+        // TODO: assicurarsi che se allergies o medical history vengano modificati, poi vengano passati come lista
+        body: JSON.stringify({
+          Name: userDetails.Name,
+          Surname: userDetails.Surname,
+          CodiceFiscale: userDetails.CodiceFiscale,
+          Allergies: userDetails.Allergies,
+          MedicalHistory: userDetails.MedicalHistory,
+          Password: userDetails.Password,
+          BirthDate: userDetails.BirthDate,
+          Address: userDetails.Address,
+          Weight: userDetails.Weight,
+          Height: userDetails.Height,
+        })
+      });
+
+      if (response.status == 200) {
+        showAlertMessage("User info updated successfully", 'success');
+      } else {
+        const errorResponse = await response.json();
+        if (errorResponse && errorResponse.message) {
+          showAlertMessage(errorResponse.message, 'error');
+        } else {
+          // In case of generic/unknown error
+          showAlertMessage("Error updating user info", 'error');
+        }
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsModified(false);
+      setEditInfoModalOpen(false);
+    }
   };
 
-
-
-  //TODO: mettere una duration di default appropriata
-  const showAlertMessage = (message, type, duration = 10000) => {
+  const showAlertMessage = (message, type, duration = 2000) => {
     // Determine which state variables to set based on the type
     const showStateVariable = type === 'success' ? setShowSuccessAlert : type === 'error' ? setShowErrorAlert : null;
 
@@ -899,6 +931,7 @@ export default function Home() {
         open={isEditInfoModalOpen}
         onClose={() => {
           setEditInfoModalOpen(false);
+          setIsModified(false);
           setUserDetails(originalUserDetails);
         }}
         aria-labelledby="modal-modal-title"
@@ -979,6 +1012,7 @@ export default function Home() {
                   <Input
                     type="text"
                     value={userDetails.Address}
+                    onChange={(e) => handleInputChange('Address', e.target.value)}
                     style={{ marginBottom: '0.5rem' }}
                   />
                 </FormControl>
@@ -988,6 +1022,7 @@ export default function Home() {
                     <Input
                       type="number"
                       value={userDetails.Height}
+                      onChange={(e) => handleInputChange('Height', e.target.value)}
                       style={{ marginBottom: '0.5rem' }}
                     />
                   </FormControl>
@@ -996,6 +1031,7 @@ export default function Home() {
                     <Input
                       type="number"
                       value={userDetails.Weight}
+                      onChange={(e) => handleInputChange('Weight', e.target.value)}
                       style={{ marginBottom: '0.5rem' }}
                     />
                   </FormControl>
@@ -1014,17 +1050,22 @@ export default function Home() {
                   <Textarea
                     type="text"
                     value={userDetails.MedicalHistory}
+                    onChange={(e) => handleInputChange('MedicalHistory', e.target.value)}
                     style={{ marginBottom: '0.5rem' }}
                   />
                 </FormControl>
               </Stack>
             </Stack>
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+              <Button
+                sx={{ mx: 'auto', width: '30%' }}
+                disabled={!isModified}
+                type='submit'
+                variant='solid'
+              >
+                Submit</Button>
+            </Box>
           </form>
-          <Button
-            sx={{ mx: 'auto', width: '30%' }}
-            disabled={!isModified}
-          >
-            Submit</Button>
         </ModalDialog>
       </Modal>
 
