@@ -81,10 +81,10 @@ export default function UserCard(props) {
             </div>
           </Sheet>
           <Box sx={{ display: 'flex', gap: 1.5, '& > button': { flex: 1 } }}>
-            <Button variant="outlined" color="neutral" onClick={props.action}>
+            {(props.role==='Doctor'|| props.role === 'Patient') &&(<Button variant="outlined" color="neutral" onClick={props.action}>
               {(props.role != 'Doctor') ? 'Edit Info' : 'Get patient info'}
-            </Button>
-            <Button variant="solid" color="primary" onClick={handleLogout}>
+            </Button>)}
+            <Button variant="solid" color="primary" onClick={handleLogout} >
               Logout
             </Button>
           </Box>
