@@ -443,7 +443,7 @@ class PharmacyContract extends Contract {
 		// Update the order state
 		orders[orderIndex].Status = "processed";
 		await ctx.stub.putState("orders", Buffer.from(stringify(sortKeysRecursive(orders))));
-
+		return orders[orderIndex];
 	}
 
 	/**

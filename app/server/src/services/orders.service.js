@@ -68,7 +68,7 @@ const processOrder = async (orderId, currentUser) => {
   console.log('*** Current user:', currentUser);
   const { ccp, wallet } = require("../index");
   const { gateway, contract } = await ledger.connect(ccp, wallet, currentUser.uuid, channelName, chaincodeName, currentUser.smartContract);
-  try{  
+  try{
     if (currentUser.role === 'Manufacturer'){
       const order = await getOrder(orderId, currentUser);
       const manufacturerID = currentUser.uuid;

@@ -444,7 +444,6 @@ export default function Home() {
   const fetchStorage = async () => {
     try{
       const pharmacyInfo = await fetchUserInfo(user);
-
       const storage = pharmacyInfo.DrugStorage
       for (let drug of storage) {
         let drugInfo = await fetchDrugInfo(drug.DrugID);
@@ -554,14 +553,12 @@ export default function Home() {
         doctors = await Promise.all(
           prescriptions?.map(async (prescription) => {
             const doctorInfo = await fetchUserInfo(prescription?.DoctorID);
-            console.log(doctorInfo);
             return { ...doctorInfo, prescriptionId: prescription.ID };
           })
         )
         patients = await Promise.all(
           prescriptions?.map(async (prescription) => {
             const patientInfo = await fetchUserInfo(prescription?.PatientID);
-            console.log(patientInfo);
             return { ...patientInfo, prescriptionId: prescription.ID };
           })
         )
@@ -573,7 +570,6 @@ export default function Home() {
           prescriptions?.map(async (prescription) => {
             if (prescription?.Status === 'processed') {
               const pharmacyInfo = await fetchUserInfo(prescription?.PharmacyID);
-              console.log(pharmacyInfo);
               return { ...pharmacyInfo, prescriptionId: prescription.ID };
             }
           })
@@ -582,7 +578,7 @@ export default function Home() {
         pharmacies = await Promise.all(
           orders?.map(async (order) => {
             const pharmacyInfo = await fetchUserInfo(order?.PharmacyID);
-            console.log(pharmacyInfo);
+
             return { ...pharmacyInfo, orderId: order.ID };
           })
         )
@@ -763,8 +759,7 @@ export default function Home() {
         {/* <Breadcrumbs navigation={ navigation } /> */}
         <Box sx={{ maxWidth: '60%' }}>
           <UserCard role={role} userProfile={userProfileCard} action={()=>{
-              setEditInfoModalOpen(true)
-            }}/>
+              setEditInfoModalOpen(true)}}/>
         </Box>
         {/* <Stack> */}
           <div>
@@ -790,19 +785,20 @@ export default function Home() {
             </Box>
             <Box sx={{ width: '100%', height: 250, }} >
               <Stack spacing={5}>
-                <Table dataTable={dataTable} />
+              { dataTable && <Table dataTable={dataTable} />}
                 {orderTable &&
                   <Typography level="h4" textAlign="left" mb={1}>
                   Orders
                   </Typography>
                 }
-                <Table dataTable={orderTable} />
+                {orderTable &&<Table dataTable={orderTable} />}
                 {storageTable &&
                   <Typography level="h4" textAlign="left" mb={1}>
                   Storage
                   </Typography>
                 }
-                <Table dataTable={storageTable} />
+                {storageTable &&<Table dataTable={storageTable} />}
+                <Box component="footer" sx={{ py: 3}}></Box>
               </Stack>
             </Box>
           </div>
@@ -995,10 +991,6 @@ export default function Home() {
               // TODO: far apparire un messaggio di successo + aggiornare la tabella delle prescrizioni
               setProcOrderModalOpen(false);
               updateDataTables();
-              setSelectedDrugs([]);
-              setAutocompleteOptions([]);
-
-
             }}
           >
             <Stack spacing={2}>
@@ -1220,7 +1212,6 @@ export default function Home() {
 
       </Modal>
     </Box>
-
 
   );
 
