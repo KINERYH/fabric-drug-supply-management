@@ -24,6 +24,32 @@
         "e ti senti come un cane della malesia"
       ],
       "UOM": "ml"
+    },
+    {
+      "DrugID": "ec110aef-28ce-4d1b-a008-840e403903no",
+      "ManufacturerID": "94ae7246-40c6-40fa-8d5a-fcc34d0edcca",
+      "Name": "Drug prova",
+      "Description": "Allevia naso e gola",
+      "Price": 1000,
+      "Composition": [
+        "paracetamolo",
+        "acido",
+        "redbull"
+      ],
+      "UOM": "ml"
+    },
+    {
+      "DrugID": "ec110aef-28ce-4d1b-a008-840e40390328",
+      "ManufacturerID": "94ae7246-40c6-40fa-8d5a-fcc34d0edcca",
+      "Name": "Drug prova 2",
+      "Description": "Allevia naso, gola e mento.",
+      "Price": 1000,
+      "Composition": [
+        "paracetamolo",
+        "acido",
+        "redbull"
+      ],
+      "UOM": "ml"
     }
   ],
   "boxes": [

@@ -5,6 +5,7 @@ import SignUp from "../pages/SignUp";
 import InitPage from "../pages/InitPage";
 import Home from "../pages/Home";
 import Prescription from "../pages/Prescription";
+import Order from "../pages/Order";
 import About from "../pages/About.js";
 import NavLayout from "../components/NavLayout";
 import { useAuth } from '../provider/authProvider';
@@ -30,6 +31,9 @@ const Routes = () => {
         },
         { path: "/prescriptions/:prescriptionId",
           element: <Prescription />
+        },
+        { path: "/orders/:orderId",
+          element: <Order />
         },
       ] 
     }];
