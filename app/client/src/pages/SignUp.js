@@ -113,8 +113,8 @@ export default function SignUp() {
 
           <div style={{ padding: '25px' }}>
             <form onSubmit={handleSubmit}>
-              <FormField label="Email" type="email" name="email" required style={{ my: 'px' }}/>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginTop:'16px' }}>
+              <FormField label="Email" type="email" name="email" required style={{ my: 'px' }} />
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginTop: '16px' }}>
                 <FormField label="First name" type="text" name="firstName" required />
                 <FormField label="Last name" type="text" name="lastName" required />
                 <FormField label="CF" type="text" name="cf" required />
