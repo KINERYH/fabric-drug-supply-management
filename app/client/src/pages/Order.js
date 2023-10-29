@@ -271,7 +271,7 @@ export default function Order(props) {
                           </Box>
                           <Box sx={{ display: 'flex', flexDirection:'column', gap: 1, alignItems: 'center', justifyContent:'center' }}>
                             <Avatar color="primary" variant="outlined" size="sm"><BusinessIcon variant="soft" color="primary"/></Avatar>  
-                            <Typography level="body-xs">{drug?.ManufacturerID}</Typography>
+                            <Typography level="body-xs">{manufacturer?.Name}</Typography>
                             <Typography level="body-xs" color="success">{box?.ProductionDate}</Typography>
                           </Box>
                         </CardContent>
