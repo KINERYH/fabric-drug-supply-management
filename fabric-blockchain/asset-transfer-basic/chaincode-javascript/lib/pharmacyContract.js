@@ -123,7 +123,7 @@ class PharmacyContract extends Contract {
 		return pharmacy.DrugStorage;
 	}
 
-	
+
 
 	/**
 	 *
@@ -351,13 +351,21 @@ class PharmacyContract extends Contract {
 	 * @param {*} description
 	 */
 	async RequestOrder(ctx, pharmacyID, orderID, manufacturerID, drugs, description) {
-		const serializedOrders = ctx.stub.getState("orders");
+		const serializedOrders = await ctx.stub.getState("orders");
 		if (!serializedOrders || serializedOrders.length === 0) {
 			throw new Error(`Orders not found`);
 		}
+		console.log("****ORDER ID")
+		console.log(typeof(orderID))
+		console.log(orderID)
+
+		console.log('***SERIALIZED ORDERS')
+		console.log(serializedOrders)
+		console.log(typeof(serializedOrders))
 
 		const orders = JSON.parse(serializedOrders.toString());
-
+		console.log("***Orders: ",orders);
+		console.log(orders)
 		const exist = orders.find((o) => o.ID === orderID);
 		if(exist){
 			throw new Error(`Order with ID ${orderID} already exists`);
@@ -374,6 +382,7 @@ class PharmacyContract extends Contract {
 
 		orders.push(order);
 		await ctx.stub.putState("orders", Buffer.from(stringify(sortKeysRecursive(orders))));
+		return orders;
 	}
 
 	/**
@@ -434,7 +443,7 @@ class PharmacyContract extends Contract {
 		// Update the order state
 		orders[orderIndex].Status = "processed";
 		await ctx.stub.putState("orders", Buffer.from(stringify(sortKeysRecursive(orders))));
-
+		return orders[orderIndex];
 	}
 
 	/**
@@ -450,6 +459,37 @@ class PharmacyContract extends Contract {
 		const manufacturers = JSON.parse(serializedManufacturers.toString());
 		return manufacturers;
 	}
+
+
+	/**
+	 *
+	 * @param {*} ctx
+	 * @returns a list of all the drugs
+	 */
+	async GetAllDrugs(ctx) {
+    const serializedDrugs = await ctx.stub.getState('drugs');
+    if (!serializedDrugs || serializedDrugs.length === 0) {
+      throw new Error(`There are no drugs in the ledger`);
+    }
+    const drugs = JSON.parse(serializedDrugs.toString());
+    return drugs;
+  }
+
+
+  /**
+   * Retrieves all manufacturers from the ledger.
+   * @async
+   * @function GetAllUsers
+   * @param {Context} ctx - The transaction context.
+   * @returns {Promise<Object>} The list of all manufacturers as a string.
+   * @throws Will throw an error if there are no manufacturers in the ledger.
+   */
+  async GetAllUsers(ctx){
+    const  serializedManufacturers = await ctx.stub.getState('manufacturers');
+    const manufacturers = JSON.parse(serializedManufacturers.toString());
+    return manufacturers;
+  }
+
 
 
 }

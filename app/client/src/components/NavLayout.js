@@ -21,19 +21,19 @@ export default function NavLayout() {
           <ListDivider />
           <ListItem role="none">
             <ListItemButton role="menuitem" component="a">
-              <NavLink to="/signup">Registrati</NavLink>
-            </ListItemButton>
-          </ListItem>
-          <ListDivider />
-          <ListItem role="none">
-            <ListItemButton role="menuitem" component="a">
-              <NavLink to="/signin">Login</NavLink>
-            </ListItemButton>
-          </ListItem>
-          <ListDivider />
-          <ListItem role="none">
-            <ListItemButton role="menuitem" component="a">
               <NavLink to="/home">User Home</NavLink>
+            </ListItemButton>
+          </ListItem>
+          <ListDivider />
+          <ListItem role="none">
+            <ListItemButton role="menuitem" component="a">
+              <NavLink to="/signup">Sign Up</NavLink>
+            </ListItemButton>
+          </ListItem>
+          <ListDivider />
+          <ListItem role="none">
+            <ListItemButton role="menuitem" component="a">
+              <NavLink to="/signin">Sign In</NavLink>
             </ListItemButton>
           </ListItem>
           {/* <ListItem role="none" sx={{ marginInlineStart: 'auto' }}>

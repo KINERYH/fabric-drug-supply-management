@@ -46,3 +46,8 @@ GET http://localhost:3001/api/test//doctors/medhistory/94ae7246-40c6-40fa-8d5a-f
 
 ###
 GET http://localhost:3001/api/users/a47e117d-3a2f-4f08-b986-474b2dd7044f
+
+###
+PATCH http://localhost:3001/api/orders/94ae7246-40c6-40fa-8d5a-fcc39d0edbca
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiYWNiYzI4NjktZjRmMS0
+Content-Type: application/json

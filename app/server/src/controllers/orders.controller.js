@@ -20,7 +20,7 @@ const getAllOrders = async (req, res) => {
 
 const getOrder = async (req, res) => {
   try{
-    const order = await ordersService.getOrder(req.params.prescriptionId, req.currentUser);
+    const order = await ordersService.getOrder(req.params.orderId, req.currentUser);
     res.status(200).json({
       message: "Get an existing order: ",
       data: order
@@ -35,7 +35,7 @@ const getOrder = async (req, res) => {
 
 const createOrder = async (req, res) => {
   try{
-    const createdOrder = await ordersService.createOrder(req.body);
+    const createdOrder = await ordersService.createOrder(req.body, req.currentUser);
     res.status(201).json({
       message: "New order created.",
       data: createdOrder
@@ -57,7 +57,7 @@ const processOrder = async (req, res) => {
     });
   } catch(error){
     res.status(error?.status || 500).json({
-      message: "Failed to get order.",
+      message: "Failed to process order.",
       error: error?.message || error
     });
   }

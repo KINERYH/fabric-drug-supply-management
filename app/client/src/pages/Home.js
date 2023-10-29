@@ -58,7 +58,12 @@ export default function Home() {
   const [showErrorAlert, setShowErrorAlert] = React.useState(false);
   const [alertMessage, setAlertMessage] = React.useState("");
   const [autocompleteOptions, setAutocompleteOptions] = React.useState([]);
+  const [autocompleteManOptions, setAutocompleteManOptions] = React.useState([]);
   const [selectedDrugs, setSelectedDrugs] = React.useState([]);
+  const [selectedManufacturer, setSelectedManufacturer] = React.useState(null);
+  const [isEditInfoModalOpen, setEditInfoModalOpen] = React.useState(false);
+  const [isPatientInfoSet, setPatientInfoSet] = React.useState(false);
+  const [patientInfo, setPatientInfo] = React.useState(null);
   const [selectedOrderID, setSelectedOrderID] = React.useState(null);
   const [selectedDrugName, setSelectedDrugName] = React.useState(null);
   const [boxList, setBoxList] = React.useState(null);
@@ -154,6 +159,73 @@ export default function Home() {
     setProcOrderModalOpen(state);
   };
 
+  const handleShipOrder = async(orderId) => {
+    console.log("============== HANDLE SHIP ORDER ===============")
+    try {
+      const res = await fetch(`http://localhost:3001/api/orders/${orderId}`, {
+        method: 'PATCH',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        }
+      });
+      if (res.status == 200) {
+        showAlertMessage("Order shipped successfully", 'success');
+        updateDataTables();
+        return;
+      } else {
+        const errorResponse = await res.json();
+        if (errorResponse && errorResponse.error) {
+          showAlertMessage(errorResponse.error, 'error');
+        } else {
+          // In case of generic/unknown error
+          showAlertMessage("Error shipping order", 'error');
+        }
+        console.error("patchOrder status code: " + res.status);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  // handle patient info
+  const getPatientInfo = async (event) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    console.log(data.get('CodiceFiscale'));
+    try{
+
+      const response = await fetch('http://localhost:3001/api/users', {
+        method: 'GET',
+        headers:{
+          'Authorization': 'Bearer ' + token,
+        }
+      });
+      if (response.status === 200) {
+        const res = await response.json();
+        const patients = res.data;
+        const patient = patients.find(p => p.CodiceFiscale === data.get('CodiceFiscale'));
+        if (!patient){
+          showAlertMessage("Patient not found", 'error');
+        }
+        else{
+          return patient}
+      }
+      else {
+        const errorResponse = await response.json();
+        if (errorResponse && errorResponse.message) {
+          showAlertMessage(errorResponse.message, 'error');
+        } else {
+          // In case of generic/unknown error
+          showAlertMessage("Error creating prescription", 'error');
+        }
+      }
+
+    }
+    catch(e){
+      console.error(e);
+    }
+
+  }
 
   const handleSubmitAddPrescr = async (event) => {
     event.preventDefault();
@@ -200,9 +272,53 @@ export default function Home() {
     }
   }
 
+    // handle  Add Order
+    const handleSubmitAddOrder = async (event) => {
+      event.preventDefault();
+      const data = new FormData(event.currentTarget);
+      console.log(data.get('ManufacturerID'));
+      console.log(data.get('description'));
+
+      const drugs = [];
+      for (const drug of selectedDrugs) {
+        drugs.push({
+          DrugID: drug.DrugID,
+          Quantity: drug.Quantity,
+          BoxIDs:[]
+        });
+      }
+
+      try{
+        const response = await fetch('http://localhost:3001/api/orders/', {
+          method: 'POST',
+          headers: {
+            'Authorization': 'Bearer ' + token,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            ManufacturerID: data.get('ManufacturerID'),
+            PharmacyID: user,
+            Description: data.get('description'),
+            Drugs: JSON.stringify(drugs),
+          })
+        });
+
+        if (response.status == 201) {
+          showAlertMessage("Order created successfully", 'success');
+        }
+        else{
+          showAlertMessage("Error creating order", 'error');
+        }
+      }
+      catch(e){
+        console.error(e);
+      }
+    }
+
   const handleSubmitProcPrescr = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
+    console.log(data)
     const prescriptionID = data.get('prescriptionID');
     try {
       const response = await fetch(`http://localhost:3001/api/prescriptions/${prescriptionID}`, {
@@ -373,37 +489,15 @@ export default function Home() {
     }
   }
 
-  const fetchManufacturer = async (manufacturerId) => {
-    try {
-      const res = await fetch(`http://localhost:3001/api/users/${manufacturerId}`, {
-        method: 'GET',
-        headers: {
-          'Authorization': 'Bearer ' + token,
-        }
-      });
-      if (res.status == 200) {
-        const data = await res.json();
-        return data.data;
-      } else {
-        console.error("fetchDrugInfo status code: " + res.status);
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  }
-
-
   // fetching drugs in the pharmacy storage
   const fetchStorage = async () => {
     try {
       const pharmacyInfo = await fetchUserInfo(user);
-
       const storage = pharmacyInfo.DrugStorage
       for (let drug of storage) {
         let drugInfo = await fetchDrugInfo(drug.DrugID);
         drug.Name = drugInfo.Name;
         drug.ManufacturerID = drugInfo.ManufacturerID;
-        let manufacturer = await fetchManufacturer(drugInfo.ManufacturerID);
       }
 
 
@@ -416,6 +510,27 @@ export default function Home() {
       console.error(e);
     }
 
+  }
+
+  const fetchAllManufacturers = async () => {
+    try {
+      const res = await fetch("http://localhost:3001/api/users/", {
+        method: 'GET',
+        headers: {
+          'Authorization': 'Bearer ' + token,
+        }
+      });
+      if (res.status == 200) {
+        const data = await res.json();
+        console.log("response fetch manufacturers");
+        console.log(data);
+        return data.data;
+      } else {
+        console.error("fetchAllManufacturers status code: " + res.status);
+      }
+    } catch (e) {
+      console.error(e);
+    }
   }
 
 
@@ -443,8 +558,14 @@ export default function Home() {
 
   // Update the data table
   const updateDataTables = async () => {
-    const prescriptions = await fetchPrescriptions() || [];
-    const orders = await fetchOrders() || [];
+    let orders = [];
+    let prescriptions = [];
+    if (role != "Manufacturer") {
+      prescriptions = await fetchPrescriptions() || [];
+    }
+    if (role === "Pharmacy" || role === "Manufacturer") {
+      orders = await fetchOrders() || [];
+    }
 
     setOrders(orders);
     setPrescriptions(prescriptions);
@@ -460,9 +581,10 @@ export default function Home() {
         prescriptions = await fetchPrescriptions() || [];
       }
       let options = [];
+      let manOptions = [];
       let orders = [];
       let drugs = [];
-      if (role === "Doctor") {
+      if (role === "Doctor" || role === "Pharmacy") {
         options = await fetchAllDrugs() || [];
       }
       setAutocompleteOptions(options);
@@ -471,20 +593,23 @@ export default function Home() {
         drugs = await fetchStorage() || [];
       }
 
+      if (role === "Pharmacy") {
+        manOptions = await fetchAllManufacturers() || [];
+      }
+      setAutocompleteManOptions(manOptions);
+
       let doctors = []
       let patients = []
       if (role != "Manufacturer") {
         doctors = await Promise.all(
           prescriptions?.map(async (prescription) => {
             const doctorInfo = await fetchUserInfo(prescription?.DoctorID);
-            console.log(doctorInfo);
             return { ...doctorInfo, prescriptionId: prescription.ID };
           })
         )
         patients = await Promise.all(
           prescriptions?.map(async (prescription) => {
             const patientInfo = await fetchUserInfo(prescription?.PatientID);
-            console.log(patientInfo);
             return { ...patientInfo, prescriptionId: prescription.ID };
           })
         )
@@ -496,7 +621,6 @@ export default function Home() {
           prescriptions?.map(async (prescription) => {
             if (prescription?.Status === 'processed') {
               const pharmacyInfo = await fetchUserInfo(prescription?.PharmacyID);
-              console.log(pharmacyInfo);
               return { ...pharmacyInfo, prescriptionId: prescription.ID };
             }
           })
@@ -505,7 +629,7 @@ export default function Home() {
         pharmacies = await Promise.all(
           orders?.map(async (order) => {
             const pharmacyInfo = await fetchUserInfo(order?.PharmacyID);
-            console.log(pharmacyInfo);
+
             return { ...pharmacyInfo, orderId: order.ID };
           })
         )
@@ -526,11 +650,11 @@ export default function Home() {
           lastName: userProfile?.Surname,
           src: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=286',
           role: "Role: " + role,
-          totPrescriptions: role != 'Manufacturer' ? prescriptions?.length : orders?.length,
-          pendingPrescriptions: role != 'Manufacturer' ?
+          totPrescriptions: (role != 'Manufacturer' && role != 'Pharmacy') ? prescriptions?.length : orders?.length,
+          pendingPrescriptions:  (role != 'Manufacturer' && role != 'Pharmacy') ?
             prescriptions?.filter(p => p.Status === 'pending').length :
-            orders?.filter(o => o.Status === 'pending').length,
-          processedPrescriptions: role != 'Manufacturer' ?
+            orders?.filter(o => o.Status === 'pending').length ,
+          processedPrescriptions:  (role != 'Manufacturer' && role != 'Pharmacy') ?
             prescriptions?.filter(p => p.Status !== 'pending').length :
             orders?.filter(o => o.Status !== 'pending').length
         });
@@ -540,6 +664,7 @@ export default function Home() {
         setDoctors(doctors);
         setPatients(patients);
         setPharmacies(pharmacies);
+        setPrescriptions(prescriptions);
       });
   }, []);
 
@@ -550,18 +675,20 @@ export default function Home() {
     return (
       <div>
         {
-          // TODO: aggiungere altre info, come il nome del manufacturer, e magari un numero per ogni Box
-          boxes.map((box, index) => (
-            <div>
-              <Typography level='h4'>Box {index}</Typography>
-              <Typography level='h5'>Box Id: {box.BoxID}</Typography>
-              <Typography>Expiration Date: {box.ExpirationDate}</Typography>
-              <Typography>Production Date: {box.ProductionDate}</Typography>
-            </div>
-          ))}
+        boxes.map((box, index) => (
+          <div>
+            <Typography level='h4'>Box {index}</Typography>
+            <Typography level='h5'>Box Id: {box.BoxID}</Typography>
+            <Typography>Expiration Date: {box.ExpirationDate}</Typography>
+            <Typography>Production Date: {box.ProductionDate}</Typography>
+          </div>
+        ))}
+
       </div>
     );
   }
+
+
 
   React.useEffect(() => {
     let table;
@@ -569,6 +696,8 @@ export default function Home() {
     let tableStorage;
     switch (role) {
       case 'Patient':
+        console.log("***prescriptions");
+        console.log(prescriptions);
         table = {
           header: ['ID', 'Status', 'Doctor', 'Pharmacy', 'Description'],
           body: prescriptions?.map(prescription => [
@@ -654,13 +783,13 @@ export default function Home() {
             { display: order?.Status, chipStatus: true },
             { display: pharmacies?.find(p => p?.orderId === order?.ID)?.Name, favicon: true },
             { display: order?.Description },
-            {
-              display:
-                <Tooltip disabled={order?.Status != 'pending'} arrow color="success" placement="right" title="ship">
-                  <IconButton variant="solid" color="primary">
-                    <LocalShippingIcon size="sm" />
-                  </IconButton>
-                </Tooltip>
+            { display:
+              <Tooltip disabled={ order?.Status != 'pending' } arrow color="success" placement="right" title="ship">
+                <IconButton variant="solid" color="primary" onClick={() => {handleShipOrder(order?.ID)}}>
+                  <LocalShippingIcon size="sm" />
+                </IconButton>
+              </Tooltip>
+
             }
           ])
         }
@@ -670,6 +799,7 @@ export default function Home() {
         tableOrders = orderTable;
         tableStorage = storageTable;
     }
+    console.log("table");
     console.log(table);
 
     setDataTable(table);
@@ -695,34 +825,67 @@ export default function Home() {
               {dataTable && (
                 <Typography level="h4" textAlign="left" sx={{ mb: 2, marginBottom: 0 }}>
                   Prescriptions
-                </Typography>
-              )}
+                  </Typography>
+                )}
+              </Box>
+              <Box sx={{ minWidth: '50%', display: 'flex', justifyContent: 'right', marginBottom: '8px' }}>
+                  {role === "Doctor" && (
+                    <Button onClick={() => setAddPrescrModalOpen(true)}>Add prescription</Button>
+                  )}
+                  {role === "Pharmacy" && (
+                     <ButtonGroup variant="solid" color="primary">
+                      <Button onClick={() => {setAddOrderModalOpen(true); setAutocompleteOptions([])} }>New Order</Button>
+                      <Button onClick={() => setProcPrescrModalOpen(true)}>Process prescription</Button>
+                      </ButtonGroup>
+                  )}
+              </Box>
             </Box>
-            <Box sx={{ minWidth: '50%', display: 'flex', justifyContent: 'right', marginBottom: '8px' }}>
-              {role === "Doctor" && (
-                <Button onClick={() => setAddPrescrModalOpen(true)}>Add prescription</Button>
-              )}
-              {role === "Pharmacy" && (
-                <Button onClick={setAddOrderModalOpen}>New Order</Button>
-              )}
-            </Box>
-          </Box>
-          <Box sx={{ width: '100%', height: 250, }} >
-            <Stack spacing={5}>
-              <Table dataTable={dataTable} />
-              {orderTable &&
-                <Typography level="h4" textAlign="left" mb={1}>
+            <Box sx={{ width: '100%', height: 250, }} >
+              <Stack spacing={5}>
+              { dataTable && <Table dataTable={dataTable} />}
+                {orderTable &&
+                  <Typography level="h4" textAlign="left" mb={1}>
                   Orders
-                </Typography>
-              }
-              <Table dataTable={orderTable} />
-              {storageTable &&
-                <Typography level="h4" textAlign="left" mb={1}>
+                  </Typography>
+                }
+                {orderTable &&<Table dataTable={orderTable} />}
+                {storageTable &&
+                  <Typography level="h4" textAlign="left" mb={1}>
                   Storage
-                </Typography>
-              }
-              <Table dataTable={storageTable} />
-            </Stack>
+                  </Typography>
+                }
+                {storageTable &&<Table dataTable={storageTable} />}
+                <Box component="footer" sx={{ py: 3}}></Box>
+              </Stack>
+            </Box>
+          </div>
+
+          <Box sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            position: 'fixed',
+            top: '90%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            zIndex: 9999,
+          }}>
+            {showSuccessAlert && (
+              <Alert
+                variant="soft"
+                color="success"
+                startDecorator={<PlaylistAddCheckCircleRoundedIcon />}
+              >
+                {alertMessage}
+              </Alert>)}
+            {showErrorAlert && (
+              <Alert
+                variant="soft"
+                color="danger"
+                startDecorator={<WarningIcon />}
+              >
+                {alertMessage}
+              </Alert>)}
           </Box>
         </div>
 
@@ -759,7 +922,6 @@ export default function Home() {
 
 
 
-      {/* TODO: finire -> Add prescription Modal */}
       <Modal open={isAddPrescrModalOpen} onClose={() => {
         setAddPrescrModalOpen(false);
         setSelectedDrugs([]);
@@ -773,7 +935,7 @@ export default function Home() {
               await handleSubmitAddPrescr(event);
               setAddPrescrModalOpen(false);
               updateDataTables();
-              setSelectedDrugs([]);
+              setSelectedDrugs([])
             }}
           >
             <Stack spacing={2}>
@@ -794,6 +956,7 @@ export default function Home() {
               <FormControl>
                 <FormLabel>Drugs List</FormLabel>
                 <Autocomplete
+                  required
                   placeholder="Select a drug"
                   slotProps={{
                     input: {
@@ -816,6 +979,8 @@ export default function Home() {
                   onChange={(event, selectedOption) => {
                     if (selectedOption) {
                       setSelectedDrugs([...selectedDrugs, selectedOption]);
+                      let newOptions = autocompleteOptions.filter(d => d.DrugID !== selectedOption.DrugID);
+                      setAutocompleteOptions(newOptions);
                       event.target.value = ''; // Clear the input
                     }
                   }}
@@ -834,6 +999,7 @@ export default function Home() {
                             type="number"
                             min="1"
                             value={selectedDrug.quantity}
+                            defaultValue={1}
                             onChange={(e) => {
                               const newQuantity = parseInt(e.target.value, 10);
                               if (!isNaN(newQuantity)) {
@@ -852,6 +1018,8 @@ export default function Home() {
                               const updatedDrugs = [...selectedDrugs];
                               updatedDrugs.splice(index, 1);
                               setSelectedDrugs(updatedDrugs);
+                              setAutocompleteOptions([...autocompleteOptions, selectedDrug]);
+
                             }}
                           >
                             Remove
@@ -914,8 +1082,7 @@ export default function Home() {
             <Stack spacing={2}>
               <FormControl>
                 <FormLabel>Order ID</FormLabel>
-                <Input autoFocus required name="orderID" value={selectedOrderID || ''} onChange={(e) => setSelectedOrderID(e.target.value)}
-                />
+                <Input autoFocus required name="orderID" value={selectedOrderID || ''} onChange={(e) => setSelectedOrderID(e.target.value)}/>
               </FormControl>
               <Button type="submit">Submit</Button>
             </Stack>
@@ -1077,7 +1244,207 @@ export default function Home() {
         </ModalDialog>
       </Modal>
 
+      {/* Add order Modal */}
+      <Modal open={isAddOrderModalOpen}
+      onClose={() => {
+        setAddOrderModalOpen(false)
+        setSelectedDrugs([]);
+        setSelectedManufacturer([])}}>
+        <ModalDialog style={{ width: "60%" }}>
+          <DialogTitle>Create new order</DialogTitle>
+          <DialogContent>Fill in the order information.</DialogContent>
+          <form onSubmit={async (event) => {
+            event.preventDefault();
+            await handleSubmitAddOrder(event);
+            setAddOrderModalOpen(false);
+            updateDataTables();
+            setSelectedDrugs([]);
+            setSelectedManufacturer([]);
+            setAutocompleteOptions([]);
+          }}>
+          <Stack spacing={2}>
+            <FormControl>
+              <FormLabel>Manufacturer ID</FormLabel>
+              <Autocomplete
+                required
+                name='ManufacturerID'
+                placeholder='Select a manufacturer'
+                options={autocompleteManOptions}
+                autoHighlight
+                getOptionLabel={(option) => option.Name}
+                renderOption={(props, option) => (
+                  <AutocompleteOption {...props}>
+                    <ListItemContent sx={{ fontSize: 'sm' }}>
+                      {option.Name}
+                      <Typography level="body-xs">
+                        {option.ID}
+                      </Typography>
+                    </ListItemContent>
+                  </AutocompleteOption>
+                )}
+                onChange={(event, selectedOption) => {
+                  if (selectedOption) {
+                    setSelectedManufacturer([ selectedOption]);
+                    event.target.value = ''; // Clear the input
+                    let filteredDrugs = drugs.filter(d => d.ManufacturerID === selectedOption.ID);
+                    setAutocompleteOptions(filteredDrugs);
+                    console.log(filteredDrugs)
+                    setSelectedDrugs([]); // Se cambio manufacturer il campo è pulito
+                  }
+                }}/>
+            </FormControl>
+            <FormControl>
+                <FormLabel>Description</FormLabel>
+                <textarea
+                  name="description"
+                  rows="4"
+                  style={{ maxWidth: "100%", minWidth: "100%" }}
+                  placeholder="Add a description"
+                  required
+                />
+              </FormControl>
+              <FormControl>
+                <FormLabel>Drugs</FormLabel>
+                <Autocomplete
+                required
+                placeholder='Select a drug'
+                options={autocompleteOptions}
+                autoHighlight
+                getOptionLabel={(option) => option.Name}
+                renderOption={(props, option) => (
+                  <AutocompleteOption {...props}>
+                    <ListItemContent sx={{ fontSize: 'sm' }}>
+                      {option.Name}
+                      <Typography level="body-xs">
+                        {option.DrugID}
+                      </Typography>
+                    </ListItemContent>
+                  </AutocompleteOption>
+                )}
+                onChange={(event, selectedOption) => {
+                  if (selectedOption) {
+                    setSelectedDrugs([...selectedDrugs, selectedOption]);
+                    let newOptions = autocompleteOptions.filter(d => d.DrugID !== selectedOption.DrugID);
+                    setAutocompleteOptions(newOptions);
+                    event.target.value = ''; // Clear the input
+                  }
+                }}/>
+              </FormControl>
+              {selectedDrugs.length > 0 && (<FormControl>
+                <FormLabel sx={{ fontSize: '0.9rem', fontWeight: 'bold' }}>Selected Drugs</FormLabel>
+                <table style={{ borderCollapse: 'collapse', width: '50%' }}>
+                  <tbody>
+                    {selectedDrugs.map((selectedDrug, index) => (
+                      <tr key={index}>
+                        <td style={{ width: 'auto' }}>{selectedDrug.Name}</td>
+                        <td style={{ width: '100px', padding: '0' }}>
+                          <Input
+                            sx={{ width: '100px' }}
+                            type="number"
+                            min="1"
+                            defaultValue={1}
+                            value={selectedDrug.quantity}
+                            onChange={(e) => {
+                              const newQuantity = parseInt(e.target.value, 10);
+                              if (!isNaN(newQuantity)) {
+                                const updatedDrugs = [...selectedDrugs];
+                                updatedDrugs[index].Quantity = newQuantity;
+                                setSelectedDrugs(updatedDrugs);
+                              }
+                            }}
+                          />
+                        </td>
+                        <td style={{ width: '70px' }}>
+                          <Button
+                            variant="solid"
+                            color="primary"
+                            onClick={() => {
+                              const updatedDrugs = [...selectedDrugs];
+                              updatedDrugs.splice(index, 1);
+                              setSelectedDrugs(updatedDrugs);
+                              setAutocompleteOptions([...autocompleteOptions, selectedDrug]);
+                            }}
+                          >
+                            Remove
+                          </Button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </FormControl>
+              )}
+
+            <Button type="submit">Submit</Button>
+          </Stack>
+          </form>
+          </ModalDialog>
+
+      </Modal>
+
+            {/* Modal doctor per vedere le informazioni del paziente */}
+            <Modal
+      open={isEditInfoModalOpen}
+      onClose={()=>{setEditInfoModalOpen(false);
+      setPatientInfoSet(false);}}
+      aria-labelledby="modal-modal-title"
+      aria-describedby="modal-modal-description">
+        <ModalDialog
+        sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: '60%',
+            p: 3, // Increase padding
+            m: 2, // Increase margin
+            display: 'flex',
+            bgcolor: 'background.level1',
+            borderRadius: 'sm',
+            flexDirection: 'column',
+        }}>
+          <DialogTitle>
+            Patient Info
+          </DialogTitle>
+          <DialogContent>Insert Patient CF</DialogContent>
+          <form onSubmit={async (event) =>{
+            const patient = await getPatientInfo(event)
+            if (patient){
+              setPatientInfo(patient)
+              setPatientInfoSet(true)
+            }
+            else{
+              setAlertMessage("Patient not found", 'error')
+            }
+            }}>
+
+            <FormControl>
+              <FormLabel required>Codice Fiscale</FormLabel>
+              <Input autoFocus required name="CodiceFiscale" />
+            </FormControl>
+            <Button variant="solid" color="primary" type='submit' sx={{my:2}}>Get patient info</Button>
+          </form>
+          {isPatientInfoSet && (
+            <div>
+              <Typography level='h5'>Name: {patientInfo.Name}</Typography>
+              <Typography level='h5'>Surname: {patientInfo.Surname}</Typography>
+              <Typography level='h5'>Birth Date: {patientInfo.BirthDate}</Typography>
+              <Typography level='h5'>Codice Fiscale: {patientInfo.CodiceFiscale}</Typography>
+              <Typography level='h5'>Address: {patientInfo.Address}</Typography>
+              <Typography level='h5'>Height: {patientInfo.Height} cm</Typography>
+              <Typography level='h5'>Weight: {patientInfo.Weight} Kg</Typography>
+              <Typography level='h5'>Allergies: {patientInfo.Allergies.join(', ')}</Typography>
+              <Typography level='h5'>Medical History: {patientInfo.MedicalHistory}</Typography>
+
+            </div>
+          )}
+
+        </ModalDialog>
+
+      </Modal>
     </Box>
 
   );
+
+
 }

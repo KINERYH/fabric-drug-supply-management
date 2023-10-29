@@ -190,13 +190,6 @@
       "smartContract": "DoctorContract"
     },
     {
-      "email": "1d@ttore.it",
-      "password": "$2b$10$ZB7buw0Zr4jZafrdyQgA2OR9sE.kc0THqJdArQl2nWjrL5s/p77pq",
-      "role": "Doctor",
-      "uuid": "7fcd5940-21fd-4761-8a27-046dbcf34124",
-      "smartContract": "DoctorContract"
-    },
-    {
       "email": "fabri@doctor.com",
       "password": "$2b$10$RC9.bj2w1rySkrnXQYSlvOlQDLqYFYD9LJHEmSjRverL2tp2UBwTO",
       "role": "Doctor",
@@ -384,6 +377,7 @@
       "role": "Doctor",
       "uuid": "3ed6b631-fb4d-45c0-83a1-30b08b146fba",
       "smartContract": "DoctorContract"
+
     }
   ]
 }

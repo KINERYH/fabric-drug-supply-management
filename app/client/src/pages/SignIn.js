@@ -56,7 +56,7 @@ export default function SignIn() {
       const json =  await response.json()
 
       if (response.status === 200) {
-        console.log('login effettuato con successo');
+        console.log('login succesfull');
         setToken(json.token)
         setUser(json.uuid)
         setRole(json.role)
@@ -64,7 +64,7 @@ export default function SignIn() {
 
       if (response.status === 401) {
         //unauthorized
-        setErrorMessage('Email o Password errati.');
+        setErrorMessage('Wrong Email or Password.');
         setIsErrorVisible(true); // Show the error message
 
       }
@@ -72,7 +72,7 @@ export default function SignIn() {
     }
     catch(err){
       console.log(err)
-      alert('Errore nella richiesta di login')
+      alert('Error in login request')
     }
 
 
@@ -139,12 +139,9 @@ export default function SignIn() {
               </Avatar>
               </Stack>
               <Stack gap={1} justifyContent="center" alignItems="center">
-                <Typography level="h3" >Accedi</Typography>
+                <Typography level="h3" >Sign In</Typography>
                 <Typography level="body-sm">
-                  Non sei ancora registrato?{' '}
-                  <Link href="/SignUp" level="title-sm">
-                    Registrati!
-                  </Link>
+                  Still not Registered? Sign Up!
                 </Typography>
               </Stack>
               </Stack>
@@ -174,16 +171,13 @@ export default function SignIn() {
                 <Stack gap={4} sx={{ mt: 2 }}>
 
                   <Button type="submit" fullWidth>
-                    Accedi
+                    Sign In
                   </Button>
                 </Stack>
               </form>
             </Stack>
           </Box>
           <Box component="footer" sx={{ py: 3}}>
-            <Typography level="body-xs" textAlign="center">
-              © Your company {new Date().getFullYear()}
-            </Typography>
           </Box>
         </Box>
     </CssVarsProvider>

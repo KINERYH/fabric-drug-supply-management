@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { v4: uuidv4 } = require('uuid');
+const { v4: uuidv4, stringify } = require('uuid');
 
 
 const ledger = require("../utils/blockchain/connection");
@@ -180,5 +180,27 @@ router.post("/patients/update/:patientID", async (req, res) => {
 	res.json({ status: "OK", data: patient });
 	console.log("Patient: \n", patient);
 });
+
+router.post("/pharmacy/order/", async (req, res) => {
+	const orderId = uuidv4();
+	try{
+	  const { ccp, wallet } = require("../index")
+	  const { gateway, contract } = await ledger.connect(ccp, wallet, 'admin', channelName, chaincodeName, 'PharmacyContract');
+	  const drugs = JSON.stringify(req.body.Drugs);
+		console.log(typeof(drugs))
+		console.log(typeof(req.body.PharmacyID))
+		console.log(typeof(orderId))
+		console.log(typeof(req.body.ManufacturerID))
+		console.log(typeof(req.body.Description))
+	  const result = await contract.submitTransaction('RequestOrder', req.body.PharmacyID, orderId, req.body.ManufacturerID, drugs, req.body.Description);
+	  const createdOrder = JSON.parse(result.toString());
+	  ledger.disconnect(gateway);
+	  console.log("*** Created order:", JSON.stringify(createdOrder, null, 2));
+	  return createdOrder;
+	}
+	catch(error){
+	  console.error('Failed to create order: ' + '\n' + error?.message);
+	  throw error;}
+})
 
 module.exports = router;

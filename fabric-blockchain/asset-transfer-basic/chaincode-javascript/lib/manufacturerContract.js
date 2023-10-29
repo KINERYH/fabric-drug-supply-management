@@ -129,51 +129,75 @@ class ManufacturerContract extends Contract{
   }
 
   /**
+   * Retrieves all prescriptions for a given patient from the ledger.
+   * @param {Context} ctx The transaction context
+   * @returns {Promise<Array>} An array of prescriptions for the given patient
+   * @throws Will throw an error if there are no prescriptions in the ledger
+   */
+	async GetAllBoxes(ctx) {
+		const serializedBoxes = await ctx.stub.getState('boxes');
+		if (!serializedBoxes || serializedBoxes.length === 0) {
+			throw new Error(`There are no boxes in the ledger`);
+		}
+		const boxes = JSON.parse(serializedBoxes.toString());
+		return boxes;
+  }
+
+  /**
 	 *
 	 * @param {*} ctx
-   * @param {*} orderID = order id
-	 * @param {*} manufacturerID = manufacturer id
+   * @param {*} order = order already processed by BACKEND
+	 * @param {*} updatedBoxes = boxes alrady updated by BACKEND
 	 */
-	async ProcessOrder(ctx, orderID, manufacturerID) {
+	async ProcessOrder(ctx, order, updatedBoxes) {
 		const serializedOrders = await ctx.stub.getState("orders");
-		const serializedManufacturers = await ctx.stub.getState("manufacturers");
-    if (!serializedOrders || serializedOrders.length === 0){
-      throw new Error('There are no orders in the ledger');
-    }
-    if (!serializedManufacturers || serializedManufacturers.length === 0){
-      throw new Error('There are no manufacturers in the ledger');
-    }
 		const orders = JSON.parse(serializedOrders.toString());
-		const manufacturers = JSON.parse(serializedManufacturers.toString());
-
-		console.log("***Orders: " + stringify(orders));
-
-    // check if the order can be processed
-    console.log("order to find -> " + stringify(orderID));
-    const order = orders.find(o => o.ID === orderID);
-    if(!order || order.length === 0){
-			throw new Error(`Order with ID ${orderID} not found`);
-    }
-    console.log(`***Order: ${stringify(order)}`);
-    if(order.ManufacturerID !== manufacturerID){
-      throw new Error('This order is not for this manufacturer');
-    }
-    if(order.Status !== 'pending'){
-      throw new Error('This order is not pending');
-    }
-    if(manufacturers.find(m => m.ID === manufacturerID).Drugs.includes(order.ID)){
-      throw new Error('This manufacturer doesn\'t have this drugs in his production catalog.');
-    }
+    order = JSON.parse(order);
+    updatedBoxes = JSON.parse(updatedBoxes);
     
-
-		// Update the order state
-    orders.find(o => o.ID === orderID).Status = "shipped";
+    // Update the order
+    const orderIndex = orders.indexOf(orders.find(o => o.ID === order.ID));
+    orders[orderIndex] = order;
     console.log(`***New order: ${stringify(order)}`);
 		await ctx.stub.putState("orders", Buffer.from(stringify(sortKeysRecursive(orders))));
-    
-    return orders.find(o => o.ID === orderID);
+		await ctx.stub.putState("boxes", Buffer.from(stringify(sortKeysRecursive(updatedBoxes))));
+    return
 	}
 
+  /**
+	 * Retrieves info for a given drugID.
+	 * @param {Context} ctx - The transaction context object.
+	 * @param {string} drugID - The ID of the drug.
+	 * @returns {Promise<Object>} - An object of drug.
+	 * @throws Will throw an error if there are no drug with the specified drugID.
+	 */
+	async GetDrug(ctx, drugID) {
+		const serializedDrugs = await ctx.stub.getState('drugs');
+		if (!serializedDrugs || serializedDrugs.length === 0) {
+			throw new Error(`There are no drugs in the ledger`);
+		}
+		const drugs = JSON.parse(serializedDrugs.toString());
+		const drug = drugs.find(drug => drug.DrugID === drugID);
+		if (!drug){
+			throw new Error(`No drug with id ${drugID} in the ledger`);
+		}
+		return drug;
+	}
 
+  /**
+   * Retrieves all prescriptions that have been processed by the pharmacy.
+   * @param {Context} ctx The transaction context
+   * @param {string} pharmacyID The ID of the pharmacy to retrieve prescriptions for
+   * @returns {Promise<Array>} An array of prescriptions for the given pharmacy
+   * @throws Will throw an error if there are no prescriptions in the ledger
+   */
+	async GetAllPrescriptions(ctx, pharmacyID) {
+		const serializedPrescriptions = await ctx.stub.getState('prescriptions');
+		if (!serializedPrescriptions || serializedPrescriptions.length === 0) {
+			throw new Error(`There are no prescriptions in the ledger`);
+		}
+		const prescriptions = JSON.parse(serializedPrescriptions.toString());
+		return prescriptions;
+	}
 }
 module.exports = ManufacturerContract;

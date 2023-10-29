@@ -2,8 +2,18 @@ const usersService = require("../services/users.service")
 
 
 const getAllUsers = async (req, res) => {
-  const allUsers = usersService.getAllUsers();
-  res.json({ status: "OK", data: allUsers });
+  try{
+    users = await usersService.getAllUsers(req.currentUser);
+    res.status(200).json({
+      message: "Get users: ",
+      data: users
+    });
+  }catch(error){
+    res.status(error?.status || 500).json({
+      message: "Impossible to get users.",
+      error: error?.message || error
+    });
+  }
 };
 
 const getUser = async (req, res) => {

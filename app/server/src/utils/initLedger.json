@@ -24,6 +24,32 @@
         "e ti senti come un cane della malesia"
       ],
       "UOM": "ml"
+    },
+    {
+      "DrugID": "ec110aef-28ce-4d1b-a008-840e403903no",
+      "ManufacturerID": "94ae7246-40c6-40fa-8d5a-fcc34d0edcca",
+      "Name": "Drug prova",
+      "Description": "Allevia naso e gola",
+      "Price": 1000,
+      "Composition": [
+        "paracetamolo",
+        "acido",
+        "redbull"
+      ],
+      "UOM": "ml"
+    },
+    {
+      "DrugID": "ec110aef-28ce-4d1b-a008-840e40390328",
+      "ManufacturerID": "94ae7246-40c6-40fa-8d5a-fcc34d0edcca",
+      "Name": "Drug prova 2",
+      "Description": "Allevia naso, gola e mento.",
+      "Price": 1000,
+      "Composition": [
+        "paracetamolo",
+        "acido",
+        "redbull"
+      ],
+      "UOM": "ml"
     }
   ],
   "boxes": [
@@ -55,6 +81,7 @@
   "prescriptions": [
     {
       "ID": "6918bcdb-bf53-4a88-9f11-986b52a72fc4",
+
       "DoctorID": "3ed6b631-fb4d-45c0-83a1-30b08b146fba",
       "PatientID": "44c87b23-7359-4cdf-afef-6fc8794d1b1d",
       "PharmacyID": null,
@@ -76,6 +103,7 @@
     },
     {
       "ID": "6918bcdb-bf53-4a88-9f11-986b53a72fc1",
+
       "DoctorID": "3ed6b631-fb4d-45c0-83a1-30b08b146fba",
       "PatientID": "88c5e7a9-b2f0-4e17-a42e-021aef6d3f91",
       "PharmacyID": "3fe7794e-d359-4480-b512-4458731bef92",
@@ -102,6 +130,7 @@
     },
     {
       "ID": "6918bcdb-bf53-4a88-9f11-986b52a7dec4",
+
       "DoctorID": "3ed6b631-fb4d-45c0-83a1-30b08b146fba",
       "PatientID": "88c5e7a9-b2f0-4e17-a42e-021aef6d3f91",
       "PharmacyID": null,
@@ -118,6 +147,7 @@
     },
     {
       "ID": "6918bcdb-bf53-4a88-9f11-986b52n7dec4",
+
       "DoctorID": "3ed6b631-fb4d-45c0-83a1-30b08b146fba",
       "PatientID": "4702b1fb-6783-4690-8e5e-9b8e89a0f1ab",
       "PharmacyID": null,
@@ -136,6 +166,7 @@
       "ID": "6918bcdb-bf53-4a88-9f11-986b52a7dec5",
       "DoctorID": "3ed6b631-fb4d-45c0-83a1-30b08b146fba",
       "PatientID": "00106b10-abe4-475b-9500-13f77421011b",
+
       "PharmacyID": null,
       "Status": "pending",
       "Description": "Prendi la medicina o vieni bannato",
@@ -168,7 +199,7 @@
   "orders": [
     {
       "ID": "94ae7246-40c6-40fa-8d5a-fcc34d0edbca",
-      "PharmacyID": "5f4325c4-85fe-4ae7-bd49-8aaa92ad4766",
+      "PharmacyID": "acbc2869-f4f1-4b75-ba61-23964d28b018",
       "ManufacturerID": "fa15c893-bb7d-4cc9-a0ca-4e303a85f8e9",
       "Status": "pending",
       "Description": "si richiedono 10 scatole di tachipirina",
@@ -182,7 +213,7 @@
     },
     {
       "ID": "94ae7246-40c6-40fa-8d5a-fcc39d0edbca",
-      "PharmacyID": "5f4325c4-85fe-4ae7-bd49-8aaa92ad4766",
+      "PharmacyID": "acbc2869-f4f1-4b75-ba61-23964d28b018",
       "ManufacturerID": "fa15c893-bb7d-4cc9-a0ca-4e303a85f8e9",
       "Status": "shipped",
       "Description": "si richiedono 10 scatole di cortisone",
@@ -196,7 +227,7 @@
     },
     {
       "ID": "93ae7246-40c6-40fa-8d5a-fcc34d0edbca",
-      "PharmacyID": "5f4325c4-85fe-4ae7-bd49-8aaa92ad4766",
+      "PharmacyID": "acbc2869-f4f1-4b75-ba61-23964d28b018",
       "ManufacturerID": "fa15c893-bb7d-4cc9-a0ca-4e303a85f8e9",
       "Status": "processed",
       "Description": "si richiedono 2 scatole di tachipirina e 1 di trembolone",
@@ -245,20 +276,27 @@
       "Surname": "Franco",
       "Specialization": "Neurologia",
       "Hospital": "Ospedale San Mario"
-    }
+    },
+    {"ID":"0e66a63f-2e4e-448e-aae6-27b71bbf7674",
+    "Name":"dott2",
+    "Surname":"cogn2",
+    "Specialization":"Cardiologia",
+    "Hospital":"Di Venere"}
   ],
   "patients": [
     {
-      "Address": "via de Marinis",
-      "Allergies": [],
-      "BirthDate": "2023-10-20",
-      "CodiceFiscale": "12345",
-      "Height": "218",
-      "ID": "00106b10-abe4-475b-9500-13f77421011b",
-      "MedicalHistory": [],
-      "Name": "Fra",
-      "Surname": "Diana",
-      "Weight": "52"
+      "Address": "lello",
+        "Allergies": [],
+        "BirthDate": "2023-10-26",
+        "CodiceFiscale": "123",
+        "Height": "14",
+        "Hospital": "",
+        "ID": "43e06c56-b8a1-4541-a4f7-243066b7db41",
+        "MedicalHistory": [],
+        "Name": "Name",
+        "Specialization": "",
+        "Surname": "Surname",
+        "Weight": "11101"
     },
     {
       "ID": "88c5e7a9-b2f0-4e17-a42e-021aef6d3f91",
@@ -307,6 +345,25 @@
     }
   ],
   "pharmacies": [
+    {"ID":"acbc2869-f4f1-4b75-ba61-23964d28b018",
+    "Name":"farmacia1",
+    "Address":"address12",
+    "DrugStorage": [
+      {
+        "DrugID": "ec110aef-28ce-4d1b-a008-840e40390329",
+        "Quantity": 2,
+        "BoxIDs": [
+          "ec110aef-28ce-4d1b-a008-840e40390328",
+          "ec110aef-28ce-4d1b-a008-840e40390327"
+        ]
+      },
+      {
+        "DrugID": "ec110aef-28ce-4d1b-a008-840e40390330",
+        "Quantity": 1,
+        "BoxIDs": [
+          "ec110aef-28ce-4d1b-a008-840e40390323"
+        ]
+      }]},
     {
 
       "ID": "25ba64c6-f712-47bf-9b02-2f85e6ce3bf9",
@@ -331,6 +388,7 @@
       ]
     },
     {
+
       "ID": "3fe7794e-d359-4480-b512-4458731bef92",
       "Address": "Address12",
       "Name": "Farmacia12",

@@ -40,8 +40,8 @@ class DoctorContract extends Contract {
     const serializedPatients = await ctx.stub.getState('patients');
     const serializedDoctors = await ctx.stub.getState('doctors');
     const serializedPharmacies = await ctx.stub.getState('pharmacies');
-    if ( 
-      (!serializedPatients || serializedPatients.length === 0) && 
+    if (
+      (!serializedPatients || serializedPatients.length === 0) &&
       (!serializedDoctors || serializedDoctors.length === 0)   &&
       (!serializedPharmacies || serializedPharmacies.length === 0)
     ) {
@@ -376,8 +376,23 @@ class DoctorContract extends Contract {
       throw new Error(`There are no drugs in the ledger`);
     }
     const drugs = JSON.parse(serializedDrugs.toString());
-    return drugs;  
+    return drugs;
   }
+
+  /**
+   * Retrieves all patients from the ledger.
+   * @async
+   * @function GetAllUsers
+   * @param {Context} ctx - The transaction context.
+   * @returns {Promise<Object>} The list of all patients as a string.
+   * @throws Will throw an error if there are no patients in the ledger.
+   */
+  async GetAllUsers(ctx){
+    const  serializedPatients = await ctx.stub.getState('patients');
+    const patients = JSON.parse(serializedPatients.toString());
+    return patients;
+  }
+
 
 }
 
