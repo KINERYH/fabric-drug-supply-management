@@ -84,19 +84,28 @@ export default function Home() {
     // E chiudi il modal
     event.preventDefault();
     try {
+      let allergies = userDetails.Allergies;
+      if(typeof(allergies) === 'string') {
+        allergies = allergies.split(",");
+      }
+
+      let medicalHistory = userDetails.MedicalHistory;
+      if(typeof(medicalHistory) === 'string') {
+        medicalHistory = medicalHistory.split(",");
+      }
+
       const response = await fetch(`http://localhost:3001/api/users/${user}`, {
         method: 'PATCH',
         headers: {
           'Authorization': 'Bearer ' + token,
           'Content-Type': 'application/json'
         },
-        // TODO: assicurarsi che se allergies o medical history vengano modificati, poi vengano passati come lista
         body: JSON.stringify({
           Name: userDetails.Name,
           Surname: userDetails.Surname,
           CodiceFiscale: userDetails.CodiceFiscale,
-          Allergies: userDetails.Allergies,
-          MedicalHistory: userDetails.MedicalHistory,
+          Allergies: JSON.stringify(allergies),
+          MedicalHistory: JSON.stringify(medicalHistory),
           Password: userDetails.Password,
           BirthDate: userDetails.BirthDate,
           Address: userDetails.Address,
@@ -207,7 +216,6 @@ export default function Home() {
       if (response.status == 200) {
         showAlertMessage("Prescription processed successfully", 'success');
       } else {
-        // TODO: gestire la propagazione degli errori
         const errorResponse = await response.json();
         if (errorResponse && errorResponse.message) {
           showAlertMessage(errorResponse.message, 'error');

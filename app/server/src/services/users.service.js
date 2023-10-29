@@ -151,7 +151,7 @@ const updateUser = async (userInfo, userID) => {
     console.log("USER INFO: ", userInfo);
     console.log("USER ID", userID);
     console.log('\n--> Submit Transaction: UpdateInfo');
-    const updatedUser = await contract.submitTransaction('UpdateInfo', userID, userInfo.Address, userInfo.Height, userInfo.Weight, JSON.stringify(userInfo.Allergies), JSON.stringify(userInfo.MedicalHistory));
+    const updatedUser = await contract.submitTransaction('UpdateInfo', userID, userInfo.Address, userInfo.Height, userInfo.Weight, userInfo.Allergies, userInfo.MedicalHistory);
     console.log('*** Result: committed');
     ledger.disconnect(gateway);
     return updatedUser;
