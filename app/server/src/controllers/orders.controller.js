@@ -20,7 +20,7 @@ const getAllOrders = async (req, res) => {
 
 const getOrder = async (req, res) => {
   try{
-    const order = await ordersService.getOrder(req.params.prescriptionId, req.currentUser);
+    const order = await ordersService.getOrder(req.params.orderId, req.currentUser);
     res.status(200).json({
       message: "Get an existing order: ",
       data: order

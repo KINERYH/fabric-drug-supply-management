@@ -164,5 +164,40 @@ class ManufacturerContract extends Contract{
     return
 	}
 
+  /**
+	 * Retrieves info for a given drugID.
+	 * @param {Context} ctx - The transaction context object.
+	 * @param {string} drugID - The ID of the drug.
+	 * @returns {Promise<Object>} - An object of drug.
+	 * @throws Will throw an error if there are no drug with the specified drugID.
+	 */
+	async GetDrug(ctx, drugID) {
+		const serializedDrugs = await ctx.stub.getState('drugs');
+		if (!serializedDrugs || serializedDrugs.length === 0) {
+			throw new Error(`There are no drugs in the ledger`);
+		}
+		const drugs = JSON.parse(serializedDrugs.toString());
+		const drug = drugs.find(drug => drug.DrugID === drugID);
+		if (!drug){
+			throw new Error(`No drug with id ${drugID} in the ledger`);
+		}
+		return drug;
+	}
+
+  /**
+   * Retrieves all prescriptions that have been processed by the pharmacy.
+   * @param {Context} ctx The transaction context
+   * @param {string} pharmacyID The ID of the pharmacy to retrieve prescriptions for
+   * @returns {Promise<Array>} An array of prescriptions for the given pharmacy
+   * @throws Will throw an error if there are no prescriptions in the ledger
+   */
+	async GetAllPrescriptions(ctx, pharmacyID) {
+		const serializedPrescriptions = await ctx.stub.getState('prescriptions');
+		if (!serializedPrescriptions || serializedPrescriptions.length === 0) {
+			throw new Error(`There are no prescriptions in the ledger`);
+		}
+		const prescriptions = JSON.parse(serializedPrescriptions.toString());
+		return prescriptions;
+	}
 }
 module.exports = ManufacturerContract;

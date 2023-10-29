@@ -27,7 +27,7 @@ const getOrder = async (orderId, currentUser) => {
   try {
     const orders = await getAllOrders(currentUser);
 
-    // filter for the specified prescription
+    // filter for the specified order
     const order = orders.find(order => order.ID === orderId);
     return order;
   } catch (error) {
