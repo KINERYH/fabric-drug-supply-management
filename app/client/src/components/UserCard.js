@@ -23,9 +23,9 @@ export default function UserCard(props) {
 
 
   const handleLogout = () => {
-     setToken();
-     setUser();
-     navigate("/");
+    setToken();
+    setUser();
+    navigate("/");
   }
   return (
     <Box sx={{ width: '100%' }} >
@@ -38,17 +38,17 @@ export default function UserCard(props) {
       >
         <AspectRatio flex ratio="1" maxHeight={70} sx={{ minWidth: 150 }}>
           <img
-            src={ props.userProfile?.src }
+            src={props.userProfile?.src}
             loading="lazy"
             alt=""
           />
         </AspectRatio>
         <CardContent>
           <Typography fontSize="xl" fontWeight="lg">
-            { props.userProfile?.firstName } { props.userProfile?.lastName }
+            {props.userProfile?.firstName} {props.userProfile?.lastName}
           </Typography>
           <Typography level="body-sm" fontWeight="lg" textColor="text.tertiary">
-            { props.userProfile?.role }
+            {props.userProfile?.role}
           </Typography>
           <Sheet
             sx={{
@@ -65,19 +65,19 @@ export default function UserCard(props) {
               <Typography level="body-xs" fontWeight="lg">
                 { (props.role != 'Manufacturer' && props.role != 'Pharmacy') ? 'Total prescriptions' : 'Total orders'}
               </Typography>
-              <Typography fontWeight="lg">{ props.userProfile?.totPrescriptions }</Typography>
+              <Typography fontWeight="lg">{props.userProfile?.totPrescriptions}</Typography>
             </div>
             <div>
               <Typography level="body-xs" fontWeight="lg">
                 { (props.role != 'Manufacturer' && props.role != 'Pharmacy') ? 'Pending prescriptions' : 'Pending orders'}
               </Typography>
-              <Typography fontWeight="lg">{ props.userProfile?.pendingPrescriptions }</Typography>
+              <Typography fontWeight="lg">{props.userProfile?.pendingPrescriptions}</Typography>
             </div>
             <div>
               <Typography level="body-xs" fontWeight="lg">
                 { (props.role != 'Manufacturer' && props.role != 'Pharmacy') ? 'Processed prescriptions' : 'Processed orders'}
               </Typography>
-              <Typography fontWeight="lg">{ props.userProfile?.processedPrescriptions }</Typography>
+              <Typography fontWeight="lg">{props.userProfile?.processedPrescriptions}</Typography>
             </div>
           </Sheet>
           <Box sx={{ display: 'flex', gap: 1.5, '& > button': { flex: 1 } }}>
@@ -90,6 +90,7 @@ export default function UserCard(props) {
           </Box>
         </CardContent>
       </Card>
+
     </Box>
   );
 }

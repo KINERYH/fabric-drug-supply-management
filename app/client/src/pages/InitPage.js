@@ -1,9 +1,21 @@
 import Box from '@mui/joy/Box';
 import Typography from '@mui/joy/Typography';
 import Avatar from '@mui/joy/Avatar';
-
+import Button from '@mui/joy/Button';
+import { useAuth } from '../provider/authProvider';
+import { useNavigate } from 'react-router-dom';
 
 export default function InitPage(props) {
+  
+  const { setToken, setUser } = useAuth();
+  const navigate = useNavigate();
+  
+  const handleLogout = () => {
+    setToken();
+    setUser();
+    navigate("/");
+  }
+
   return (
     <Box sx={{ display:'flex', flexDirection:'column', gap: 2, alignItems:'center', justifyContent:'center', minHeight:'80vh', maxWidth: '100%' }}>
       <Typography level="h1" fontSize="54px">Fabric Drug Supply Management</Typography>
@@ -21,6 +33,7 @@ export default function InitPage(props) {
       <Typography sx={{ maxWidth: '50%', overflow: 'hidden'}}>
         Current Token: {props.token}
       </Typography>
+      <Button onClick={handleLogout}>Logout</Button>
     </Box>
   );
 }
