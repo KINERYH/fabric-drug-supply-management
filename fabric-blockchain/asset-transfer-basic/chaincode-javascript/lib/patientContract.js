@@ -123,7 +123,7 @@ class PatientContract extends Contract {
    * @returns {Promise<Object>} The updated patient object
    * @throws Will throw an error if there are no patients in the ledger or if the patient with the given ID does not exist
    */
-  async UpdateInfo(ctx, patientID, address, height, weight, allergies, medicalHistory) {
+  async UpdateInfo(ctx, patientID, name, surname, address, birthdate, fiscalCode) {
     const serializedPatients = await ctx.stub.getState('patients');
     if (!serializedPatients || serializedPatients.length === 0) {
       throw new Error(`There are no patients in the ledger`);
@@ -136,11 +136,11 @@ class PatientContract extends Contract {
     }
 
     const patient = patients[index];
+    patient.Name = name;
+    patient.Surname = surname;
     patient.Address = address;
-    patient.Height = height;
-    patient.Weight = weight;
-    patient.Allergies = JSON.parse(allergies);
-    patient.MedicalHistory = JSON.parse(medicalHistory);
+    patient.BirthDate = birthdate;
+    patient.CodiceFiscale = fiscalCode;
     patients[index] = patient;
     await ctx.stub.putState('patients', Buffer.from(stringify(sortKeysRecursive(patients))));
     console.log("***patient: ", patient);

@@ -47,18 +47,8 @@ const createUser = async (req, res) => {
 };
 
 const updateUser = async (req, res) => {
-  try {
-    const updatedUser = usersService.updateUser(req.body, req.params.userId);
-    res.json({
-      message: "Updated the user with id: " + req.params.userId,
-      data: updatedUser
-    });
-  } catch (error) {
-    res.status(error?.status || 500).json({
-      message: "User not updated.",
-      error: error?.message || error
-    });
-  }
+  const updatedUser = usersService.updateUser();
+  res.json({ message: "Update an existing user" });
 };
 
 const deleteUser = async (req, res) => {

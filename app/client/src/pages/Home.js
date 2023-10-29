@@ -12,13 +12,11 @@ import ModalDialog from '@mui/joy/ModalDialog';
 import DialogTitle from '@mui/joy/DialogTitle';
 import DialogContent from '@mui/joy/DialogContent';
 import Stack from '@mui/joy/Stack';
-import Textarea from '@mui/joy/Textarea';
 import WarningIcon from '@mui/icons-material/Warning';
 import Add from '@mui/icons-material/Add';
 import UserCard from '../components/UserCard';
 import Breadcrumbs from '../components/Breadcrumbs';
 import Table from '../components/Table';
-import Chip from '@mui/joy/Chip';
 import Autocomplete from '@mui/joy/Autocomplete';
 import AutocompleteOption from '@mui/joy/AutocompleteOption';
 import ListItemDecorator from '@mui/joy/ListItemDecorator';
@@ -68,76 +66,8 @@ export default function Home() {
   const [selectedDrugName, setSelectedDrugName] = React.useState(null);
   const [boxList, setBoxList] = React.useState(null);
 
-  // User card states
-  const [isEditInfoModalOpen, setEditInfoModalOpen] = React.useState(false);
-  const [userDetails, setUserDetails] = React.useState({});
-  const [originalUserDetails, setOriginalUserDetails] = React.useState({});
-  const [isModified, setIsModified] = React.useState(false);
 
-  // Funzione per gestire la modifica dei campi di input
-  const handleInputChange = (field, value) => {
-    setUserDetails({
-      ...userDetails,
-      [field]: value,
-    });
-    setIsModified(true);
-  };
-
-  const handleEditInfoModalSubmit = async (event) => {
-    // Invia i dati modificati al server
-    // Una volta completato con successo, reimposta isModified su false
-    // E chiudi il modal
-    event.preventDefault();
-    try {
-      let allergies = userDetails.Allergies;
-      if(typeof(allergies) === 'string') {
-        allergies = allergies.split(",");
-      }
-
-      let medicalHistory = userDetails.MedicalHistory;
-      if(typeof(medicalHistory) === 'string') {
-        medicalHistory = medicalHistory.split(",");
-      }
-
-      const response = await fetch(`http://localhost:3001/api/users/${user}`, {
-        method: 'PATCH',
-        headers: {
-          'Authorization': 'Bearer ' + token,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          Name: userDetails.Name,
-          Surname: userDetails.Surname,
-          CodiceFiscale: userDetails.CodiceFiscale,
-          Allergies: JSON.stringify(allergies),
-          MedicalHistory: JSON.stringify(medicalHistory),
-          Password: userDetails.Password,
-          BirthDate: userDetails.BirthDate,
-          Address: userDetails.Address,
-          Weight: userDetails.Weight,
-          Height: userDetails.Height,
-        })
-      });
-
-      if (response.status == 200) {
-        showAlertMessage("User info updated successfully", 'success');
-      } else {
-        const errorResponse = await response.json();
-        if (errorResponse && errorResponse.message) {
-          showAlertMessage(errorResponse.message, 'error');
-        } else {
-          // In case of generic/unknown error
-          showAlertMessage("Error updating user info", 'error');
-        }
-      }
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setIsModified(false);
-      setEditInfoModalOpen(false);
-    }
-  };
-
+  //TODO: mettere una duration di default appropriata
   const showAlertMessage = (message, type, duration = 2000) => {
     // Determine which state variables to set based on the type
     const showStateVariable = type === 'success' ? setShowSuccessAlert : type === 'error' ? setShowErrorAlert : null;
@@ -332,6 +262,7 @@ export default function Home() {
       if (response.status == 200) {
         showAlertMessage("Prescription processed successfully", 'success');
       } else {
+        // TODO: gestire la propagazione degli errori
         const errorResponse = await response.json();
         if (errorResponse && errorResponse.message) {
           showAlertMessage(errorResponse.message, 'error');
@@ -350,11 +281,11 @@ export default function Home() {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const orderID = data.get('orderID');
-    try {
+    try{
       const response = await fetch(`http://localhost:3001/api/orders/${orderID}`, {
         method: 'PATCH',
         headers: {
-          'Authorization': 'Bearer ' + token,
+          'Authorization': 'Bearer '+ token,
           'Content-Type': 'application/json'
         },
       });
@@ -371,11 +302,31 @@ export default function Home() {
         }
       }
       console.log("Response: " + response.status)
-    } catch (e) {
+    } catch(e) {
       console.error(e);
     }
   }
 
+  const fetchUserProfile = async () => {
+    try {
+      const res = await fetch(`http://localhost:3001/api/users/${user}`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        }
+      });
+      if (res.status == 200) {
+        const result = await res.json();
+        console.log("response fetch user");
+        console.log(result.data);
+        return result.data;
+      } else {
+        console.error("userProfileFetch status code: " + res.status);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }
   // get all the info about boxes in a list
   const fetchBoxesInfo = async (boxIds) => {
     try {
@@ -471,7 +422,7 @@ export default function Home() {
 
   // fetching drug info
   const fetchDrugInfo = async (drugId) => {
-    try {
+    try{
       const res = await fetch(`http://localhost:3001/api/drugs/${drugId}`, {
         method: 'GET',
         headers: {
@@ -484,14 +435,14 @@ export default function Home() {
       } else {
         console.error("fetchDrugInfo status code: " + res.status);
       }
-    } catch (e) {
+    } catch(e){
       console.error(e);
     }
   }
 
   // fetching drugs in the pharmacy storage
   const fetchStorage = async () => {
-    try {
+    try{
       const pharmacyInfo = await fetchUserInfo(user);
       const storage = pharmacyInfo.DrugStorage
       for (let drug of storage) {
@@ -506,7 +457,7 @@ export default function Home() {
 
       return storage;
     }
-    catch (e) {
+    catch(e){
       console.error(e);
     }
 
@@ -573,9 +524,7 @@ export default function Home() {
 
   React.useEffect(() => {
     const fetchData = async () => {
-      const userProfile = await fetchUserInfo(user);
-      setUserDetails(userProfile);
-      console.log("HOME - USER PROFILE: ", userProfile);
+      const userProfile = await fetchUserProfile();
       let prescriptions = [];
       if (role != "Manufacturer") {
         prescriptions = await fetchPrescriptions() || [];
@@ -675,6 +624,7 @@ export default function Home() {
     return (
       <div>
         {
+          // TODO: aggiungere altre info, come il nome del manufacturer
         boxes.map((box, index) => (
           <div>
             <Typography level='h4'>Box {index}</Typography>
@@ -683,7 +633,6 @@ export default function Home() {
             <Typography>Production Date: {box.ProductionDate}</Typography>
           </div>
         ))}
-
       </div>
     );
   }
@@ -740,13 +689,12 @@ export default function Home() {
             { display: order?.Status, chipStatus: true },
             { display: order?.ManufacturerID, favicon: true },
             { display: order?.Description },
-            {
-              display: order?.Status === 'shipped' &&
-                <Tooltip arrow color="neutral" placement="right" title="Process">
-                  <Fab color="primary" size="small" onClick={() => openModalWithOrderID(order.ID, true)}>
-                    <ControlPointIcon size="sm" />
-                  </Fab>
-                </Tooltip>
+            { display: order?.Status === 'shipped' &&
+            <Tooltip arrow color="neutral" placement="right" title="Process">
+              <Fab color="primary" size="small" onClick={() => openModalWithOrderID(order.ID, true)}>
+                <ControlPointIcon size="sm" />
+              </Fab>
+            </Tooltip>
             }
           ])
         }
@@ -754,23 +702,21 @@ export default function Home() {
         tableStorage = {
           header: ['Drug ID', 'Name', 'Manufacturer', 'Quantity', 'Additional info'],
           body: drugs?.map(drug => [
-            { display: drug?.DrugID },
+            { display: drug?.DrugID},
             { display: drug?.Name },
             { display: drug?.ManufacturerID, favicon: true },
-            { display: drug?.Quantity },
-            {
-              display: <Tooltip arrow color="neutral" placement="right" title="box info">
-                <Fab color="primary" size="small" onClick={
-                  async () => {
-                    setSelectedDrugName(drug?.Name);
-                    const boxInfos = await fetchBoxesInfo(drug?.BoxIDs);
-                    setBoxList(boxInfos);
-                    setBoxInfoModalOpen(true);
-                  }}>
-                  <ControlPointIcon size="sm" />
-                </Fab>
-              </Tooltip>
-            }
+            { display: drug?.Quantity},
+            {display:  <Tooltip arrow color="neutral" placement="right" title="box info">
+            <Fab color="primary" size="small" onClick={
+              async ()=>{
+                setSelectedDrugName(drug?.Name);
+                const boxInfos = await fetchBoxesInfo(drug?.BoxIDs);
+                setBoxList(boxInfos);
+                setBoxInfoModalOpen(true);
+               }}>
+              <ControlPointIcon size="sm" />
+            </Fab>
+          </Tooltip>}
           ])
         }
 
@@ -789,7 +735,6 @@ export default function Home() {
                   <LocalShippingIcon size="sm" />
                 </IconButton>
               </Tooltip>
-
             }
           ])
         }
@@ -805,7 +750,7 @@ export default function Home() {
     setDataTable(table);
     setOrderTable(tableOrders);
     setStorageTable(tableStorage);
-  }, [prescriptions, orders, doctors, patients, pharmacies, drugs]);
+  }, [prescriptions, orders, doctors, patients, pharmacies, drugs ]);
   // ^^^^ indicando gli state come dipendenza ogni volta che cambiano parte l'hook
 
   return (
@@ -813,17 +758,15 @@ export default function Home() {
       <Box sx={{ maxWidth: '80%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: 5 }}>
         {/* <Breadcrumbs navigation={ navigation } /> */}
         <Box sx={{ maxWidth: '60%' }}>
-          <UserCard role={role} userProfile={userProfileCard} action={() => {
-            setEditInfoModalOpen(true);
-            setOriginalUserDetails(userDetails);
-          }} />
+          <UserCard role={role} userProfile={userProfileCard} action={()=>{
+              setEditInfoModalOpen(true)}}/>
         </Box>
         {/* <Stack> */}
-        <div>
-          <Box sx={{ maxWidth: '100%', display: 'flex', flexDirection: 'row' }}>
-            <Box sx={{ minWidth: '50%' }}>
-              {dataTable && (
-                <Typography level="h4" textAlign="left" sx={{ mb: 2, marginBottom: 0 }}>
+          <div>
+            <Box sx={{ maxWidth: '100%', display: 'flex', flexDirection: 'row' }}>
+              <Box sx={{ minWidth: '50%' }}>
+                { dataTable && (
+                  <Typography level="h4" textAlign="left" sx={{ mb: 2, marginBottom: 0 }}>
                   Prescriptions
                   </Typography>
                 )}
@@ -887,35 +830,6 @@ export default function Home() {
                 {alertMessage}
               </Alert>)}
           </Box>
-        </div>
-
-        <Box sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          position: 'fixed',
-          top: '90%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          zIndex: 9999,
-        }}>
-          {showSuccessAlert && (
-            <Alert
-              variant="soft"
-              color="success"
-              startDecorator={<PlaylistAddCheckCircleRoundedIcon />}
-            >
-              {alertMessage}
-            </Alert>)}
-          {showErrorAlert && (
-            <Alert
-              variant="soft"
-              color="danger"
-              startDecorator={<WarningIcon />}
-            >
-              {alertMessage}
-            </Alert>)}
-        </Box>
 
 
       </Box>
@@ -1093,154 +1007,9 @@ export default function Home() {
 
       {/* BoxInfo Modal */}
       <Modal open={isBoxInfoModalOpen} onClose={() => setBoxInfoModalOpen(false)}>
-        <ModalDialog style={{ width: "60%" }}>
+      <ModalDialog style={{ width: "60%" }}>
           <DialogTitle level='h3'>{selectedDrugName} Storage</DialogTitle>
-          <BoxInfoModal boxes={boxList} />
-        </ModalDialog>
-      </Modal>
-
-
-
-      {/* TODO: FABRIZIO PENSACI TU -> Not responsive - Edit info modal */}
-      <Modal
-        open={isEditInfoModalOpen}
-        onClose={() => {
-          setEditInfoModalOpen(false);
-          setIsModified(false);
-          setUserDetails(originalUserDetails);
-        }}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <ModalDialog
-          sx={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            width: '60%',
-            p: 3, // Increase padding
-            m: 2, // Increase margin
-            display: 'flex',
-            bgcolor: 'background.level1',
-            borderRadius: 'sm',
-            flexDirection: 'column',
-          }}
-        >
-          {/* <div style={{ display: 'flex', justifyContent: 'space-between' }}> */}
-          {/* <Typography id="modal-modal-title" variant="h6" component="h2">
-            Edit info
-          </Typography> */}
-          {/* <IconButton variant="outlined" onClick={() => setEditInfoModalOpen(false)}>Close</IconButton> */}
-          {/* </div> */}
-          <DialogTitle> User Information</DialogTitle>
-          <DialogContent>Visualize and edit the user information.</DialogContent>
-          <form
-            onSubmit={async (event) => {
-              event.preventDefault();
-              await handleEditInfoModalSubmit(event);
-              setEditInfoModalOpen(false);
-            }}
-          >
-            <Stack direction='row' style={{ display: 'flex' }}>
-              <Stack style={{ flex: 1, margin: '0.5rem' }}>
-                <FormControl>
-                  <FormLabel>First Name</FormLabel>
-                  <Input
-                    type="text"
-                    value={userDetails.Name}
-                    readOnly
-                    style={{ marginBottom: '0.5rem' }}
-                  />
-                </FormControl>
-                <FormControl>
-                  <FormLabel>Last Name</FormLabel>
-                  <Input
-                    type="text"
-                    value={userDetails.Surname}
-                    readOnly
-                    style={{ marginBottom: '0.5rem' }}
-                  />
-                </FormControl>
-                <FormControl>
-                  <FormLabel>Birth Date</FormLabel>
-                  <Input
-                    type="date"
-                    value={userDetails.BirthDate}
-                    readOnly
-                    style={{ marginBottom: '0.5rem' }}
-                  />
-                </FormControl>
-                <FormControl>
-                  <FormLabel>CF</FormLabel>
-                  <Input
-                    type="text"
-                    value={userDetails.CodiceFiscale}
-                    readOnly
-                    style={{ marginBottom: '0.5rem' }}
-                  />
-                </FormControl>
-              </Stack>
-              <Stack style={{ flex: 1, margin: '0.5rem' }}>
-                <FormControl>
-                  <FormLabel>Address</FormLabel>
-                  <Input
-                    type="text"
-                    value={userDetails.Address}
-                    onChange={(e) => handleInputChange('Address', e.target.value)}
-                    style={{ marginBottom: '0.5rem' }}
-                  />
-                </FormControl>
-                <Stack direction='row' style={{ display: 'flex', flex: 1 }}>
-                  <FormControl>
-                    <FormLabel>Height</FormLabel>
-                    <Input
-                      type="number"
-                      value={userDetails.Height}
-                      onChange={(e) => handleInputChange('Height', e.target.value)}
-                      style={{ marginBottom: '0.5rem' }}
-                    />
-                  </FormControl>
-                  <FormControl>
-                    <FormLabel>Weight</FormLabel>
-                    <Input
-                      type="number"
-                      value={userDetails.Weight}
-                      onChange={(e) => handleInputChange('Weight', e.target.value)}
-                      style={{ marginBottom: '0.5rem' }}
-                    />
-                  </FormControl>
-                </Stack>
-                <FormControl>
-                  <FormLabel>Allergies</FormLabel>
-                  <Input
-                      type="text"
-                      value={userDetails.Allergies}
-                      onChange={(e) => handleInputChange('Allergies', e.target.value)}
-                      style={{ marginBottom: '0.5rem' }}
-                    />
-                </FormControl>
-                <FormControl>
-                  <FormLabel>Medical History</FormLabel>
-                  <Textarea
-                    type="text"
-                    value={userDetails.MedicalHistory}
-                    onChange={(e) => handleInputChange('MedicalHistory', e.target.value)}
-                    style={{ marginBottom: '0.5rem' }}
-                  />
-                </FormControl>
-              </Stack>
-            </Stack>
-            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-              <Button
-                sx={{ mx: 'auto', width: '30%' }}
-                disabled={!isModified}
-                type='submit'
-                variant='solid'
-              >
-                Submit</Button>
-            </Box>
-          </form>
+          <BoxInfoModal boxes={boxList}/>
         </ModalDialog>
       </Modal>
 

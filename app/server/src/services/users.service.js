@@ -159,21 +159,8 @@ const createUser = async (user) => {
   }
 };
 
-const updateUser = async (userInfo, userID) => {
-  try {
-    const { ccp, wallet } = require("../index");
-    const { gateway, contract } = await ledger.connect(ccp, wallet, userID, channelName, chaincodeName, "PatientContract");
-    console.log("USER INFO: ", userInfo);
-    console.log("USER ID", userID);
-    console.log('\n--> Submit Transaction: UpdateInfo');
-    const updatedUser = await contract.submitTransaction('UpdateInfo', userID, userInfo.Address, userInfo.Height, userInfo.Weight, userInfo.Allergies, userInfo.MedicalHistory);
-    console.log('*** Result: committed');
-    ledger.disconnect(gateway);
-    return updatedUser;
-  } catch (error) {
-    console.error('Failed to update user: ' + userID + '\n' + error?.message);
-    throw error;
-  }
+const updateUser = () => {
+  return;
 };
 
 const deleteUser = () => {

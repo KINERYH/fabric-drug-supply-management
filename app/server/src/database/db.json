@@ -358,26 +358,32 @@
       "smartContract": "PharmacyContract"
     },
     {
-      "email": "p@ziente.it",
-      "password": "$2b$10$.UlJokGL62s.v2D.EXYkbeScD2Q8ZnScX6iTkGhMGejPeJpHh.tPe",
+      "email": "em@il.it",
+      "password": "$2b$10$kaPtCL1OBhUrXM5gcDrDjuJ8gdgzfjyfykf85JLR89I3oGk7y6QSm",
       "role": "Patient",
-      "uuid": "88c5e7a9-b2f0-4e17-a42e-021aef6d3f91",
+      "uuid": "2a745109-84c6-4f89-8315-7ed0cc286062",
       "smartContract": "PatientContract"
     },
     {
-      "email": "f@rmacia.it",
-      "password": "$2b$10$NZNGApH0IcQIqL9BdA3dJOcr8Uf6pTqnxLfJ8udfdcOMnddD2sAQ6",
-      "role": "Pharmacy",
-      "uuid": "3fe7794e-d359-4480-b512-4458731bef92",
-      "smartContract": "PharmacyContract"
+      "email": "p@ziente.it",
+      "password": "$2b$10$XerD7RpOAFT3J8n55a9i4.1KQqOs068NeWccl3d/wiltZXAqWj4NC",
+      "role": "Patient",
+      "uuid": "43e06c56-b8a1-4541-a4f7-243066b7db41",
+      "smartContract": "PatientContract"
     },
     {
-      "email": "dott@ressa.it",
-      "password": "$2b$10$Mgh0vZMtg00l3PiDe/nUc.Bm7m5dTabxQPPaum.dRCaTQDWSVJFdO",
+      "email": "1d@ttore.it",
+      "password": "$2b$10$NMR0D8VKqNwFjHofnH7Kiu0.SR5jGvHb.W6pVeKi3.nDPrLR63gbK",
       "role": "Doctor",
-      "uuid": "3ed6b631-fb4d-45c0-83a1-30b08b146fba",
+      "uuid": "0e66a63f-2e4e-448e-aae6-27b71bbf7674",
       "smartContract": "DoctorContract"
-
+    },
+    {
+      "email": "f@rmacia.it",
+      "password": "$2b$10$gTGNV3K8OKG0z/S1bDPJce1ONR5uuoutP8.X8At.4nLQl/q64rEzy",
+      "role": "Pharmacy",
+      "uuid": "acbc2869-f4f1-4b75-ba61-23964d28b018",
+      "smartContract": "PharmacyContract"
     }
   ]
 }
