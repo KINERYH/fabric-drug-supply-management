@@ -199,7 +199,7 @@
   "orders": [
     {
       "ID": "94ae7246-40c6-40fa-8d5a-fcc34d0edbca",
-      "PharmacyID": "acbc2869-f4f1-4b75-ba61-23964d28b018",
+      "PharmacyID": "f5617d40-326a-405c-9229-d86edd0e679b",
       "ManufacturerID": "fa15c893-bb7d-4cc9-a0ca-4e303a85f8e9",
       "Status": "pending",
       "Description": "si richiedono 10 scatole di tachipirina",
@@ -213,7 +213,7 @@
     },
     {
       "ID": "94ae7246-40c6-40fa-8d5a-fcc39d0edbca",
-      "PharmacyID": "acbc2869-f4f1-4b75-ba61-23964d28b018",
+      "PharmacyID": "f5617d40-326a-405c-9229-d86edd0e679b",
       "ManufacturerID": "fa15c893-bb7d-4cc9-a0ca-4e303a85f8e9",
       "Status": "shipped",
       "Description": "si richiedono 10 scatole di cortisone",
@@ -227,7 +227,7 @@
     },
     {
       "ID": "93ae7246-40c6-40fa-8d5a-fcc34d0edbca",
-      "PharmacyID": "acbc2869-f4f1-4b75-ba61-23964d28b018",
+      "PharmacyID": "f5617d40-326a-405c-9229-d86edd0e679b",
       "ManufacturerID": "fa15c893-bb7d-4cc9-a0ca-4e303a85f8e9",
       "Status": "processed",
       "Description": "si richiedono 2 scatole di tachipirina e 1 di trembolone",
@@ -366,7 +366,7 @@
       }]},
     {
 
-      "ID": "25ba64c6-f712-47bf-9b02-2f85e6ce3bf9",
+      "ID": "f5617d40-326a-405c-9229-d86edd0e679b",
       "Name": "pharmacy1",
       "Address": "address1",
       "DrugStorage": [
