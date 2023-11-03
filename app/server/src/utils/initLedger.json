@@ -3,53 +3,50 @@
     {
       "DrugID": "ec110aef-28ce-4d1b-a008-840e40390329",
       "ManufacturerID": "94ae7246-40c6-40fa-8d5a-fcc34d0edcca",
-      "Name": "drug1",
-      "Description": "drug1",
-      "Price": 100,
+      "Name": "Augmentin",
+      "Description": "Antibiotico combinato usato per trattare infezioni batteriche multiple.",
+      "Price": 20,
       "Composition": [
-        "element1",
-        "element2"
+        "Amoxicillina",
+        "Acido clavulanico"
       ],
       "UOM": "mg"
     },
     {
       "DrugID": "ec110aef-28ce-4d1b-a008-840e40390330",
       "ManufacturerID": "94ae7246-40c6-40fa-8d5a-fcc34d0edcca",
-      "Name": "Trembolone",
-      "Description": "ti fai i muscoli",
-      "Price": 1000,
+      "Name": "Exforge",
+      "Description": "Usato per trattare l'ipertensione, combinando due principi attivi per un effetto sinergico.",
+      "Price": 85,
       "Composition": [
-        "tre ceres",
-        "una botta di cocaina",
-        "e ti senti come un cane della malesia"
+        "Valsartan",
+        "Amlodipina"
       ],
-      "UOM": "ml"
+      "UOM": "mg"
     },
     {
       "DrugID": "ec110aef-28ce-4d1b-a008-840e403903no",
       "ManufacturerID": "94ae7246-40c6-40fa-8d5a-fcc34d0edcca",
-      "Name": "Drug prova",
-      "Description": "Allevia naso e gola",
-      "Price": 1000,
+      "Name": "Co-Aprovel",
+      "Description": "Antipertensivo che associa due componenti per migliorare il controllo della pressione arteriosa.",
+      "Price": 30,
       "Composition": [
-        "paracetamolo",
-        "acido",
-        "redbull"
+        "Irbesartan",
+        "Idroclorotiazide"
       ],
-      "UOM": "ml"
+      "UOM": "mg"
     },
     {
-      "DrugID": "ec110aef-28ce-4d1b-a008-840e40390328",
+      "DrugID": "b47dae06-5ccb-4c67-8f44-3ad8db3588d9",
       "ManufacturerID": "94ae7246-40c6-40fa-8d5a-fcc34d0edcca",
-      "Name": "Drug prova 2",
-      "Description": "Allevia naso, gola e mento.",
-      "Price": 1000,
+      "Name": "Advair Diskus",
+      "Description": "Usato per controllare e prevenire i sintomi dell'asma o della BPCO.",
+      "Price": 300,
       "Composition": [
-        "paracetamolo",
-        "acido",
-        "redbull"
+        "Fluticasone propionato",
+        "Salmeterolo"
       ],
-      "UOM": "ml"
+      "UOM": "mcg"
     }
   ],
   "boxes": [
@@ -76,27 +73,31 @@
       "BoxID": "ec110aef-28ce-4d1b-a008-840e40390323",
       "ExpirationDate": "2018-12-31T23:59:59.000Z",
       "ProductionDate": "2018-12-31T23:59:59.000Z"
+    },
+    {
+      "DrugID": "b47dae06-5ccb-4c67-8f44-3ad8db3588d9",
+      "BoxID": "117bb658-3b1d-433f-be2a-51c1a6eed0b7",
+      "ExpirationDate": "2018-12-31T23:59:59.000Z",
+      "ProductionDate": "2018-12-31T23:59:59.000Z"
     }
   ],
   "prescriptions": [
     {
       "ID": "6918bcdb-bf53-4a88-9f11-986b52a72fc4",
-      "DoctorID": "3ed6b631-fb4d-45c0-83a1-30b08b146fba",
-      "PatientID": "44c87b23-7359-4cdf-afef-6fc8794d1b1d",
-      "PharmacyID": null,
-      "Status": "pending",
-      "Description": "Due supposte grosse per il culo",
-      "ProcessingDate": "2018-12-31T23:59:59.000Z",
+      "DoctorID": "874d1f5e-549e-4598-afbd-e90e826d3dad",
+      "PatientID": "d20785ab-bdd8-4547-9248-a508820cedb3",
+      "PharmacyID": "f5617d40-326a-405c-9229-d86edd0e679b",
+      "Description": "Terapia antibiotica per infezione delle vie respiratorie superiori",
+      "ProcessingDate": "2023-11-03T10:22:00.973Z",
+      "Status": "processed",
       "Drugs": [
         {
+          "BoxIDs": [
+            "ec110aef-28ce-4d1b-a008-840e40390328",
+            "ec110aef-28ce-4d1b-a008-840e40390327"
+          ],
           "DrugID": "ec110aef-28ce-4d1b-a008-840e40390329",
-          "Quantity": 1,
-          "BoxIDs": []
-        },
-        {
-          "DrugID": "ec110aef-28ce-4d1b-a008-840e40390330",
-          "Quantity": 1,
-          "BoxIDs": []
+          "Quantity": 2
         }
       ]
     },
@@ -106,7 +107,7 @@
       "PatientID": "88c5e7a9-b2f0-4e17-a42e-021aef6d3f91",
       "PharmacyID": "3fe7794e-d359-4480-b512-4458731bef92",
       "Status": "processed",
-      "Description": "Tachipirina 100 e oki",
+      "Description": "Trattamento per ipertensione e gestione del dolore post-operatorio",
       "ProcessingDate": "2018-12-31T23:59:59.000Z",
       "Drugs": [
         {
@@ -132,12 +133,12 @@
       "PatientID": "88c5e7a9-b2f0-4e17-a42e-021aef6d3f91",
       "PharmacyID": null,
       "Status": "pending",
-      "Description": "Non dovrebbe prenderla",
+      "Description": "Prescrizione per gestione a lungo termine di malattie croniche (da verificare dosaggio)",
       "ProcessingDate": null,
       "Drugs": [
         {
           "DrugID": "ec110aef-28ce-4d1b-a008-840e40390329",
-          "Quantity": 100,
+          "Quantity": 1,
           "BoxIDs": []
         }
       ]
@@ -148,12 +149,12 @@
       "PatientID": "4702b1fb-6783-4690-8e5e-9b8e89a0f1ab",
       "PharmacyID": null,
       "Status": "pending",
-      "Description": "Non dovrebbe prenderla",
+      "Description": "Ricetta per terapia di mantenimento dell'asma bronchiale",
       "ProcessingDate": "2018-12-31T23:59:59.000Z",
       "Drugs": [
         {
           "DrugID": "ec110aef-28ce-4d1b-a008-840e40390329",
-          "Quantity": 10,
+          "Quantity": 2,
           "BoxIDs": []
         }
       ]
@@ -164,7 +165,7 @@
       "PatientID": "00106b10-abe4-475b-9500-13f77421011b",
       "PharmacyID": null,
       "Status": "pending",
-      "Description": "Prendi la medicina o vieni bannato",
+      "Description": "Medicazione per la prevenzione delle esacerbazioni nella BPCO",
       "ProcessingDate": "2018-12-31T23:59:59.000Z",
       "Drugs": [
         {
@@ -180,7 +181,7 @@
       "PatientID": "4702b1fb-6783-4690-8e5e-9b8e89a0f1ab",
       "PharmacyID": null,
       "Status": "pending",
-      "Description": "Trenbolone acetato",
+      "Description": "Terapia con corticosteroidi per artrite reumatoide",
       "ProcessingDate": "2018-12-31T23:59:59.000Z",
       "Drugs": [
         {
@@ -194,10 +195,10 @@
   "orders": [
     {
       "ID": "94ae7246-40c6-40fa-8d5a-fcc34d0edbca",
-      "PharmacyID": "acbc2869-f4f1-4b75-ba61-23964d28b018",
+      "PharmacyID": "f5617d40-326a-405c-9229-d86edd0e679b",
       "ManufacturerID": "fa15c893-bb7d-4cc9-a0ca-4e303a85f8e9",
       "Status": "pending",
-      "Description": "si richiedono 10 scatole di tachipirina",
+      "Description": "Ordine urgente di Paracetamolo in compresse, confezione da 500mg",
       "Drugs": [
         {
           "DrugID": "ec110aef-28ce-4d1b-a008-840e403903no",
@@ -208,24 +209,26 @@
     },
     {
       "ID": "94ae7246-40c6-40fa-8d5a-fcc39d0edbca",
-      "PharmacyID": "acbc2869-f4f1-4b75-ba61-23964d28b018",
+      "PharmacyID": "f5617d40-326a-405c-9229-d86edd0e679b",
       "ManufacturerID": "fa15c893-bb7d-4cc9-a0ca-4e303a85f8e9",
       "Status": "shipped",
-      "Description": "si richiedono 10 scatole di cortisone",
+      "Description": "Rifornimento di Cortisone acetato, fiale per iniezione 25mg",
       "Drugs": [
         {
           "DrugID": "ec110aef-28ce-4d1b-a008-840e40390329",
-          "Quantity": 1,
-          "BoxIDs": ["ec110aef-28ce-4d1b-a008-840e40389328"]
+          "Quantity": 10,
+          "BoxIDs": [
+            "ec110aef-28ce-4d1b-a008-840e40389328"
+          ]
         }
       ]
     },
     {
       "ID": "93ae7246-40c6-40fa-8d5a-fcc34d0edbca",
-      "PharmacyID": "acbc2869-f4f1-4b75-ba61-23964d28b018",
+      "PharmacyID": "f5617d40-326a-405c-9229-d86edd0e679b",
       "ManufacturerID": "fa15c893-bb7d-4cc9-a0ca-4e303a85f8e9",
       "Status": "processed",
-      "Description": "si richiedono 2 scatole di tachipirina e 1 di trembolone",
+      "Description": "Reintegro stock di Paracetamolo 500mg e Trenbolone enantato 100mg/ml per uso veterinario",
       "Drugs": [
         {
           "DrugID": "ec110aef-28ce-4d1b-a008-840e40390329",
@@ -236,134 +239,63 @@
           ]
         },
         {
-          "DrugID": "ec110aef-28ce-4d1b-a008-840e40390328",
+          "DrugID": "b47dae06-5ccb-4c67-8f44-3ad8db3588d9",
           "Quantity": 1,
-          "BoxIDs": ["ec110aef-28ce-4d1b-a008-840e40390323"]
+          "BoxIDs": [
+            "ec110aef-28ce-4d1b-a008-840e40390323"
+          ]
         }
       ]
+    },
+    {
+      "Description": "Terminato augmentin compresse. Necessarie 10 scatole",
+      "Drugs": [
+        {
+          "BoxIDs": [],
+          "DrugID": "ec110aef-28ce-4d1b-a008-840e40390329",
+          "Quantity": 10
+        }
+      ],
+      "ID": "2870b9c4-5bdd-453e-b9e6-85813af22f5e",
+      "ManufacturerID": "fa15c893-bb7d-4cc9-a0ca-4e303a85f8e9",
+      "PharmacyID": "f5617d40-326a-405c-9229-d86edd0e679b",
+      "Status": "pending"
     }
   ],
   "doctors": [
     {
-      "ID": "94ae7246-40c6-40fa-8d5a-fcc34d0edbca",
+      "ID": "874d1f5e-549e-4598-afbd-e90e826d3dad",
       "Name": "Francesco",
       "Surname": "Ventrella",
-      "Specialization": "Neonatologia",
-      "Hospital": "Ospedale di Venere"
-    },
-    {
-      "Hospital": "Sacro Cuore",
-      "ID": "045edc66-ae1c-4706-9351-8126950ab314",
-      "Name": "Turk",
-      "Specialization": "Chirurgo",
-      "Surname": "Turkleton"
-    },
-    {
-      "ID": "94ae7246-40c6-40fa-8d5a-fcc34d0edbcb",
-      "Name": "Pietro",
-      "Surname": "Diana",
       "Specialization": "Cardiologia",
-      "Hospital": "Ospedale San Paolo"
-    },
-    {
-      "ID": "3ed6b631-fb4d-45c0-83a1-30b08b146fba",
-      "Name": "Mario",
-      "Surname": "Franco",
-      "Specialization": "Neurologia",
-      "Hospital": "Ospedale San Mario"
-    },
-    {"ID":"0e66a63f-2e4e-448e-aae6-27b71bbf7674",
-    "Name":"dott2",
-    "Surname":"cogn2",
-    "Specialization":"Cardiologia",
-    "Hospital":"Di Venere"}
+      "Hospital": "Ospedale di Venere"
+    }
   ],
   "patients": [
     {
-      "Address": "lello",
-        "Allergies": [],
-        "BirthDate": "2023-10-26",
-        "CodiceFiscale": "123",
-        "Height": "14",
-        "Hospital": "",
-        "ID": "43e06c56-b8a1-4541-a4f7-243066b7db41",
-        "MedicalHistory": [],
-        "Name": "Name",
-        "Specialization": "",
-        "Surname": "Surname",
-        "Weight": "11101"
-    },
-    {
-      "ID": "88c5e7a9-b2f0-4e17-a42e-021aef6d3f91",
+      "ID": "d20785ab-bdd8-4547-9248-a508820cedb3",
       "CodiceFiscale": "VNTPLA95T31L219K",
-      "Name": "Pietro",
-      "Surname": "Ventrella",
+      "Name": "Mario",
+      "Surname": "Rossi",
       "BirthDate": "1995-12-31",
-      "Address": "address1",
+      "Address": "Via Roma 123, 00184 Roma, Italia",
       "Allergies": [
-        "allergy1",
-        "allergy2"
+        "Polline di betulla",
+        "Peanuts"
       ],
-      "Weight": 87,
-      "Height": 190,
+      "Weight": 80,
+      "Height": 75,
       "MedicalHistory": [
-        "Asthma",
-        "Diabetes"
+        "Asma",
+        "Diabete di tipo 2"
       ]
-    },
-    {
-      "Address": "",
-      "Allergies": [],
-      "BirthDate": "",
-      "CodiceFiscale": "",
-      "Height": "",
-      "ID": "4702b1fb-6783-4690-8e5e-9b8e89a0f1ab",
-      "MedicalHistory": [],
-      "Name": "Fabry3",
-      "cf": "123",
-      "Surname": "",
-      "Weight": ""
-    },
-    {
-      "Address": "Prova",
-      "Allergies": [],
-      "BirthDate": "2023-10-01",
-      "CodiceFiscale": "FabriProva",
-      "Height": "70",
-      "Hospital": "",
-      "ID": "44c87b23-7359-4cdf-afef-6fc8794d1b1d",
-      "MedicalHistory": [],
-      "Name": "Fabri",
-      "Specialization": "",
-      "Surname": "Prova",
-      "Weight": "70"
     }
   ],
   "pharmacies": [
-    {"ID":"acbc2869-f4f1-4b75-ba61-23964d28b018",
-    "Name":"farmacia1",
-    "Address":"address12",
-    "DrugStorage": [
-      {
-        "DrugID": "ec110aef-28ce-4d1b-a008-840e40390329",
-        "Quantity": 2,
-        "BoxIDs": [
-          "ec110aef-28ce-4d1b-a008-840e40390328",
-          "ec110aef-28ce-4d1b-a008-840e40390327"
-        ]
-      },
-      {
-        "DrugID": "ec110aef-28ce-4d1b-a008-840e40390330",
-        "Quantity": 1,
-        "BoxIDs": [
-          "ec110aef-28ce-4d1b-a008-840e40390323"
-        ]
-      }]},
     {
-
-      "ID": "25ba64c6-f712-47bf-9b02-2f85e6ce3bf9",
-      "Name": "pharmacy1",
-      "Address": "address1",
+      "ID": "f5617d40-326a-405c-9229-d86edd0e679b",
+      "Name": "Farmacia Verde Salute",
+      "Address": "Corso Buonarroti 48, 10121 Torino, Italia",
       "DrugStorage": [
         {
           "DrugID": "ec110aef-28ce-4d1b-a008-840e40390329",
@@ -383,9 +315,9 @@
       ]
     },
     {
-      "ID": "3fe7794e-d359-4480-b512-4458731bef92",
-      "Address": "Address12",
-      "Name": "Farmacia12",
+      "ID": "0591c179-312c-43eb-98cd-a87ddcd972c7",
+      "Name": "Farmacia del Borgo Antico",
+      "Address": "Via Garibaldi 157, 50123 Firenze, Italia",
       "DrugStorage": [
         {
           "DrugID": "ec110aef-28ce-4d1b-a008-840e40390329",
@@ -407,21 +339,23 @@
   ],
   "manufacturers": [
     {
-      "ID": "94ae7246-40c6-40fa-8d5a-fcc34d0edcca",
-      "Name": "manufacturer1",
-      "Address": "address1",
+      "ID": "fa15c893-bb7d-4cc9-a0ca-4e303a85f8e9",
+      "Name": "Altera Pharma Solutions",
+      "Address": "Via Luminosa 123, 00144 Roma, Italia",
       "Drugs": [
         "ec110aef-28ce-4d1b-a008-840e40390329",
-        "ec110aef-28ce-4d1b-a008-840e40390330"
+        "ec110aef-28ce-4d1b-a008-840e40390330",
+        "b47dae06-5ccb-4c67-8f44-3ad8db3588d9"
       ]
     },
     {
-      "ID": "fa15c893-bb7d-4cc9-a0ca-4e303a85f8e9",
-      "Name": "Manu",
-      "Address": "Facturer",
+      "ID": "94ae7246-40c6-40fa-8d5a-fcc34d0edcca",
+      "Name": "Biogena Laboratories S.r.l.",
+      "Address": "Strada del Progresso 75, 20159 Milano, Italia",
       "Drugs": [
         "ec110aef-28ce-4d1b-a008-840e40390329",
-        "ec110aef-28ce-4d1b-a008-840e40390330"
+        "ec110aef-28ce-4d1b-a008-840e40390330",
+        "b47dae06-5ccb-4c67-8f44-3ad8db3588d9"
       ]
     }
   ]

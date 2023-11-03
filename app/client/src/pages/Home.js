@@ -89,12 +89,12 @@ export default function Home() {
     event.preventDefault();
     try {
       let allergies = userDetails.Allergies;
-      if(typeof(allergies) === 'string') {
+      if (typeof (allergies) === 'string') {
         allergies = allergies.split(",");
       }
 
       let medicalHistory = userDetails.MedicalHistory;
-      if(typeof(medicalHistory) === 'string') {
+      if (typeof (medicalHistory) === 'string') {
         medicalHistory = medicalHistory.split(",");
       }
 
@@ -158,7 +158,7 @@ export default function Home() {
     setProcOrderModalOpen(state);
   };
 
-  const handleShipOrder = async(orderId) => {
+  const handleShipOrder = async (orderId) => {
     console.log("============== HANDLE SHIP ORDER ===============")
     try {
       const res = await fetch(`http://localhost:3001/api/orders/${orderId}`, {
@@ -191,11 +191,11 @@ export default function Home() {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     console.log(data.get('CodiceFiscale'));
-    try{
+    try {
 
       const response = await fetch('http://localhost:3001/api/users', {
         method: 'GET',
-        headers:{
+        headers: {
           'Authorization': 'Bearer ' + token,
         }
       });
@@ -203,11 +203,12 @@ export default function Home() {
         const res = await response.json();
         const patients = res.data;
         const patient = patients.find(p => p.CodiceFiscale === data.get('CodiceFiscale'));
-        if (!patient){
+        if (!patient) {
           showAlertMessage("Patient not found", 'error');
         }
-        else{
-          return patient}
+        else {
+          return patient
+        }
       }
       else {
         const errorResponse = await response.json();
@@ -220,7 +221,7 @@ export default function Home() {
       }
 
     }
-    catch(e){
+    catch (e) {
       console.error(e);
     }
 
@@ -271,48 +272,48 @@ export default function Home() {
     }
   }
 
-    // handle  Add Order
-    const handleSubmitAddOrder = async (event) => {
-      event.preventDefault();
-      const data = new FormData(event.currentTarget);
-      console.log(data.get('ManufacturerID'));
-      console.log(data.get('description'));
+  // handle  Add Order
+  const handleSubmitAddOrder = async (event) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    console.log(data.get('ManufacturerID'));
+    console.log(data.get('description'));
 
-      const drugs = [];
-      for (const drug of selectedDrugs) {
-        drugs.push({
-          DrugID: drug.DrugID,
-          Quantity: drug.Quantity,
-          BoxIDs:[]
-        });
+    const drugs = [];
+    for (const drug of selectedDrugs) {
+      drugs.push({
+        DrugID: drug.DrugID,
+        Quantity: drug.Quantity,
+        BoxIDs: []
+      });
+    }
+
+    try {
+      const response = await fetch('http://localhost:3001/api/orders/', {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer ' + token,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          ManufacturerID: data.get('ManufacturerID'),
+          PharmacyID: user,
+          Description: data.get('description'),
+          Drugs: JSON.stringify(drugs),
+        })
+      });
+
+      if (response.status == 201) {
+        showAlertMessage("Order created successfully", 'success');
       }
-
-      try{
-        const response = await fetch('http://localhost:3001/api/orders/', {
-          method: 'POST',
-          headers: {
-            'Authorization': 'Bearer ' + token,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            ManufacturerID: data.get('ManufacturerID'),
-            PharmacyID: user,
-            Description: data.get('description'),
-            Drugs: JSON.stringify(drugs),
-          })
-        });
-
-        if (response.status == 201) {
-          showAlertMessage("Order created successfully", 'success');
-        }
-        else{
-          showAlertMessage("Error creating order", 'error');
-        }
-      }
-      catch(e){
-        console.error(e);
+      else {
+        showAlertMessage("Error creating order", 'error');
       }
     }
+    catch (e) {
+      console.error(e);
+    }
+  }
 
   const handleSubmitProcPrescr = async (event) => {
     event.preventDefault();
@@ -566,6 +567,25 @@ export default function Home() {
       orders = await fetchOrders() || [];
     }
 
+    let doctors = [];
+    let patients = [];
+    if (role != "Manufacturer") {
+      doctors = await Promise.all(
+        prescriptions?.map(async (prescription) => {
+          const doctorInfo = await fetchUserInfo(prescription?.DoctorID);
+          return { ...doctorInfo, prescriptionId: prescription.ID };
+        })
+      )
+      patients = await Promise.all(
+        prescriptions?.map(async (prescription) => {
+          const patientInfo = await fetchUserInfo(prescription?.PatientID);
+          return { ...patientInfo, prescriptionId: prescription.ID };
+        })
+      )
+    }
+
+    setDoctors(doctors);
+    setPatients(patients);
     setOrders(orders);
     setPrescriptions(prescriptions);
   }
@@ -650,10 +670,10 @@ export default function Home() {
           src: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=286',
           role: "Role: " + role,
           totPrescriptions: (role != 'Manufacturer' && role != 'Pharmacy') ? prescriptions?.length : orders?.length,
-          pendingPrescriptions:  (role != 'Manufacturer' && role != 'Pharmacy') ?
+          pendingPrescriptions: (role != 'Manufacturer' && role != 'Pharmacy') ?
             prescriptions?.filter(p => p.Status === 'pending').length :
-            orders?.filter(o => o.Status === 'pending').length ,
-          processedPrescriptions:  (role != 'Manufacturer' && role != 'Pharmacy') ?
+            orders?.filter(o => o.Status === 'pending').length,
+          processedPrescriptions: (role != 'Manufacturer' && role != 'Pharmacy') ?
             prescriptions?.filter(p => p.Status !== 'pending').length :
             orders?.filter(o => o.Status !== 'pending').length
         });
@@ -675,14 +695,14 @@ export default function Home() {
       <div>
         {
           // TODO: aggiungere altre info, come il nome del manufacturer
-        boxes.map((box, index) => (
-          <div>
-            <Typography level='h4'>Box {index}</Typography>
-            <Typography level='h5'>Box Id: {box.BoxID}</Typography>
-            <Typography>Expiration Date: {box.ExpirationDate}</Typography>
-            <Typography>Production Date: {box.ProductionDate}</Typography>
-          </div>
-        ))}
+          boxes.map((box, index) => (
+            <div>
+              <Typography level='h4'>Box {index}</Typography>
+              <Typography level='h5'>Box Id: {box.BoxID}</Typography>
+              <Typography>Expiration Date: {box.ExpirationDate}</Typography>
+              <Typography>Production Date: {box.ProductionDate}</Typography>
+            </div>
+          ))}
       </div>
     );
   }
@@ -782,12 +802,13 @@ export default function Home() {
             { display: order?.Status, chipStatus: true },
             { display: pharmacies?.find(p => p?.orderId === order?.ID)?.Name, favicon: true },
             { display: order?.Description },
-            { display:
-              <Tooltip disabled={ order?.Status != 'pending' } arrow color="success" placement="right" title="ship">
-                <IconButton variant="solid" color="primary" onClick={() => {handleShipOrder(order?.ID)}}>
-                  <LocalShippingIcon size="sm" />
-                </IconButton>
-              </Tooltip>
+            {
+              display:
+                <Tooltip disabled={order?.Status != 'pending'} arrow color="success" placement="right" title="ship">
+                  <IconButton variant="solid" color="primary" onClick={() => { handleShipOrder(order?.ID) }}>
+                    <LocalShippingIcon size="sm" />
+                  </IconButton>
+                </Tooltip>
             }
           ])
         }
@@ -937,11 +958,11 @@ export default function Home() {
                   }}
                   options={autocompleteOptions}
                   autoHighlight
-                  getOptionLabel={(option) => option.Name}
+                  getOptionLabel={(option) => option?.Name}
                   renderOption={(props, option) => (
                     <AutocompleteOption {...props}>
                       <ListItemContent sx={{ fontSize: 'sm' }}>
-                        {option.Name}
+                        {option?.Name}
                         <Typography level="body-xs">
                           {option.DrugID}
                         </Typography>
@@ -951,7 +972,7 @@ export default function Home() {
                   onChange={(event, selectedOption) => {
                     if (selectedOption) {
                       setSelectedDrugs([...selectedDrugs, selectedOption]);
-                      let newOptions = autocompleteOptions.filter(d => d.DrugID !== selectedOption.DrugID);
+                      let newOptions = autocompleteOptions.filter(d => d?.DrugID !== selectedOption?.DrugID);
                       setAutocompleteOptions(newOptions);
                       event.target.value = ''; // Clear the input
                     }
@@ -964,7 +985,7 @@ export default function Home() {
                   <tbody>
                     {selectedDrugs.map((selectedDrug, index) => (
                       <tr key={index}>
-                        <td style={{ width: 'auto' }}>{selectedDrug.Name}</td>
+                        <td style={{ width: 'auto' }}>{selectedDrug?.Name}</td>
                         <td style={{ width: '100px', padding: '0' }}>
                           <Input
                             sx={{ width: '100px' }}
@@ -1054,7 +1075,7 @@ export default function Home() {
             <Stack spacing={2}>
               <FormControl>
                 <FormLabel>Order ID</FormLabel>
-                <Input autoFocus required name="orderID" value={selectedOrderID || ''} onChange={(e) => setSelectedOrderID(e.target.value)}/>
+                <Input autoFocus required name="orderID" value={selectedOrderID || ''} onChange={(e) => setSelectedOrderID(e.target.value)} />
               </FormControl>
               <Button type="submit">Submit</Button>
             </Stack>
@@ -1115,12 +1136,12 @@ export default function Home() {
             }}
           >
             <Stack direction='row' style={{ display: 'flex' }}>
-              <Stack style={{ flex: 1, margin: '0.5rem' }}>
+              <Stack style={{ flex: 1, margin: '0.5rem', width: '30%' }}>
                 <FormControl>
                   <FormLabel>First Name</FormLabel>
                   <Input
                     type="text"
-                    value={userDetails.Name}
+                    value={userDetails?.Name}
                     readOnly
                     style={{ marginBottom: '0.5rem' }}
                   />
@@ -1129,7 +1150,7 @@ export default function Home() {
                   <FormLabel>Last Name</FormLabel>
                   <Input
                     type="text"
-                    value={userDetails.Surname}
+                    value={userDetails?.Surname}
                     readOnly
                     style={{ marginBottom: '0.5rem' }}
                   />
@@ -1138,7 +1159,7 @@ export default function Home() {
                   <FormLabel>Birth Date</FormLabel>
                   <Input
                     type="date"
-                    value={userDetails.BirthDate}
+                    value={userDetails?.BirthDate}
                     readOnly
                     style={{ marginBottom: '0.5rem' }}
                   />
@@ -1147,37 +1168,37 @@ export default function Home() {
                   <FormLabel>CF</FormLabel>
                   <Input
                     type="text"
-                    value={userDetails.CodiceFiscale}
+                    value={userDetails?.CodiceFiscale}
                     readOnly
                     style={{ marginBottom: '0.5rem' }}
                   />
                 </FormControl>
               </Stack>
-              <Stack style={{ flex: 1, margin: '0.5rem' }}>
+              <Stack style={{ flex: 1, margin: '0.5rem', width: '65%' }}>
                 <FormControl>
                   <FormLabel>Address</FormLabel>
                   <Input
                     type="text"
-                    value={userDetails.Address}
+                    value={userDetails?.Address}
                     onChange={(e) => handleInputChange('Address', e.target.value)}
                     style={{ marginBottom: '0.5rem' }}
                   />
                 </FormControl>
                 <Stack direction='row' style={{ display: 'flex', flex: 1 }}>
-                  <FormControl>
+                  <FormControl sx={{ width:'35%'}}>
                     <FormLabel>Height</FormLabel>
                     <Input
                       type="number"
-                      value={userDetails.Height}
+                      value={userDetails?.Height}
                       onChange={(e) => handleInputChange('Height', e.target.value)}
                       style={{ marginBottom: '0.5rem' }}
                     />
                   </FormControl>
-                  <FormControl>
+                  <FormControl sx={{ width:'35%'}}>
                     <FormLabel>Weight</FormLabel>
                     <Input
                       type="number"
-                      value={userDetails.Weight}
+                      value={userDetails?.Weight}
                       onChange={(e) => handleInputChange('Weight', e.target.value)}
                       style={{ marginBottom: '0.5rem' }}
                     />
@@ -1186,17 +1207,17 @@ export default function Home() {
                 <FormControl>
                   <FormLabel>Allergies</FormLabel>
                   <Input
-                      type="text"
-                      value={userDetails.Allergies}
-                      onChange={(e) => handleInputChange('Allergies', e.target.value)}
-                      style={{ marginBottom: '0.5rem' }}
-                    />
+                    type="text"
+                    value={userDetails?.Allergies}
+                    onChange={(e) => handleInputChange('Allergies', e.target.value)}
+                    style={{ marginBottom: '0.5rem' }}
+                  />
                 </FormControl>
                 <FormControl>
                   <FormLabel>Medical History</FormLabel>
                   <Textarea
                     type="text"
-                    value={userDetails.MedicalHistory}
+                    value={userDetails?.MedicalHistory}
                     onChange={(e) => handleInputChange('MedicalHistory', e.target.value)}
                     style={{ marginBottom: '0.5rem' }}
                   />
@@ -1218,10 +1239,11 @@ export default function Home() {
 
       {/* Add order Modal */}
       <Modal open={isAddOrderModalOpen}
-      onClose={() => {
-        setAddOrderModalOpen(false)
-        setSelectedDrugs([]);
-        setSelectedManufacturer([])}}>
+        onClose={() => {
+          setAddOrderModalOpen(false)
+          setSelectedDrugs([]);
+          setSelectedManufacturer([])
+        }}>
         <ModalDialog style={{ width: "60%" }}>
           <DialogTitle>Create new order</DialogTitle>
           <DialogContent>Fill in the order information.</DialogContent>
@@ -1234,38 +1256,38 @@ export default function Home() {
             setSelectedManufacturer([]);
             setAutocompleteOptions([]);
           }}>
-          <Stack spacing={2}>
-            <FormControl>
-              <FormLabel>Manufacturer ID</FormLabel>
-              <Autocomplete
-                required
-                name='ManufacturerID'
-                placeholder='Select a manufacturer'
-                options={autocompleteManOptions}
-                autoHighlight
-                getOptionLabel={(option) => option.Name}
-                renderOption={(props, option) => (
-                  <AutocompleteOption {...props}>
-                    <ListItemContent sx={{ fontSize: 'sm' }}>
-                      {option.Name}
-                      <Typography level="body-xs">
-                        {option.ID}
-                      </Typography>
-                    </ListItemContent>
-                  </AutocompleteOption>
-                )}
-                onChange={(event, selectedOption) => {
-                  if (selectedOption) {
-                    setSelectedManufacturer([ selectedOption]);
-                    event.target.value = ''; // Clear the input
-                    let filteredDrugs = drugs.filter(d => d.ManufacturerID === selectedOption.ID);
-                    setAutocompleteOptions(filteredDrugs);
-                    console.log(filteredDrugs)
-                    setSelectedDrugs([]); // Se cambio manufacturer il campo è pulito
-                  }
-                }}/>
-            </FormControl>
-            <FormControl>
+            <Stack spacing={2}>
+              <FormControl>
+                <FormLabel>Manufacturer ID</FormLabel>
+                <Autocomplete
+                  required
+                  name='ManufacturerID'
+                  placeholder='Select a manufacturer'
+                  options={autocompleteManOptions}
+                  autoHighlight
+                  getOptionLabel={(option) => option?.Name}
+                  renderOption={(props, option) => (
+                    <AutocompleteOption {...props}>
+                      <ListItemContent sx={{ fontSize: 'sm' }}>
+                        {option?.Name}
+                        <Typography level="body-xs">
+                          {option?.ID}
+                        </Typography>
+                      </ListItemContent>
+                    </AutocompleteOption>
+                  )}
+                  onChange={(event, selectedOption) => {
+                    if (selectedOption) {
+                      setSelectedManufacturer([selectedOption]);
+                      event.target.value = ''; // Clear the input
+                      let filteredDrugs = drugs.filter(d => d.ManufacturerID === selectedOption.ID);
+                      setAutocompleteOptions(filteredDrugs);
+                      console.log(filteredDrugs)
+                      setSelectedDrugs([]); // Se cambio manufacturer il campo è pulito
+                    }
+                  }} />
+              </FormControl>
+              <FormControl>
                 <FormLabel>Description</FormLabel>
                 <textarea
                   name="description"
@@ -1278,35 +1300,35 @@ export default function Home() {
               <FormControl>
                 <FormLabel>Drugs</FormLabel>
                 <Autocomplete
-                required
-                placeholder='Select a drug'
-                options={autocompleteOptions}
-                autoHighlight
-                getOptionLabel={(option) => option.Name}
-                renderOption={(props, option) => (
-                  <AutocompleteOption {...props}>
-                    <ListItemContent sx={{ fontSize: 'sm' }}>
-                      {option.Name}
-                      <Typography level="body-xs">
-                        {option.DrugID}
-                      </Typography>
-                    </ListItemContent>
-                  </AutocompleteOption>
-                )}
-                onChange={(event, selectedOption) => {
-                  if (selectedOption) {
-                    setSelectedDrugs([...selectedDrugs, selectedOption]);
-                    let newOptions = autocompleteOptions.filter(d => d.DrugID !== selectedOption.DrugID);
-                    setAutocompleteOptions(newOptions);
-                    event.target.value = ''; // Clear the input
-                  }
-                }}/>
+                  required
+                  placeholder='Select a drug'
+                  options={autocompleteOptions}
+                  autoHighlight
+                  getOptionLabel={(option) => option?.Name}
+                  renderOption={(props, option) => (
+                    <AutocompleteOption {...props}>
+                      <ListItemContent sx={{ fontSize: 'sm' }}>
+                        {option?.Name}
+                        <Typography level="body-xs">
+                          {option?.DrugID}
+                        </Typography>
+                      </ListItemContent>
+                    </AutocompleteOption>
+                  )}
+                  onChange={(event, selectedOption) => {
+                    if (selectedOption) {
+                      setSelectedDrugs([...selectedDrugs, selectedOption]);
+                      let newOptions = autocompleteOptions.filter(d => d.DrugID !== selectedOption.DrugID);
+                      setAutocompleteOptions(newOptions);
+                      event.target.value = ''; // Clear the input
+                    }
+                  }} />
               </FormControl>
               {selectedDrugs.length > 0 && (<FormControl>
                 <FormLabel sx={{ fontSize: '0.9rem', fontWeight: 'bold' }}>Selected Drugs</FormLabel>
                 <table style={{ borderCollapse: 'collapse', width: '50%' }}>
                   <tbody>
-                    {selectedDrugs.map((selectedDrug, index) => (
+                    {selectedDrugs?.map((selectedDrug, index) => (
                       <tr key={index}>
                         <td style={{ width: 'auto' }}>{selectedDrug.Name}</td>
                         <td style={{ width: '100px', padding: '0' }}>
@@ -1315,7 +1337,7 @@ export default function Home() {
                             type="number"
                             min="1"
                             defaultValue={1}
-                            value={selectedDrug.quantity}
+                            value={selectedDrug?.quantity}
                             onChange={(e) => {
                               const newQuantity = parseInt(e.target.value, 10);
                               if (!isNaN(newQuantity)) {
@@ -1347,22 +1369,24 @@ export default function Home() {
               </FormControl>
               )}
 
-            <Button type="submit">Submit</Button>
-          </Stack>
+              <Button type="submit">Submit</Button>
+            </Stack>
           </form>
-          </ModalDialog>
+        </ModalDialog>
 
       </Modal>
 
-            {/* Modal doctor per vedere le informazioni del paziente */}
-            <Modal
-      open={isEditInfoModalOpen}
-      onClose={()=>{setEditInfoModalOpen(false);
-      setPatientInfoSet(false);}}
-      aria-labelledby="modal-modal-title"
-      aria-describedby="modal-modal-description">
+      {/* Modal doctor per vedere le informazioni del paziente */}
+      {/* <Modal
+        open={isEditInfoModalOpen}
+        onClose={() => {
+          setEditInfoModalOpen(false);
+          setPatientInfoSet(false);
+        }}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description">
         <ModalDialog
-        sx={{
+          sx={{
             position: 'absolute',
             top: '50%',
             left: '50%',
@@ -1374,46 +1398,46 @@ export default function Home() {
             bgcolor: 'background.level1',
             borderRadius: 'sm',
             flexDirection: 'column',
-        }}>
+          }}>
           <DialogTitle>
             Patient Info
           </DialogTitle>
           <DialogContent>Insert Patient CF</DialogContent>
-          <form onSubmit={async (event) =>{
+          <form onSubmit={async (event) => {
             const patient = await getPatientInfo(event)
-            if (patient){
+            if (patient) {
               setPatientInfo(patient)
               setPatientInfoSet(true)
             }
-            else{
+            else {
               setAlertMessage("Patient not found", 'error')
             }
-            }}>
+          }}>
 
             <FormControl>
               <FormLabel required>Codice Fiscale</FormLabel>
               <Input autoFocus required name="CodiceFiscale" />
             </FormControl>
-            <Button variant="solid" color="primary" type='submit' sx={{my:2}}>Get patient info</Button>
+            <Button variant="solid" color="primary" type='submit' sx={{ my: 2 }}>Get patient info</Button>
           </form>
           {isPatientInfoSet && (
             <div>
-              <Typography level='h5'>Name: {patientInfo.Name}</Typography>
-              <Typography level='h5'>Surname: {patientInfo.Surname}</Typography>
-              <Typography level='h5'>Birth Date: {patientInfo.BirthDate}</Typography>
-              <Typography level='h5'>Codice Fiscale: {patientInfo.CodiceFiscale}</Typography>
-              <Typography level='h5'>Address: {patientInfo.Address}</Typography>
-              <Typography level='h5'>Height: {patientInfo.Height} cm</Typography>
-              <Typography level='h5'>Weight: {patientInfo.Weight} Kg</Typography>
-              <Typography level='h5'>Allergies: {patientInfo.Allergies.join(', ')}</Typography>
-              <Typography level='h5'>Medical History: {patientInfo.MedicalHistory}</Typography>
+              <Typography level='h5'>Name: {patientInfo?.Name}</Typography>
+              <Typography level='h5'>Surname: {patientInfo?.Surname}</Typography>
+              <Typography level='h5'>Birth Date: {patientInfo?.BirthDate}</Typography>
+              <Typography level='h5'>Codice Fiscale: {patientInfo?.CodiceFiscale}</Typography>
+              <Typography level='h5'>Address: {patientInfo?.Address}</Typography>
+              <Typography level='h5'>Height: {patientInfo?.Height} cm</Typography>
+              <Typography level='h5'>Weight: {patientInfo?.Weight} Kg</Typography>
+              <Typography level='h5'>Allergies: {patientInfo?.Allergies.join(', ')}</Typography>
+              <Typography level='h5'>Medical History: {patientInfo?.MedicalHistory}</Typography>
 
             </div>
           )}
 
         </ModalDialog>
 
-      </Modal>
+      </Modal> */}
     </Box>
 
   );
